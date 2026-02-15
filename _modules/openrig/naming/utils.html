@@ -1,0 +1,1070 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>openrig.naming.utils &mdash; OpenRig 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            OpenRig
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../style_guide/coding_standards.html">Python Coding Style Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Naming Package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">OpenRig</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">openrig.naming.utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for openrig.naming.utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module providing string manipulation facilities.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterable</span>
+
+<span class="c1"># Compiled Regex Patterns for performance</span>
+<span class="n">_CAMEL_CASE_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[a-z][a-z0-9]*([A-Z][a-z0-9]*)*$&quot;</span><span class="p">)</span>
+<span class="n">_PASCAL_CASE_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[A-Z][a-z0-9]*([A-Z][a-z0-9]*)*$&quot;</span><span class="p">)</span>
+<span class="n">_SNAKE_CASE_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[a-z]+(_[a-z0-9]+)*$&quot;</span><span class="p">)</span>
+<span class="n">_KEBAB_CASE_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[a-z]+(-[a-z0-9]+)*$&quot;</span><span class="p">)</span>
+<span class="n">_DIGITS_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\d+&#39;</span><span class="p">)</span>
+<span class="n">_BRACKETS_DIGITS_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\[([^\]]+)\]&quot;</span><span class="p">)</span>
+<span class="n">_UNDERSCORE_DATA_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(?&lt;=_)[^_]+(?=_)&quot;</span><span class="p">)</span>
+<span class="n">_NORMALIZE_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[^a-zA-Z0-9]+&#39;</span><span class="p">)</span>
+<span class="n">_SPLIT_TEXT_DELIM_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[_\-\s\.]+&#39;</span><span class="p">)</span>
+<span class="n">_SPLIT_TEXT_WORDS_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[A-Z]+(?=[A-Z][a-z])|[A-Z][a-z0-9]+|[A-Z]+|[a-z]+|[0-9]+&#39;</span><span class="p">)</span>
+<span class="n">_CLEAN_TXT_INVALID_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[^a-zA-Z0-9_]&#39;</span><span class="p">)</span>
+<span class="n">_INCREMENT_DIGIT_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(\d+)$&#39;</span><span class="p">)</span>
+<span class="n">_VERSION_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[vV](\d+)&#39;</span><span class="p">)</span>
+<span class="n">_SIDE_MAPPING</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;_L_&#39;</span><span class="p">:</span> <span class="s1">&#39;_R_&#39;</span><span class="p">,</span> <span class="s1">&#39;_R_&#39;</span><span class="p">:</span> <span class="s1">&#39;_L_&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;_l_&#39;</span><span class="p">:</span> <span class="s1">&#39;_r_&#39;</span><span class="p">,</span> <span class="s1">&#39;_r_&#39;</span><span class="p">:</span> <span class="s1">&#39;_l_&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;L_&#39;</span><span class="p">:</span> <span class="s1">&#39;R_&#39;</span><span class="p">,</span> <span class="s1">&#39;R_&#39;</span><span class="p">:</span> <span class="s1">&#39;L_&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;l_&#39;</span><span class="p">:</span> <span class="s1">&#39;r_&#39;</span><span class="p">,</span> <span class="s1">&#39;r_&#39;</span><span class="p">:</span> <span class="s1">&#39;l_&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;_L&#39;</span><span class="p">:</span> <span class="s1">&#39;_R&#39;</span><span class="p">,</span> <span class="s1">&#39;_R&#39;</span><span class="p">:</span> <span class="s1">&#39;_L&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;_l&#39;</span><span class="p">:</span> <span class="s1">&#39;_r&#39;</span><span class="p">,</span> <span class="s1">&#39;_r&#39;</span><span class="p">:</span> <span class="s1">&#39;_l&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;_C_&#39;</span><span class="p">:</span> <span class="s1">&#39;_C_&#39;</span><span class="p">,</span> <span class="s1">&#39;_c_&#39;</span><span class="p">:</span> <span class="s1">&#39;_c_&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Left&#39;</span><span class="p">:</span> <span class="s1">&#39;Right&#39;</span><span class="p">,</span> <span class="s1">&#39;Right&#39;</span><span class="p">:</span> <span class="s1">&#39;Left&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;_Left&#39;</span><span class="p">:</span> <span class="s1">&#39;_Right&#39;</span><span class="p">,</span> <span class="s1">&#39;_Right&#39;</span><span class="p">:</span> <span class="s1">&#39;_Left&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Center&#39;</span><span class="p">:</span> <span class="s1">&#39;Center&#39;</span><span class="p">,</span> <span class="s1">&#39;center&#39;</span><span class="p">:</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="s1">&#39;left&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;_left&#39;</span><span class="p">:</span> <span class="s1">&#39;_right&#39;</span><span class="p">,</span> <span class="s1">&#39;_right&#39;</span><span class="p">:</span> <span class="s1">&#39;_left&#39;</span>
+<span class="p">}</span>
+
+
+<span class="c1"># VALIDATORS</span>
+<div class="viewcode-block" id="is_string">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.is_string">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_string</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates if a variable is a string.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: String to validate.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        True if successful, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="is_digit">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.is_digit">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_digit</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates if a variable is a number (int or float).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        value: Value to validate.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        True if successful, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="is_camel_case">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.is_camel_case">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_camel_case</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates if a text is in camelCase style.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Text to validate.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        True if the text is in camelCase style, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">_CAMEL_CASE_RE</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">text</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="is_pascal_case">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.is_pascal_case">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_pascal_case</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates if a text is in PascalCase style.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: String to validate.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        True if the text is in PascalCase style, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">_PASCAL_CASE_RE</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">text</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="is_snake_case">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.is_snake_case">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_snake_case</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates if a text is in snake_case style.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: String to validate.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        True if the text is in snake_case style, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">_SNAKE_CASE_RE</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">text</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="is_kebab_case">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.is_kebab_case">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_kebab_case</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates if a text is in kebab-case style.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: String to validate.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        True if the text is in kebab-case style, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">_KEBAB_CASE_RE</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">text</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="is_character_in">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.is_character_in">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_character_in</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">character</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates if a character is in a text.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Text to look for.</span>
+<span class="sd">        character: Character to validate. Defaults to &#39;_&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        True if the character is in the text, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">character</span> <span class="ow">in</span> <span class="n">text</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># GETTERS</span>
+<div class="viewcode-block" id="get_case_style">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.get_case_style">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_case_style</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determines the naming style of a given text.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: The text to determine style.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The naming style of the text. Possible values are:</span>
+<span class="sd">        &quot;camelCase&quot;, &quot;PascalCase&quot;, &quot;snake_case&quot;, &quot;kebab-case&quot;, or &quot;unknown&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">is_camel_case</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;camelCase&quot;</span>
+    <span class="k">if</span> <span class="n">is_pascal_case</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;PascalCase&quot;</span>
+    <span class="k">if</span> <span class="n">is_snake_case</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;snake_case&quot;</span>
+    <span class="k">if</span> <span class="n">is_kebab_case</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;kebab-case&quot;</span>
+
+    <span class="k">return</span> <span class="s2">&quot;unknown&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="get_digits">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.get_digits">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_digits</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets digits inside a text.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Text to extract digits.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List of string digits from the original text.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_DIGITS_RE</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_digit_by_index">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.get_digit_by_index">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_digit_by_index</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets the digit inside a text at a specific index.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Text to extract digits.</span>
+<span class="sd">        index: Index of the digit to extract. Defaults to 0.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Digit from the original text.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">digit</span> <span class="o">=</span> <span class="n">get_digits</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">digit</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">digit</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">digit</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="get_first_digit">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.get_first_digit">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_first_digit</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets the first digit inside a text.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Text to extract digits.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        First digit from the original string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">digit</span> <span class="o">=</span> <span class="n">get_digits</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">digit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">digit</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="get_last_digit">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.get_last_digit">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_last_digit</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets the last digit inside a string.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Text to extract digits.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Last digit from the original text.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">digit</span> <span class="o">=</span> <span class="n">get_digits</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">digit</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">digit</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="get_digits_between_brackets">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.get_digits_between_brackets">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_digits_between_brackets</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets all digits between brackets inside a text.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: The text to extract digits from.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List of strings representing the numeric digits found between square brackets.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">results</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">_BRACKETS_DIGITS_RE</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+    <span class="n">numeric_results</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+        <span class="n">digits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">_DIGITS_RE</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="n">numeric_results</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">digits</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">numeric_results</span> <span class="k">if</span> <span class="n">numeric_results</span> <span class="k">else</span> <span class="p">[]</span></div>
+
+
+
+<div class="viewcode-block" id="get_data_between_underscores">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.get_data_between_underscores">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_data_between_underscores</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets all data between underscores inside a text.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: The text to extract data from.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List of strings representing the data found between underscores.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Use lookarounds to handle overlapping matches (e.g. &#39;a_b_c&#39; -&gt; &#39;b&#39;)</span>
+    <span class="k">return</span> <span class="n">_UNDERSCORE_DATA_RE</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_version">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.get_version">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_version</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts the version number from a text (e.g., &#39;v001&#39; -&gt; 1).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Text to extract version from.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The version number as an integer, or None if not found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">_VERSION_RE</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="get_namespace">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.get_namespace">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_namespace</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts the namespace prefix from a string.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: The string to process (e.g., &#39;namespace:item&#39;).</span>
+<span class="sd">        separator: The separator character. Defaults to &#39;:&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The namespace string, or empty string if none.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">separator</span> <span class="ow">in</span> <span class="n">text</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">text</span><span class="o">.</span><span class="n">rpartition</span><span class="p">(</span><span class="n">separator</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
+
+
+
+<span class="c1"># CONVERTERS</span>
+<div class="viewcode-block" id="replace_spaces">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.replace_spaces">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">replace_spaces</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">replacement</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Replaces spaces in the given text with a specified character.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: The input text.</span>
+<span class="sd">        replacement: Specified character to replace with.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The input text with spaces replaced by the given replacement.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">replacement</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="normalize_text">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.normalize_text">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">normalize_text</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalizes text by replacing non-alphanumeric characters with spaces.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Text to normalize.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Normalized text.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_NORMALIZE_RE</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="to_upper">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.to_upper">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">to_upper</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a text to uppercase.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Text to convert.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Uppercase text.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">text</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="to_lower">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.to_lower">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">to_lower</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a text to lowercase.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Text to convert.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Lowercase text.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="to_camel_case">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.to_camel_case">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">to_camel_case</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">remove_digits</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a text to camelCase.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Text to convert to camelCase.</span>
+<span class="sd">        remove_digits: Remove digits from the text. Defaults to False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        camelCase string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">split_words</span> <span class="o">=</span> <span class="n">split_text</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+    <span class="n">camel_case</span> <span class="o">=</span> <span class="n">split_words</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">split_words</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+        <span class="n">camel_case</span> <span class="o">+=</span> <span class="n">word</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">remove_digits</span><span class="p">:</span>
+        <span class="n">camel_case</span> <span class="o">=</span> <span class="n">strip_digits</span><span class="p">(</span><span class="n">camel_case</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">camel_case</span></div>
+
+
+
+<div class="viewcode-block" id="to_pascal_case">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.to_pascal_case">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">to_pascal_case</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">remove_digits</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a text to PascalCase.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Text to convert to PascalCase.</span>
+<span class="sd">        remove_digits: Remove digits from the text. Defaults to False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        PascalCase string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">split_words</span> <span class="o">=</span> <span class="n">split_text</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+    <span class="n">pascal_case</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">split_words</span><span class="p">:</span>
+        <span class="n">pascal_case</span> <span class="o">+=</span> <span class="n">word</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">remove_digits</span><span class="p">:</span>
+        <span class="n">pascal_case</span> <span class="o">=</span> <span class="n">strip_digits</span><span class="p">(</span><span class="n">pascal_case</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pascal_case</span></div>
+
+
+
+<div class="viewcode-block" id="to_snake_case">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.to_snake_case">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">to_snake_case</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">remove_digits</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a text to snake_case.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Text to convert to snake_case.</span>
+<span class="sd">        remove_digits: Remove digits from the text. Defaults to False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        snake_case string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">split_words</span> <span class="o">=</span> <span class="n">split_text</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+    <span class="n">snake_case_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">split_words</span><span class="p">:</span>
+        <span class="n">snake_case_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <span class="n">snake_case</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">snake_case_list</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">remove_digits</span><span class="p">:</span>
+        <span class="n">snake_case</span> <span class="o">=</span> <span class="n">strip_digits</span><span class="p">(</span><span class="n">snake_case</span><span class="p">)</span>
+        <span class="n">snake_case</span> <span class="o">=</span> <span class="n">to_snake_case</span><span class="p">(</span><span class="n">snake_case</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">snake_case</span></div>
+
+
+
+<div class="viewcode-block" id="to_kebab_case">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.to_kebab_case">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">to_kebab_case</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">remove_digits</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a text to kebab-case.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Text to convert to kebab-case.</span>
+<span class="sd">        remove_digits: Remove digits from the text. Defaults to False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        kebab-case string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">split_words</span> <span class="o">=</span> <span class="n">split_text</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+    <span class="n">kebab_case_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">split_words</span><span class="p">:</span>
+        <span class="n">kebab_case_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <span class="n">kebab_case</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">kebab_case_list</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">remove_digits</span><span class="p">:</span>
+        <span class="n">kebab_case</span> <span class="o">=</span> <span class="n">strip_digits</span><span class="p">(</span><span class="n">kebab_case</span><span class="p">)</span>
+        <span class="n">kebab_case</span> <span class="o">=</span> <span class="n">to_kebab_case</span><span class="p">(</span><span class="n">kebab_case</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">kebab_case</span></div>
+
+
+
+<div class="viewcode-block" id="value_to_str">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.value_to_str">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">value_to_str</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a digit to a string with the following format: MxDx.</span>
+
+<span class="sd">    where M is the sign (M for negative digits),</span>
+<span class="sd">    x is the integer part,</span>
+<span class="sd">    D is the decimal point (d), and x is the decimal part.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        value: Value to convert to string.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Converted value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sign</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">sign</span> <span class="o">=</span> <span class="s1">&#39;M&#39;</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>  <span class="c1"># Convert value to positive</span>
+
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">sign</span><span class="si">}{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="str_to_value">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.str_to_value">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">str_to_value</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a formatted string (MxDx) into a digit.</span>
+
+<span class="sd">    Where M is the sign (M for negative digits),</span>
+<span class="sd">    x is the integer part,</span>
+<span class="sd">    D is the decimal point (d), and x is the decimal part.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Formatted text to convert into a digit.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The corresponding numerical value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sign</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;M&#39;</span><span class="p">:</span>
+        <span class="n">sign</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">))</span> <span class="o">*</span> <span class="n">sign</span></div>
+
+
+
+<div class="viewcode-block" id="strip_digits">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.strip_digits">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">strip_digits</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Removes digits from a text.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Text to remove digits from.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Text without digits.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_DIGITS_RE</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="split_text">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.split_text">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">split_text</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Splits text into individual words, handling camelCase, PascalCase, and delimiters like _ and -.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: The text to split.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of words.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">_SPLIT_TEXT_DELIM_RE</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_SPLIT_TEXT_WORDS_RE</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="join_tokens">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.join_tokens">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">join_tokens</span><span class="p">(</span><span class="n">tokens</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">],</span> <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Joins a sequence of tokens, filtering out None or empty strings.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        tokens: A sequence of tokens (strings or None).</span>
+<span class="sd">        separator: The separator to use. Defaults to &#39;_&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The joined string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">separator</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tokens</span> <span class="k">if</span> <span class="n">t</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="capitalize_first">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.capitalize_first">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">capitalize_first</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Capitalizes the first letter of a text.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Text to capitalize.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Text with the first letter capitalized.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">text</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">text</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span></div>
+
+
+
+<div class="viewcode-block" id="remove_prefix">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.remove_prefix">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">remove_prefix</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Removes a prefix from a text.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Text to remove prefix from.</span>
+<span class="sd">        prefix: Prefix to remove.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Text without prefix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">text</span><span class="o">.</span><span class="n">removeprefix</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="remove_suffix">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.remove_suffix">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">remove_suffix</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Removes a suffix from a text.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Text to remove suffix from.</span>
+<span class="sd">        suffix: Suffix to remove.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Text without suffix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">text</span><span class="o">.</span><span class="n">removesuffix</span><span class="p">(</span><span class="n">suffix</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="clean_txt">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.clean_txt">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">clean_txt</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">replace_with</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cleans a string by replacing illegal characters and ensuring it doesn&#39;t start with a digit.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Text to clean.</span>
+<span class="sd">        replace_with: Character to replace illegal characters with. Defaults to &#39;_&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Cleaned text.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">_CLEAN_TXT_INVALID_RE</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">replace_with</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">replace_with</span><span class="p">:</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">replace_with</span><span class="p">)</span><span class="si">}</span><span class="s1">+&#39;</span><span class="p">,</span> <span class="n">replace_with</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">text</span> <span class="ow">and</span> <span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">replace_with</span><span class="si">}{</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">text</span></div>
+
+
+
+<div class="viewcode-block" id="strip_namespace">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.strip_namespace">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">strip_namespace</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Removes the namespace prefix from a string.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: The string to process.</span>
+<span class="sd">        separator: The separator character. Defaults to &#39;:&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The string without the namespace prefix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">separator</span> <span class="ow">in</span> <span class="n">text</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">text</span><span class="o">.</span><span class="n">rpartition</span><span class="p">(</span><span class="n">separator</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">text</span></div>
+
+
+
+<div class="viewcode-block" id="get_base_name">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.get_base_name">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_base_name</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;|&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the last component of a path-like string.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: The path string (e.g. &#39;path/to/item&#39;).</span>
+<span class="sd">        separator: The path separator. Defaults to &#39;|&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The base name (leaf node).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">separator</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="truncate">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.truncate">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">truncate</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ellipsis</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;...&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Truncates a string to a maximum length.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: The text to truncate.</span>
+<span class="sd">        max_length: The maximum length including the ellipsis.</span>
+<span class="sd">        ellipsis: The string to append to truncated text. Defaults to &quot;...&quot;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The truncated string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">max_length</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">text</span>
+    <span class="k">return</span> <span class="n">text</span><span class="p">[:</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_length</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">ellipsis</span><span class="p">))]</span> <span class="o">+</span> <span class="n">ellipsis</span></div>
+
+
+
+<div class="viewcode-block" id="split_name_number">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.split_name_number">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">split_name_number</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Splits a string into its name and trailing number components.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: The text to split (e.g., &#39;arm01&#39;).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A tuple containing the name and the number string (or None).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">_INCREMENT_DIGIT_RE</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+        <span class="n">number</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">text</span><span class="p">[:</span><span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="n">name</span><span class="p">,</span> <span class="n">number</span>
+    <span class="k">return</span> <span class="n">text</span><span class="p">,</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="get_unique_name">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.get_unique_name">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_unique_name</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">existing_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a unique name by incrementing the digit if it exists in the list.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: The desired name.</span>
+<span class="sd">        existing_names: Iterable of names that already exist.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A unique name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">existing_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">existing_names</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">existing_set</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">increment_digit</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">name</span></div>
+
+
+
+<span class="c1"># INCREMENTERS</span>
+<div class="viewcode-block" id="increment_character">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.increment_character">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">increment_character</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Increments a letter sequence in a manner similar to Excel column naming.</span>
+
+<span class="sd">    - Works for both uppercase and lowercase sequences</span>
+<span class="sd">    - Handles cases like &#39;ZZ&#39; → &#39;AAA&#39; and &#39;zz&#39; → &#39;aaa&#39;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: A text containing only letters (&#39;A&#39;-&#39;Z&#39; or &#39;a&#39;-&#39;z&#39;).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The incremented letter sequence.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Convert string to list for mutability</span>
+    <span class="n">chars</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="c1"># Check if the input is uppercase or lowercase</span>
+    <span class="n">is_upper</span> <span class="o">=</span> <span class="n">chars</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isupper</span><span class="p">()</span>
+    <span class="n">start_char</span> <span class="o">=</span> <span class="s1">&#39;A&#39;</span> <span class="k">if</span> <span class="n">is_upper</span> <span class="k">else</span> <span class="s1">&#39;a&#39;</span>
+    <span class="n">end_char</span> <span class="o">=</span> <span class="s1">&#39;Z&#39;</span> <span class="k">if</span> <span class="n">is_upper</span> <span class="k">else</span> <span class="s1">&#39;z&#39;</span>
+    <span class="c1"># Start from the last character</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">chars</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">end_char</span><span class="p">:</span>
+            <span class="n">chars</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">chars</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Increment character</span>
+            <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">chars</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">start_char</span>  <span class="c1"># Reset current position to start character</span>
+            <span class="n">i</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="c1"># Prepend &#39;A&#39; or &#39;a&#39; if all characters were &#39;Z&#39; or &#39;z&#39;</span>
+    <span class="k">return</span> <span class="n">start_char</span> <span class="o">+</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="increment_digit">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.increment_digit">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">increment_digit</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Increments the last digit in a text.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Text to increment.</span>
+<span class="sd">        pads: Number of digits for padding.</span>
+<span class="sd">              If None, uses existing padding or defaults to 2.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Text with the last digit incremented, or a digit appended if none existed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">_INCREMENT_DIGIT_RE</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+        <span class="n">current_digit</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">padding</span> <span class="o">=</span> <span class="n">pads</span> <span class="k">if</span> <span class="n">pads</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">current_digit</span><span class="p">)</span>
+        <span class="n">new_digit</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">current_digit</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">incremented_digit</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">new_digit</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="n">padding</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">text</span><span class="p">[:</span><span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()]</span> <span class="o">+</span> <span class="n">incremented_digit</span>
+
+    <span class="n">padding</span> <span class="o">=</span> <span class="n">pads</span> <span class="k">if</span> <span class="n">pads</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">text</span><span class="si">}{</span><span class="s1">&#39;1&#39;</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="n">padding</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="replace_padding">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.replace_padding">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">replace_padding</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">padding</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Replaces the padding of the last number in the text.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Text to modify.</span>
+<span class="sd">        padding: New padding size. Defaults to 2.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Text with updated padding.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">_INCREMENT_DIGIT_RE</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+        <span class="n">digit</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">new_digit</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">digit</span><span class="p">))</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="n">padding</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">text</span><span class="p">[:</span><span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()]</span> <span class="o">+</span> <span class="n">new_digit</span>
+    <span class="k">return</span> <span class="n">text</span></div>
+
+
+
+<div class="viewcode-block" id="add_suffix">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.add_suffix">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_suffix</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adds a suffix to a text using a separator.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Text to add the suffix to.</span>
+<span class="sd">        suffix: The suffix to add.</span>
+<span class="sd">        separator: The separator to use. Defaults to &#39;_&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Text with the suffix added.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">to_camel_case</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">suffix</span><span class="o">.</span><span class="n">isupper</span><span class="p">():</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="n">to_camel_case</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">suffix</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">text</span><span class="si">}{</span><span class="n">separator</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="add_prefix">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.add_prefix">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_prefix</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adds a prefix to a text using a separator.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Text to add the prefix to.</span>
+<span class="sd">        prefix: The prefix to add.</span>
+<span class="sd">        separator: The separator to use. Defaults to &#39;_&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Text with the prefix added.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">to_camel_case</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">prefix</span><span class="o">.</span><span class="n">isupper</span><span class="p">():</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="n">to_camel_case</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">prefix</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}{</span><span class="n">separator</span><span class="si">}{</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="add_text">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.add_text">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_text</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">text_to_add</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adds a text to another text in PascalCase.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: The text to add to.</span>
+<span class="sd">        text_to_add: The text to add. Defaults to &#39;&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The text with the text_to_add added.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">text_to_add</span><span class="p">:</span>
+        <span class="n">text_to_add</span> <span class="o">=</span> <span class="n">to_pascal_case</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">text_to_add</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">text</span><span class="si">}{</span><span class="n">text_to_add</span><span class="si">}</span><span class="s1">&#39;</span></div>
+
+
+
+<div class="viewcode-block" id="swap_substrings">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.swap_substrings">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">swap_substrings</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mapping</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Swaps substrings in a text based on a mapping dictionary.</span>
+<span class="sd">    </span>
+<span class="sd">    Performs a simultaneous replacement of all keys found in the mapping.</span>
+<span class="sd">    This prevents double-swapping (e.g. L-&gt;R then R-&gt;L) and ensures robustness.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: The text to process.</span>
+<span class="sd">        mapping: Dictionary mapping substrings (e.g., {&#39;_L_&#39;: &#39;_R_&#39;}).</span>
+<span class="sd">                 If None, defaults to a standard side mapping (L/R, Left/Right).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The text with substrings swapped if matches are found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="n">mapping</span> <span class="ow">or</span> <span class="n">_SIDE_MAPPING</span>
+    
+    <span class="c1"># Create a regex pattern that matches any of the keys</span>
+    <span class="c1"># Sort keys by length descending to match longest keys first (e.g. &#39;Left&#39; before &#39;L&#39;)</span>
+    <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)))</span>
+    
+    <span class="k">return</span> <span class="n">pattern</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="n">mapping</span><span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)],</span> <span class="n">text</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># DECREMENTERS</span>
+<div class="viewcode-block" id="decrement_character">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.decrement_character">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">decrement_character</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Decrements a letter sequence in a manner similar to Excel column naming.</span>
+
+<span class="sd">    - Works for both uppercase and lowercase sequences</span>
+<span class="sd">    - Handles cases like &#39;AAA&#39; → &#39;ZZ&#39; and &#39;aaa&#39; → &#39;zz&#39;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: A text containing only letters (&#39;A&#39;-&#39;Z&#39; or &#39;a&#39;-&#39;z&#39;).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The decremented letter sequence.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">chars</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">is_upper</span> <span class="o">=</span> <span class="n">chars</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isupper</span><span class="p">()</span>
+    <span class="n">start_char</span> <span class="o">=</span> <span class="s1">&#39;A&#39;</span> <span class="k">if</span> <span class="n">is_upper</span> <span class="k">else</span> <span class="s1">&#39;a&#39;</span>
+    <span class="n">end_char</span> <span class="o">=</span> <span class="s1">&#39;Z&#39;</span> <span class="k">if</span> <span class="n">is_upper</span> <span class="k">else</span> <span class="s1">&#39;z&#39;</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">chars</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">start_char</span><span class="p">:</span>
+            <span class="n">chars</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">chars</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">chars</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">end_char</span>
+            <span class="n">i</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chars</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span></div>
+
+
+
+<div class="viewcode-block" id="decrement_digit">
+<a class="viewcode-back" href="../../../modules.html#openrig.naming.utils.decrement_digit">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">decrement_digit</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">remove_if_one</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Decrements the last digit in a text.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: Text to decrement.</span>
+<span class="sd">        remove_if_one: If True, removes the digit if it becomes 0 or 1.</span>
+<span class="sd">                       Defaults to True.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Text with the decremented digit, or the original text if no digit is found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">_INCREMENT_DIGIT_RE</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+        <span class="n">current_digit</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">current_value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">current_digit</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">remove_if_one</span> <span class="ow">and</span> <span class="n">current_value</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">text</span><span class="p">[:</span><span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()]</span>
+        <span class="k">if</span> <span class="n">current_value</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">text</span>
+        <span class="n">digits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">current_digit</span><span class="p">)</span>
+        <span class="n">decremented_digit</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">current_value</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="n">digits</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">text</span><span class="p">[:</span><span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()]</span> <span class="o">+</span> <span class="n">decremented_digit</span>
+
+    <span class="k">return</span> <span class="n">text</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Iván Cuenca Ruiz &amp; Luis de Campos.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

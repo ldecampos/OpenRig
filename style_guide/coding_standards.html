@@ -1,0 +1,576 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Coding Style Guide &mdash; OpenRig 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Naming Package" href="../modules.html" />
+    <link rel="prev" title="Welcome to OpenRig’s documentation!" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenRig
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Python Coding Style Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#code-layout-imports-pep-8">1. Code Layout &amp; Imports (PEP 8)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#indentation">1.1. Indentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#maximum-line-length">1.2. Maximum Line Length</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#blank-lines">1.3. Blank Lines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#imports">1.4. Imports</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#naming-pep-8">2. Naming (PEP 8)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#variables">2.1. Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#functions-and-methods">2.2. Functions and Methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#classes">2.3. Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#modules">2.4. Modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#constants">2.5. Constants</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#docstrings-google-style-pep-257">3. Docstrings (Google Style &amp; PEP 257)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#general-guidelines-pep-257">3.1. General Guidelines (PEP 257)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#google-style-for-functions-and-methods">3.2. Google Style for Functions and Methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#google-style-for-classes">3.3. Google Style for Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-docstrings">3.4. Module Docstrings</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#type-hinting-pep-484">4. Type Hinting (PEP 484)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#function-signatures">4.1. Function Signatures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#complex-types">4.2. Complex Types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#logging-pep-282">5. Logging (PEP 282)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#usage">5.1. Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#log-levels">5.2. Log Levels</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tooling">6. Tooling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pre-commit">6.1. Pre-commit</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#installation-setup">Installation &amp; Setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Usage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Naming Package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenRig</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Python Coding Style Guide</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/style_guide/coding_standards.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="python-coding-style-guide">
+<h1>Python Coding Style Guide<a class="headerlink" href="#python-coding-style-guide" title="Link to this heading"></a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
+<p>This style guide provides the coding conventions for Python projects at OpenRig. The goal is to improve code readability and maintain consistency across the entire codebase.</p>
+<ul class="simple">
+<li><p>PEP 8 – Style Guide for Python Code for code style</p></li>
+<li><p>PEP 257 – Docstring Conventions for documentation strings (docstrings).</p></li>
+<li><p>PEP 484 – Type Hints for type annotations</p></li>
+<li><p>PEP 282 – A Logging System for logging, and Google’s conventions.</p></li>
+</ul>
+</section>
+<section id="code-layout-imports-pep-8">
+<h2>1. Code Layout &amp; Imports (PEP 8)<a class="headerlink" href="#code-layout-imports-pep-8" title="Link to this heading"></a></h2>
+<section id="indentation">
+<h3>1.1. Indentation<a class="headerlink" href="#indentation" title="Link to this heading"></a></h3>
+<p>Use <strong>4 spaces</strong> per indentation level. Do not use tabs.</p>
+</section>
+<section id="maximum-line-length">
+<h3>1.2. Maximum Line Length<a class="headerlink" href="#maximum-line-length" title="Link to this heading"></a></h3>
+<p>Limit all lines to a maximum of <strong>88 characters</strong> (compatible with <code class="docutils literal notranslate"><span class="pre">black</span></code>) or 79 characters (strict PEP 8).</p>
+</section>
+<section id="blank-lines">
+<h3>1.3. Blank Lines<a class="headerlink" href="#blank-lines" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Surround top-level function and class definitions with <strong>two blank lines</strong>.</p></li>
+<li><p>Method definitions inside a class are surrounded by a <strong>single blank line</strong>.</p></li>
+</ul>
+</section>
+<section id="imports">
+<h3>1.4. Imports<a class="headerlink" href="#imports" title="Link to this heading"></a></h3>
+<p>Imports should be grouped in the following order:</p>
+<ol class="arabic simple">
+<li><p>Standard library imports.</p></li>
+<li><p>Related third-party imports (e.g., <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">maya</span></code>).</p></li>
+<li><p>Local application/library specific imports.</p></li>
+</ol>
+<p>Put a blank line between each group of imports.</p>
+<ul>
+<li><p><strong>Yes:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">maya.cmds</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cmds</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">openrig.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">base</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>No:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="kn">import</span><span class="w"> </span><span class="nn">maya.cmds</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cmds</span>
+  <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+  <span class="kn">from</span><span class="w"> </span><span class="nn">openrig.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">base</span>
+  <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+<section id="naming-pep-8">
+<h2>2. Naming (PEP 8)<a class="headerlink" href="#naming-pep-8" title="Link to this heading"></a></h2>
+<p>Choosing sensible names is crucial. Follow these conventions to maintain clarity.</p>
+<section id="variables">
+<h3>2.1. Variables<a class="headerlink" href="#variables" title="Link to this heading"></a></h3>
+<p>Variable names should be in <code class="docutils literal notranslate"><span class="pre">snake_case</span></code> (lowercase with underscores).</p>
+<ul>
+<li><p><strong>Yes:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">user_profile</span> <span class="o">=</span> <span class="n">get_user_profile</span><span class="p">()</span>
+<span class="n">max_retries</span> <span class="o">=</span> <span class="mi">5</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>No:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">userProfile</span> <span class="o">=</span> <span class="n">get_user_profile</span><span class="p">()</span> <span class="c1"># Avoid camelCase</span>
+<span class="n">MaxRetries</span> <span class="o">=</span> <span class="mi">5</span>                   <span class="c1"># Avoid PascalCase</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="functions-and-methods">
+<h3>2.2. Functions and Methods<a class="headerlink" href="#functions-and-methods" title="Link to this heading"></a></h3>
+<p>Like variables, functions and methods should be in <code class="docutils literal notranslate"><span class="pre">snake_case</span></code>.</p>
+<ul>
+<li><p><strong>Yes:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">calculate_total_value</span><span class="p">(</span><span class="n">quantity</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="c1"># ...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_full_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># ...</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>No:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">CalculateTotalValue</span><span class="p">(</span><span class="n">quantity</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span> <span class="c1"># Avoid PascalCase</span>
+    <span class="c1"># ...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getFullName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>                         <span class="c1"># Avoid camelCase</span>
+        <span class="c1"># ...</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="classes">
+<h3>2.3. Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h3>
+<p>Class names should follow the <code class="docutils literal notranslate"><span class="pre">PascalCase</span></code> convention (also known as <code class="docutils literal notranslate"><span class="pre">CapWords</span></code>).</p>
+<ul>
+<li><p><strong>Yes:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">OpenRigAgent</span><span class="p">:</span>
+    <span class="c1"># ...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">DiagramGenerateRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="c1"># ...</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>No:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">open_rig_agent</span><span class="p">:</span> <span class="c1"># Avoid snake_case</span>
+    <span class="c1"># ...</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="modules">
+<h3>2.4. Modules<a class="headerlink" href="#modules" title="Link to this heading"></a></h3>
+<p>Python module names should be short, lowercase, and, if necessary, use underscores to improve readability.</p>
+<ul>
+<li><p><strong>Yes:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># File: src/openrig/utils/string_helpers.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">string_helpers</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>No:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># File: src/openrig/utils/StringHelpers.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">StringHelpers</span> <span class="c1"># Avoid PascalCase</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="constants">
+<h3>2.5. Constants<a class="headerlink" href="#constants" title="Link to this heading"></a></h3>
+<p>Constants are declared at the module level and written in all capital letters with underscores separating words.</p>
+<ul>
+<li><p><strong>Yes:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># In a module</span>
+<span class="n">DEFAULT_MODEL</span> <span class="o">=</span> <span class="s2">&quot;gpt-4&quot;</span>
+<span class="n">MAX_WORKERS</span> <span class="o">=</span> <span class="mi">10</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>No:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">default_model</span> <span class="o">=</span> <span class="s2">&quot;gpt-4&quot;</span> <span class="c1"># Avoid snake_case for constants</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+<section id="docstrings-google-style-pep-257">
+<h2>3. Docstrings (Google Style &amp; PEP 257)<a class="headerlink" href="#docstrings-google-style-pep-257" title="Link to this heading"></a></h2>
+<p>All public modules, functions, classes, and methods must have docstrings.</p>
+<section id="general-guidelines-pep-257">
+<h3>3.1. General Guidelines (PEP 257)<a class="headerlink" href="#general-guidelines-pep-257" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The docstring is a string literal that appears as the first statement in the definition.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">&quot;&quot;&quot;triple</span> <span class="pre">double</span> <span class="pre">quotes&quot;&quot;&quot;</span></code> for docstrings.</p></li>
+<li><p>The docstring should be concise and describe what the object does, not how it does it.</p></li>
+<li><p>The first line should be a short, imperative summary ending in a period.</p></li>
+</ul>
+</section>
+<section id="google-style-for-functions-and-methods">
+<h3>3.2. Google Style for Functions and Methods<a class="headerlink" href="#google-style-for-functions-and-methods" title="Link to this heading"></a></h3>
+<p>Function and method docstrings should contain:</p>
+<ol class="arabic simple">
+<li><p>A one-line summary ending in a period.</p></li>
+<li><p>A more detailed description (optional, but recommended for complex functions). This section can explain behavior, algorithms, or side effects.</p></li>
+<li><p>An <code class="docutils literal notranslate"><span class="pre">Args:</span></code> section to describe the arguments.</p></li>
+<li><p>A <code class="docutils literal notranslate"><span class="pre">Returns:</span></code> section to describe the return value.</p></li>
+<li><p>An optional <code class="docutils literal notranslate"><span class="pre">Raises:</span></code> section to describe any exceptions that are raised.</p></li>
+</ol>
+<ul>
+<li><p><strong>Complete Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets an instance of the specified model.</span>
+
+<span class="sd">    If `model_name` is None, it returns the default model. This method</span>
+<span class="sd">    lazily loads the OpenAI client to avoid errors if the API</span>
+<span class="sd">    key is not configured.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model_name: The name of the model to get.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A `Model` instance configured with the appropriate client.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">model_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">model_name</span> <span class="o">=</span> <span class="n">DEFAULT_MODEL</span>
+
+    <span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_client</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">OpenAIResponsesModel</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span> <span class="n">openai_client</span><span class="o">=</span><span class="n">client</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_use_responses</span>
+        <span class="k">else</span> <span class="n">OpenAIChatCompletionsModel</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span> <span class="n">openai_client</span><span class="o">=</span><span class="n">client</span><span class="p">)</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Example with <code class="docutils literal notranslate"><span class="pre">Raises</span></code>:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">validate_code</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates that the code contains a Diagram definition.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        v: The code string to validate.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The original code string if it is valid.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the code does not contain a &#39;Diagram&#39; definition.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s1">&#39;Diagram(&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Code must contain a Diagram definition&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">v</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="google-style-for-classes">
+<h3>3.3. Google Style for Classes<a class="headerlink" href="#google-style-for-classes" title="Link to this heading"></a></h3>
+<p>Class docstrings should contain:</p>
+<ol class="arabic simple">
+<li><p>A one-line summary.</p></li>
+<li><p>A more detailed description of the class’s purpose.</p></li>
+<li><p>An <code class="docutils literal notranslate"><span class="pre">Attributes:</span></code> (or <code class="docutils literal notranslate"><span class="pre">Args:</span></code> in <code class="docutils literal notranslate"><span class="pre">__init__</span></code>) section to describe public attributes.</p></li>
+<li><p>An optional <code class="docutils literal notranslate"><span class="pre">Example:</span></code> block showing basic usage.</p></li>
+</ol>
+<ul>
+<li><p><strong>Class Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">OpenAIProvider</span><span class="p">(</span><span class="n">ModelProvider</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a new OpenAI provider.</span>
+
+<span class="sd">    This class manages the creation and access to an OpenAI client,</span>
+<span class="sd">    allowing for the configuration of API keys, base URLs, and other parameters.</span>
+<span class="sd">    It loads the client lazily to optimize performance.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        use_responses: A boolean indicating whether to use the OpenAI responses API.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">api_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">base_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="c1"># ...</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the OpenAI provider.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            api_key: The API key to use.</span>
+<span class="sd">            base_url: The base URL for the client.</span>
+<span class="sd">            openai_client: An optional, pre-existing OpenAI client.</span>
+<span class="sd">            # ...</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># ...</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Example with <code class="docutils literal notranslate"><span class="pre">Example</span></code>:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">OpenIdConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Represents the OpenID Connect configuration.</span>
+
+<span class="sd">  Attributes:</span>
+<span class="sd">      client_id: The client ID.</span>
+<span class="sd">      auth_uri: The authorization URI.</span>
+<span class="sd">      token_uri: The token URI.</span>
+<span class="sd">      client_secret: The client secret.</span>
+<span class="sd">      redirect_uri: The optional redirect URI.</span>
+
+<span class="sd">  Example:</span>
+<span class="sd">      config = OpenIdConfig(</span>
+<span class="sd">          client_id=&quot;your_client_id&quot;,</span>
+<span class="sd">          auth_uri=&quot;https://accounts.google.com/o/oauth2/auth&quot;,</span>
+<span class="sd">          token_uri=&quot;https://oauth2.googleapis.com/token&quot;,</span>
+<span class="sd">          client_secret=&quot;your_client_secret&quot;,</span>
+<span class="sd">      )</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">client_id</span><span class="p">:</span> <span class="nb">str</span>
+  <span class="n">auth_uri</span><span class="p">:</span> <span class="nb">str</span>
+  <span class="n">token_uri</span><span class="p">:</span> <span class="nb">str</span>
+  <span class="n">client_secret</span><span class="p">:</span> <span class="nb">str</span>
+  <span class="n">redirect_uri</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="module-docstrings">
+<h3>3.4. Module Docstrings<a class="headerlink" href="#module-docstrings" title="Link to this heading"></a></h3>
+<p>Module docstrings should be at the top of the file and summarize the module’s content and purpose.</p>
+<ul>
+<li><p><strong>Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Defines the Coder agent for generating, executing, and debugging code.</span>
+
+<span class="sd">This module provides the `CoderAgent` class, which interacts with a</span>
+<span class="sd">language model to write code and with a code executor (local or Docker)</span>
+<span class="sd">to test it. The agent supports multiple rounds of debugging and user</span>
+<span class="sd">approval guards.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># ... rest of the module&#39;s code ...</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+<section id="type-hinting-pep-484">
+<h2>4. Type Hinting (PEP 484)<a class="headerlink" href="#type-hinting-pep-484" title="Link to this heading"></a></h2>
+<p>Type hints improve code readability and enable static analysis. We follow PEP 484 standards.</p>
+<section id="function-signatures">
+<h3>4.1. Function Signatures<a class="headerlink" href="#function-signatures" title="Link to this heading"></a></h3>
+<p>All functions and methods must include type annotations for arguments and return values.</p>
+<ul>
+<li><p><strong>Yes:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">calculate_offset</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">bias</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">value</span> <span class="o">+</span> <span class="n">bias</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>No:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">calculate_offset</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">value</span> <span class="o">+</span> <span class="n">bias</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="complex-types">
+<h3>4.2. Complex Types<a class="headerlink" href="#complex-types" title="Link to this heading"></a></h3>
+<p>Use generic types from the typing module (or built-ins in Python 3.9+) for complex structures.</p>
+<ul>
+<li><p><strong>Yes:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">process_items</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="c1"># ...</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+<section id="logging-pep-282">
+<h2>5. Logging (PEP 282)<a class="headerlink" href="#logging-pep-282" title="Link to this heading"></a></h2>
+<p>We follow <a class="reference external" href="https://peps.python.org/pep-0282/">PEP 282</a> standards for logging.</p>
+<section id="usage">
+<h3>5.1. Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h3>
+<p>Use the standard <code class="docutils literal notranslate"><span class="pre">logging</span></code> module instead of <code class="docutils literal notranslate"><span class="pre">print()</span></code> for tracking events, status, and errors.</p>
+<ul>
+<li><p><strong>Yes:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Operation started&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>No:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Operation started&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="log-levels">
+<h3>5.2. Log Levels<a class="headerlink" href="#log-levels" title="Link to this heading"></a></h3>
+<p>Select the appropriate level: <code class="docutils literal notranslate"><span class="pre">DEBUG</span></code>, <code class="docutils literal notranslate"><span class="pre">INFO</span></code>, <code class="docutils literal notranslate"><span class="pre">WARNING</span></code>, <code class="docutils literal notranslate"><span class="pre">ERROR</span></code>, or <code class="docutils literal notranslate"><span class="pre">CRITICAL</span></code>.</p>
+</section>
+</section>
+<section id="tooling">
+<h2>6. Tooling<a class="headerlink" href="#tooling" title="Link to this heading"></a></h2>
+<p>To ensure consistency and automate compliance, use the following tools:</p>
+<ul class="simple">
+<li><p><strong>Formatter:</strong> Black</p></li>
+<li><p><strong>Import Sorter:</strong> isort</p></li>
+<li><p><strong>Type Checker:</strong> mypy</p></li>
+</ul>
+<section id="pre-commit">
+<h3>6.1. Pre-commit<a class="headerlink" href="#pre-commit" title="Link to this heading"></a></h3>
+<p>We use pre-commit to automatically run these checks before every commit.</p>
+<section id="installation-setup">
+<h4>Installation &amp; Setup<a class="headerlink" href="#installation-setup" title="Link to this heading"></a></h4>
+<ol class="arabic">
+<li><p>Install pre-commit:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pre-commit
+</pre></div>
+</div>
+</li>
+<li><p>Install the git hook scripts:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pre-commit<span class="w"> </span>install
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="id1">
+<h4>Usage<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<p>Once installed, pre-commit will run automatically on <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span></code>. To run it manually on all files:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to OpenRig’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../modules.html" class="btn btn-neutral float-right" title="Naming Package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Iván Cuenca Ruiz &amp; Luis de Campos.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
