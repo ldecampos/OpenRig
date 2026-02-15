@@ -54,3 +54,20 @@ autodoc_default_options = {
     'undoc-members': True,
     'show-inheritance': True,
 }
+
+# -- Auto-generate API documentation -----------------------------------------
+def run_apidoc(_):
+    """Runs sphinx-apidoc automatically when building docs."""
+    from sphinx.ext.apidoc import main
+    
+    cur_dir = os.path.abspath(os.path.dirname(__file__))
+    output_path = cur_dir
+    module_path = os.path.abspath(os.path.join(cur_dir, '..', 'src', 'openrig'))
+    
+    # -f: Force overwrite (so it updates with new files)
+    # -e: Put each module on its own page (cleaner structure)
+    # -M: Put module documentation before submodule documentation
+    main(['-f', '-e', '-M', '-o', output_path, module_path])
+
+def setup(app):
+    app.connect('builder-inited', run_apidoc)
