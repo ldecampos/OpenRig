@@ -4,10 +4,10 @@
 
 This style guide provides the coding conventions for Python projects at OpenRig. The goal is to improve code readability and maintain consistency across the entire codebase.
 
-- [PEP 8 -- Style Guide for Python Code](https://www.python.org/dev/peps/pep-0008/) for code style
-- [PEP 257 -- Docstring Conventions](https://www.python.org/dev/peps/pep-0257/) for documentation strings (docstrings).
-- [PEP 484 -- Type Hints](https://www.python.org/dev/peps/pep-0484/) for type annotations
-- [PEP 282 -- A Logging System](https://peps.python.org/pep-0282/) for logging, and Google's conventions.
+- PEP 8 -- Style Guide for Python Code for code style
+- PEP 257 -- Docstring Conventions for documentation strings (docstrings).
+- PEP 484 -- Type Hints for type annotations
+- PEP 282 -- A Logging System for logging, and Google's conventions.
 
 ## 1. Code Layout & Imports (PEP 8)
 
@@ -385,7 +385,7 @@ To ensure consistency and automate compliance, use the following tools:
 
 ### 6.1. Pre-commit
 
-We use [pre-commit](https://pre-commit.com/) to automatically run these checks before every commit.
+We use pre-commit to automatically run these checks before every commit.
 
 #### Installation & Setup
 
