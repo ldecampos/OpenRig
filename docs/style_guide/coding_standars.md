@@ -28,13 +28,14 @@ Limit all lines to a maximum of **88 characters** (compatible with `black`) or 7
 
 Imports should be grouped in the following order:
 
-1.  Standard library imports.
-2.  Related third-party imports (e.g., `numpy`, `maya`).
-3.  Local application/library specific imports.
+1. Standard library imports.
+2. Related third-party imports (e.g., `numpy`, `maya`).
+3. Local application/library specific imports.
 
 Put a blank line between each group of imports.
 
 - **Yes:**
+
   ```python
   import os
   import sys
@@ -45,6 +46,7 @@ Put a blank line between each group of imports.
   ```
 
 - **No:**
+
   ```python
     import maya.cmds as cmds
     import os
@@ -61,12 +63,14 @@ Choosing sensible names is crucial. Follow these conventions to maintain clarity
 Variable names should be in `snake_case` (lowercase with underscores).
 
 - **Yes:**
+
   ```python
   user_profile = get_user_profile()
   max_retries = 5
   ```
 
 - **No:**
+
   ```python
   userProfile = get_user_profile() # Avoid camelCase
   MaxRetries = 5                   # Avoid PascalCase
@@ -77,6 +81,7 @@ Variable names should be in `snake_case` (lowercase with underscores).
 Like variables, functions and methods should be in `snake_case`.
 
 - **Yes:**
+
   ```python
   def calculate_total_value(quantity, value):
       # ...
@@ -87,6 +92,7 @@ Like variables, functions and methods should be in `snake_case`.
   ```
 
 - **No:**
+
   ```python
   def CalculateTotalValue(quantity, value): # Avoid PascalCase
       # ...
@@ -101,6 +107,7 @@ Like variables, functions and methods should be in `snake_case`.
 Class names should follow the `PascalCase` convention (also known as `CapWords`).
 
 - **Yes:**
+
   ```python
   class OpenRigAgent:
       # ...
@@ -110,6 +117,7 @@ Class names should follow the `PascalCase` convention (also known as `CapWords`)
   ```
 
 - **No:**
+
   ```python
   class open_rig_agent: # Avoid snake_case
       # ...
@@ -120,13 +128,15 @@ Class names should follow the `PascalCase` convention (also known as `CapWords`)
 Python module names should be short, lowercase, and, if necessary, use underscores to improve readability.
 
 - **Yes:**
-  ```
+
+  ``` python
   # File: src/openrig/utils/string_helpers.py
   import string_helpers
   ```
 
 - **No:**
-  ```
+
+  ``` python
   # File: src/openrig/utils/StringHelpers.py
   import StringHelpers # Avoid PascalCase
   ```
@@ -136,6 +146,7 @@ Python module names should be short, lowercase, and, if necessary, use underscor
 Constants are declared at the module level and written in all capital letters with underscores separating words.
 
 - **Yes:**
+
   ```python
   # In a module
   DEFAULT_MODEL = "gpt-4"
@@ -143,6 +154,7 @@ Constants are declared at the module level and written in all capital letters wi
   ```
 
 - **No:**
+
   ```python
   default_model = "gpt-4" # Avoid snake_case for constants
   ```
@@ -161,13 +173,15 @@ All public modules, functions, classes, and methods must have docstrings.
 ### 3.2. Google Style for Functions and Methods
 
 Function and method docstrings should contain:
-1.  A one-line summary ending in a period.
-2.  A more detailed description (optional, but recommended for complex functions). This section can explain behavior, algorithms, or side effects.
-3.  An `Args:` section to describe the arguments.
-4.  A `Returns:` section to describe the return value.
-5.  An optional `Raises:` section to describe any exceptions that are raised.
+
+1. A one-line summary ending in a period.
+2. A more detailed description (optional, but recommended for complex functions). This section can explain behavior, algorithms, or side effects.
+3. An `Args:` section to describe the arguments.
+4. A `Returns:` section to describe the return value.
+5. An optional `Raises:` section to describe any exceptions that are raised.
 
 - **Complete Example:**
+
   ```python
   def get_model(self, model_name: str | None) -> Model:
       """Gets an instance of the specified model.
@@ -195,6 +209,7 @@ Function and method docstrings should contain:
   ```
 
 - **Example with `Raises`:**
+
   ```python
   def validate_code(cls, v):
       """Validates that the code contains a Diagram definition.
@@ -216,12 +231,14 @@ Function and method docstrings should contain:
 ### 3.3. Google Style for Classes
 
 Class docstrings should contain:
-1.  A one-line summary.
-2.  A more detailed description of the class's purpose.
-3.  An `Attributes:` (or `Args:` in `__init__`) section to describe public attributes.
-4.  An optional `Example:` block showing basic usage.
+
+1. A one-line summary.
+2. A more detailed description of the class's purpose.
+3. An `Attributes:` (or `Args:` in `__init__`) section to describe public attributes.
+4. An optional `Example:` block showing basic usage.
 
 - **Class Example:**
+
   ```python
   class OpenAIProvider(ModelProvider):
       """Creates a new OpenAI provider.
@@ -253,6 +270,7 @@ Class docstrings should contain:
   ```
 
 - **Example with `Example`:**
+
   ```python
   class OpenIdConfig(BaseModel):
     """Represents the OpenID Connect configuration.
@@ -284,6 +302,7 @@ Class docstrings should contain:
 Module docstrings should be at the top of the file and summarize the module's content and purpose.
 
 - **Example:**
+
   ```python
   """Defines the Coder agent for generating, executing, and debugging code.
 
@@ -305,12 +324,14 @@ Type hints improve code readability and enable static analysis. We follow PEP 48
 All functions and methods must include type annotations for arguments and return values.
 
 - **Yes:**
+
   ```python
   def calculate_offset(value: float, bias: float = 0.0) -> float:
       return value + bias
   ```
 
 - **No:**
+
   ```python
   def calculate_offset(value, bias=0.0):
       return value + bias
@@ -321,6 +342,7 @@ All functions and methods must include type annotations for arguments and return
 Use generic types from the typing module (or built-ins in Python 3.9+) for complex structures.
 
 - **Yes:**
+
   ```python
   def process_items(items: list[str]) -> dict[str, int]:
       # ...
@@ -335,6 +357,7 @@ We follow [PEP 282](https://peps.python.org/pep-0282/) standards for logging.
 Use the standard `logging` module instead of `print()` for tracking events, status, and errors.
 
 - **Yes:**
+
   ```python
   import logging
 
@@ -343,6 +366,7 @@ Use the standard `logging` module instead of `print()` for tracking events, stat
   ```
 
 - **No:**
+
   ```python
   print("Operation started")
   ```
@@ -365,12 +389,14 @@ We use [pre-commit](https://pre-commit.com/) to automatically run these checks b
 
 #### Installation & Setup
 
-1.  Install pre-commit:
+1. Install pre-commit:
+
     ```bash
     pip install pre-commit
     ```
 
-2.  Install the git hook scripts:
+2. Install the git hook scripts:
+
     ```bash
     pre-commit install
     ```
