@@ -1,6 +1,7 @@
 # OpenRig #
 
-<img alt="Icon of the openRig project" height="128" src="icons/openRig.png" width="128"/>
+<!-- markdownlint-disable-next-line MD033 -->
+<p align="center"><img src="icons/openRig.png" alt="OpenRig logo featuring" width="250"></p>
 
 ---
 
@@ -20,9 +21,9 @@ We have full-time jobs and this is a side project; all development, solutions, a
 
 ## FEATURES ##
 
-*   **Modular Rigging:** A fully flexible system capable of rigging any creature, prop, or element imaginable—from standard bipeds to complex mechanical assets.
-*   **Automation:** Scripts to handle repetitive tasks like joint placement and skinning.
-*   **Scalability:** Designed to work in production pipelines of any size.
+* **Modular Rigging:** A fully flexible system capable of rigging any creature, prop, or element imaginable—from standard bipeds to complex mechanical assets.
+* **Automation:** Scripts to handle repetitive tasks like joint placement and skinning.
+* **Scalability:** Designed to work in production pipelines of any size.
 
 ---
 
@@ -41,20 +42,22 @@ OpenRig © 2026 by Iván Cuenca Ruiz & Luis de Campos is licensed under Attribut
 ---
 
 ## REQUIREMENTS ##
-*   Autodesk Maya 2026+
-*   Python 3
+
+* Autodesk Maya 2026+
+* Python 3
 
 ---
 
 ## INSTALLATION ##
 
-1.  Download the repository.
-2.  Rename the folder to `OpenRig`.
-3.  Move the folder to your Maya scripts directory:
-    *   Windows: `C:\Users\<NAME>\Documents\maya\scripts\`
-    *   macOS: `/Users/<NAME>/Library/Preferences/Autodesk/maya/scripts/`
-    *   Linux: `~/maya/scripts/`
-4.  Launch Maya and run the following Python command:
+1. Download the repository.
+2. Rename the folder to `OpenRig`.
+3. Move the folder to your Maya scripts directory:
+    * Windows: `C:\Users\<NAME>\Documents\maya\scripts\`
+    * macOS: `/Users/<NAME>/Library/Preferences/Autodesk/maya/scripts/`
+    * Linux: `~/maya/scripts/`
+4. Launch Maya and run the following Python command:
+
     ```python
     import OpenRig
     ```
@@ -73,8 +76,7 @@ If you want to support us with our open source development, you can leave a tip 
 
 [![Support via PayPal](https://img.shields.io/badge/Donate-PayPal.Me-orange)](https://www.paypal.me/IvanCuencaRigging/)
 
-
 ## AUTHORS ##
 
-*   **Iván Cuenca** - [Web](https://ivan-cuenca.com/) | [LinkedIn](https://www.linkedin.com/in/ivan-cuenca-ruiz/)
-*   **Luis de Campos** - [LinkedIn](https://www.linkedin.com/in/luisdecamposmdl/)
+* **Iván Cuenca** - [Web](https://ivan-cuenca.com/) | [LinkedIn](https://www.linkedin.com/in/ivan-cuenca-ruiz/)
+* **Luis de Campos** - [LinkedIn](https://www.linkedin.com/in/luisdecamposmdl/)
