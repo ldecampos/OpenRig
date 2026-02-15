@@ -44,7 +44,7 @@ OpenRig © 2026 by Iván Cuenca Ruiz & Luis de Campos is licensed under Attribut
 ## REQUIREMENTS ##
 
 * Autodesk Maya 2026+
-* Python 3
+* Python 3.10+
 
 ---
 
