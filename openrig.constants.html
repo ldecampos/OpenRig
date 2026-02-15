@@ -1,0 +1,1566 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>openrig.constants module &mdash; OpenRig 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="openrig.utils package" href="openrig.utils.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            OpenRig
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="style_guide/coding_standards.html">Python Coding Style Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">openrig</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="openrig.html">openrig package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="openrig.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="openrig.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">openrig.constants module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">OpenRig</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">openrig</a></li>
+          <li class="breadcrumb-item"><a href="openrig.html">openrig package</a></li>
+      <li class="breadcrumb-item active">openrig.constants module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/openrig.constants.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-openrig.constants">
+<span id="openrig-constants-module"></span><h1>openrig.constants module<a class="headerlink" href="#module-openrig.constants" title="Link to this heading"></a></h1>
+<p>This module defines a set of constants used throughout the project.
+These include common values for rigging-related properties to ensure consistency.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.constants.Tokens">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.constants.</span></span><span class="sig-name descname"><span class="pre">Tokens</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/openrig/constants.html#Tokens"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Tokens" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Defines the core components for the procedural naming system.</p>
+<p>These tokens represent the fundamental parts of a name
+assembled by the naming manager. The order and usage of these tokens
+will define the final naming convention across the project.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Tokens.DESCRIPTOR">
+<span class="sig-name descname"><span class="pre">DESCRIPTOR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'descriptor'</span></em><a class="headerlink" href="#openrig.constants.Tokens.DESCRIPTOR" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Tokens.SIDE">
+<span class="sig-name descname"><span class="pre">SIDE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'side'</span></em><a class="headerlink" href="#openrig.constants.Tokens.SIDE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Tokens.USAGE">
+<span class="sig-name descname"><span class="pre">USAGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'usage'</span></em><a class="headerlink" href="#openrig.constants.Tokens.USAGE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Tokens.__format__">
+<span class="sig-name descname"><span class="pre">__format__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openrig.constants.Tokens.__format__" title="Link to this definition"></a></dt>
+<dd><p>Returns format using actual value type unless __str__ has been overridden.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.constants.Side">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.constants.</span></span><span class="sig-name descname"><span class="pre">Side</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/openrig/constants.html#Side"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Side" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Common side tokens for naming conventions.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Side.LEFT">
+<span class="sig-name descname"><span class="pre">LEFT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'l'</span></em><a class="headerlink" href="#openrig.constants.Side.LEFT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Side.RIGHT">
+<span class="sig-name descname"><span class="pre">RIGHT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'r'</span></em><a class="headerlink" href="#openrig.constants.Side.RIGHT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Side.CENTER">
+<span class="sig-name descname"><span class="pre">CENTER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'c'</span></em><a class="headerlink" href="#openrig.constants.Side.CENTER" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Side.MIDDLE">
+<span class="sig-name descname"><span class="pre">MIDDLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'m'</span></em><a class="headerlink" href="#openrig.constants.Side.MIDDLE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Side.LEFT_LONG">
+<span class="sig-name descname"><span class="pre">LEFT_LONG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'left'</span></em><a class="headerlink" href="#openrig.constants.Side.LEFT_LONG" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Side.RIGHT_LONG">
+<span class="sig-name descname"><span class="pre">RIGHT_LONG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'right'</span></em><a class="headerlink" href="#openrig.constants.Side.RIGHT_LONG" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Side.CENTER_LONG">
+<span class="sig-name descname"><span class="pre">CENTER_LONG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'center'</span></em><a class="headerlink" href="#openrig.constants.Side.CENTER_LONG" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Side.MIDDLE_LONG">
+<span class="sig-name descname"><span class="pre">MIDDLE_LONG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'middle'</span></em><a class="headerlink" href="#openrig.constants.Side.MIDDLE_LONG" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Side.DEFAULT">
+<span class="sig-name descname"><span class="pre">DEFAULT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'c'</span></em><a class="headerlink" href="#openrig.constants.Side.DEFAULT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Side.mirror">
+<span class="sig-name descname"><span class="pre">mirror</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#openrig.constants.Side" title="openrig.constants.Side"><span class="pre">Side</span></a></span></span><a class="reference internal" href="_modules/openrig/constants.html#Side.mirror"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Side.mirror" title="Link to this definition"></a></dt>
+<dd><p>Gets the mirrored side token.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The mirrored side token (e.g., LEFT becomes RIGHT).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Side.is_left">
+<span class="sig-name descname"><span class="pre">is_left</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/openrig/constants.html#Side.is_left"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Side.is_left" title="Link to this definition"></a></dt>
+<dd><p>Checks if the side is ‘left’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the side is LEFT or LEFT_LONG, False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Side.is_right">
+<span class="sig-name descname"><span class="pre">is_right</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/openrig/constants.html#Side.is_right"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Side.is_right" title="Link to this definition"></a></dt>
+<dd><p>Checks if the side is ‘right’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the side is RIGHT or RIGHT_LONG, False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Side.is_center">
+<span class="sig-name descname"><span class="pre">is_center</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/openrig/constants.html#Side.is_center"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Side.is_center" title="Link to this definition"></a></dt>
+<dd><p>Checks if the side is ‘center’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the side is CENTER or CENTER_LONG, False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Side.__format__">
+<span class="sig-name descname"><span class="pre">__format__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openrig.constants.Side.__format__" title="Link to this definition"></a></dt>
+<dd><p>Returns format using actual value type unless __str__ has been overridden.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.constants.Position">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.constants.</span></span><span class="sig-name descname"><span class="pre">Position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/openrig/constants.html#Position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Position" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Common position tokens for naming conventions.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Position.FRONT">
+<span class="sig-name descname"><span class="pre">FRONT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'front'</span></em><a class="headerlink" href="#openrig.constants.Position.FRONT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Position.BACK">
+<span class="sig-name descname"><span class="pre">BACK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'back'</span></em><a class="headerlink" href="#openrig.constants.Position.BACK" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Position.UP">
+<span class="sig-name descname"><span class="pre">UP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'up'</span></em><a class="headerlink" href="#openrig.constants.Position.UP" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Position.DOWN">
+<span class="sig-name descname"><span class="pre">DOWN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'dw'</span></em><a class="headerlink" href="#openrig.constants.Position.DOWN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Position.MIDDLE">
+<span class="sig-name descname"><span class="pre">MIDDLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'middle'</span></em><a class="headerlink" href="#openrig.constants.Position.MIDDLE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Position.INTERNAL">
+<span class="sig-name descname"><span class="pre">INTERNAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'int'</span></em><a class="headerlink" href="#openrig.constants.Position.INTERNAL" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Position.EXTERNAL">
+<span class="sig-name descname"><span class="pre">EXTERNAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ext'</span></em><a class="headerlink" href="#openrig.constants.Position.EXTERNAL" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Position.mirror">
+<span class="sig-name descname"><span class="pre">mirror</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#openrig.constants.Position" title="openrig.constants.Position"><span class="pre">Position</span></a></span></span><a class="reference internal" href="_modules/openrig/constants.html#Position.mirror"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Position.mirror" title="Link to this definition"></a></dt>
+<dd><p>Gets the mirrored position token.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The mirrored position token (e.g., FRONT becomes BACK).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Position.__format__">
+<span class="sig-name descname"><span class="pre">__format__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openrig.constants.Position.__format__" title="Link to this definition"></a></dt>
+<dd><p>Returns format using actual value type unless __str__ has been overridden.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.constants.Usage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.constants.</span></span><span class="sig-name descname"><span class="pre">Usage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/openrig/constants.html#Usage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Usage" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Defines common usage tokens for naming conventions.</p>
+<p>These tokens describe the purpose or type of an object in the rig.
+While this enum provides a set of standardized usages for consistency
+(e.g., for controls, groups), the naming system should also be
+flexible enough to accept custom string values for scalability.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Usage.COMPONENT">
+<span class="sig-name descname"><span class="pre">COMPONENT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'cmp'</span></em><a class="headerlink" href="#openrig.constants.Usage.COMPONENT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Usage.IN">
+<span class="sig-name descname"><span class="pre">IN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'in'</span></em><a class="headerlink" href="#openrig.constants.Usage.IN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Usage.CONTROLS">
+<span class="sig-name descname"><span class="pre">CONTROLS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'controls'</span></em><a class="headerlink" href="#openrig.constants.Usage.CONTROLS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Usage.LOGIC">
+<span class="sig-name descname"><span class="pre">LOGIC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'logic'</span></em><a class="headerlink" href="#openrig.constants.Usage.LOGIC" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Usage.DEFORM">
+<span class="sig-name descname"><span class="pre">DEFORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'deform'</span></em><a class="headerlink" href="#openrig.constants.Usage.DEFORM" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Usage.SETTINGS">
+<span class="sig-name descname"><span class="pre">SETTINGS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'settings'</span></em><a class="headerlink" href="#openrig.constants.Usage.SETTINGS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Usage.LOCAL">
+<span class="sig-name descname"><span class="pre">LOCAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'local'</span></em><a class="headerlink" href="#openrig.constants.Usage.LOCAL" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Usage.GROUP">
+<span class="sig-name descname"><span class="pre">GROUP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'grp'</span></em><a class="headerlink" href="#openrig.constants.Usage.GROUP" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Usage.OFFSET">
+<span class="sig-name descname"><span class="pre">OFFSET</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'offset'</span></em><a class="headerlink" href="#openrig.constants.Usage.OFFSET" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Usage.OUT">
+<span class="sig-name descname"><span class="pre">OUT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'out'</span></em><a class="headerlink" href="#openrig.constants.Usage.OUT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Usage.CONTROL">
+<span class="sig-name descname"><span class="pre">CONTROL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ctr'</span></em><a class="headerlink" href="#openrig.constants.Usage.CONTROL" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Usage.JOINT">
+<span class="sig-name descname"><span class="pre">JOINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'jnt'</span></em><a class="headerlink" href="#openrig.constants.Usage.JOINT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Usage.SKIN_JOINT">
+<span class="sig-name descname"><span class="pre">SKIN_JOINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'skn'</span></em><a class="headerlink" href="#openrig.constants.Usage.SKIN_JOINT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Usage.IK_HANDLE">
+<span class="sig-name descname"><span class="pre">IK_HANDLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ikh'</span></em><a class="headerlink" href="#openrig.constants.Usage.IK_HANDLE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Usage.POLE_VECTOR">
+<span class="sig-name descname"><span class="pre">POLE_VECTOR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'pv'</span></em><a class="headerlink" href="#openrig.constants.Usage.POLE_VECTOR" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Usage.LOCATOR">
+<span class="sig-name descname"><span class="pre">LOCATOR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'loc'</span></em><a class="headerlink" href="#openrig.constants.Usage.LOCATOR" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Usage.GUIDE">
+<span class="sig-name descname"><span class="pre">GUIDE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'guide'</span></em><a class="headerlink" href="#openrig.constants.Usage.GUIDE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Usage.GEOMETRY">
+<span class="sig-name descname"><span class="pre">GEOMETRY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'geo'</span></em><a class="headerlink" href="#openrig.constants.Usage.GEOMETRY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Usage.PROXY">
+<span class="sig-name descname"><span class="pre">PROXY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'proxy'</span></em><a class="headerlink" href="#openrig.constants.Usage.PROXY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Usage.NURBS">
+<span class="sig-name descname"><span class="pre">NURBS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nurbs'</span></em><a class="headerlink" href="#openrig.constants.Usage.NURBS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Usage.DEFAULT">
+<span class="sig-name descname"><span class="pre">DEFAULT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'grp'</span></em><a class="headerlink" href="#openrig.constants.Usage.DEFAULT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Usage.__format__">
+<span class="sig-name descname"><span class="pre">__format__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openrig.constants.Usage.__format__" title="Link to this definition"></a></dt>
+<dd><p>Returns format using actual value type unless __str__ has been overridden.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.constants.Extension">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.constants.</span></span><span class="sig-name descname"><span class="pre">Extension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/openrig/constants.html#Extension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Extension" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Common file extensions for export and import operations.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Extension.MAYA_ASCII">
+<span class="sig-name descname"><span class="pre">MAYA_ASCII</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ma'</span></em><a class="headerlink" href="#openrig.constants.Extension.MAYA_ASCII" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Extension.MAYA_BINARY">
+<span class="sig-name descname"><span class="pre">MAYA_BINARY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'mb'</span></em><a class="headerlink" href="#openrig.constants.Extension.MAYA_BINARY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Extension.OBJ">
+<span class="sig-name descname"><span class="pre">OBJ</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'obj'</span></em><a class="headerlink" href="#openrig.constants.Extension.OBJ" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Extension.FBX">
+<span class="sig-name descname"><span class="pre">FBX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'fbx'</span></em><a class="headerlink" href="#openrig.constants.Extension.FBX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Extension.ABC">
+<span class="sig-name descname"><span class="pre">ABC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'abc'</span></em><a class="headerlink" href="#openrig.constants.Extension.ABC" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Extension.JSON">
+<span class="sig-name descname"><span class="pre">JSON</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'json'</span></em><a class="headerlink" href="#openrig.constants.Extension.JSON" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Extension.XML">
+<span class="sig-name descname"><span class="pre">XML</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'xml'</span></em><a class="headerlink" href="#openrig.constants.Extension.XML" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Extension.PYTHON">
+<span class="sig-name descname"><span class="pre">PYTHON</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'py'</span></em><a class="headerlink" href="#openrig.constants.Extension.PYTHON" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Extension.MEL">
+<span class="sig-name descname"><span class="pre">MEL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'mel'</span></em><a class="headerlink" href="#openrig.constants.Extension.MEL" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Extension.PNG">
+<span class="sig-name descname"><span class="pre">PNG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'png'</span></em><a class="headerlink" href="#openrig.constants.Extension.PNG" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Extension.JPG">
+<span class="sig-name descname"><span class="pre">JPG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'jpg'</span></em><a class="headerlink" href="#openrig.constants.Extension.JPG" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Extension.EXR">
+<span class="sig-name descname"><span class="pre">EXR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'exr'</span></em><a class="headerlink" href="#openrig.constants.Extension.EXR" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Extension.TIFF">
+<span class="sig-name descname"><span class="pre">TIFF</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'tif'</span></em><a class="headerlink" href="#openrig.constants.Extension.TIFF" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Extension.get_scene_formats">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_scene_formats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#openrig.constants.Extension" title="openrig.constants.Extension"><span class="pre">Extension</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/openrig/constants.html#Extension.get_scene_formats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Extension.get_scene_formats" title="Link to this definition"></a></dt>
+<dd><p>Gets a tuple of all Maya scene file extensions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Extension.get_geometry_formats">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_geometry_formats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#openrig.constants.Extension" title="openrig.constants.Extension"><span class="pre">Extension</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/openrig/constants.html#Extension.get_geometry_formats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Extension.get_geometry_formats" title="Link to this definition"></a></dt>
+<dd><p>Gets a tuple of all common geometry cache/export extensions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Extension.get_image_formats">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_image_formats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#openrig.constants.Extension" title="openrig.constants.Extension"><span class="pre">Extension</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/openrig/constants.html#Extension.get_image_formats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Extension.get_image_formats" title="Link to this definition"></a></dt>
+<dd><p>Gets a tuple of all common image file extensions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Extension.get_data_formats">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_data_formats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#openrig.constants.Extension" title="openrig.constants.Extension"><span class="pre">Extension</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/openrig/constants.html#Extension.get_data_formats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Extension.get_data_formats" title="Link to this definition"></a></dt>
+<dd><p>Gets a tuple of all common data file extensions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Extension.get_script_formats">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_script_formats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#openrig.constants.Extension" title="openrig.constants.Extension"><span class="pre">Extension</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/openrig/constants.html#Extension.get_script_formats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Extension.get_script_formats" title="Link to this definition"></a></dt>
+<dd><p>Gets a tuple of all common script file extensions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Extension.__format__">
+<span class="sig-name descname"><span class="pre">__format__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openrig.constants.Extension.__format__" title="Link to this definition"></a></dt>
+<dd><p>Returns format using actual value type unless __str__ has been overridden.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.constants.AttributeType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.constants.</span></span><span class="sig-name descname"><span class="pre">AttributeType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/openrig/constants.html#AttributeType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.AttributeType" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Common attribute types for Maya nodes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.AttributeType.BOOL">
+<span class="sig-name descname"><span class="pre">BOOL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'bool'</span></em><a class="headerlink" href="#openrig.constants.AttributeType.BOOL" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.AttributeType.LONG">
+<span class="sig-name descname"><span class="pre">LONG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'long'</span></em><a class="headerlink" href="#openrig.constants.AttributeType.LONG" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.AttributeType.DOUBLE">
+<span class="sig-name descname"><span class="pre">DOUBLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'double'</span></em><a class="headerlink" href="#openrig.constants.AttributeType.DOUBLE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.AttributeType.FLOAT">
+<span class="sig-name descname"><span class="pre">FLOAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'float'</span></em><a class="headerlink" href="#openrig.constants.AttributeType.FLOAT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.AttributeType.TIME">
+<span class="sig-name descname"><span class="pre">TIME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'time'</span></em><a class="headerlink" href="#openrig.constants.AttributeType.TIME" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.AttributeType.ANGLE">
+<span class="sig-name descname"><span class="pre">ANGLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'angle'</span></em><a class="headerlink" href="#openrig.constants.AttributeType.ANGLE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.AttributeType.DOUBLE2">
+<span class="sig-name descname"><span class="pre">DOUBLE2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'double2'</span></em><a class="headerlink" href="#openrig.constants.AttributeType.DOUBLE2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.AttributeType.DOUBLE3">
+<span class="sig-name descname"><span class="pre">DOUBLE3</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'double3'</span></em><a class="headerlink" href="#openrig.constants.AttributeType.DOUBLE3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.AttributeType.FLOAT2">
+<span class="sig-name descname"><span class="pre">FLOAT2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'float2'</span></em><a class="headerlink" href="#openrig.constants.AttributeType.FLOAT2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.AttributeType.FLOAT3">
+<span class="sig-name descname"><span class="pre">FLOAT3</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'float3'</span></em><a class="headerlink" href="#openrig.constants.AttributeType.FLOAT3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.AttributeType.VECTOR">
+<span class="sig-name descname"><span class="pre">VECTOR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'vector'</span></em><a class="headerlink" href="#openrig.constants.AttributeType.VECTOR" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.AttributeType.COLOR">
+<span class="sig-name descname"><span class="pre">COLOR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'color'</span></em><a class="headerlink" href="#openrig.constants.AttributeType.COLOR" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.AttributeType.ENUM">
+<span class="sig-name descname"><span class="pre">ENUM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'enum'</span></em><a class="headerlink" href="#openrig.constants.AttributeType.ENUM" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.AttributeType.STRING">
+<span class="sig-name descname"><span class="pre">STRING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'string'</span></em><a class="headerlink" href="#openrig.constants.AttributeType.STRING" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.AttributeType.MESSAGE">
+<span class="sig-name descname"><span class="pre">MESSAGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'message'</span></em><a class="headerlink" href="#openrig.constants.AttributeType.MESSAGE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.AttributeType.MATRIX">
+<span class="sig-name descname"><span class="pre">MATRIX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'matrix'</span></em><a class="headerlink" href="#openrig.constants.AttributeType.MATRIX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.AttributeType.COMPOUND">
+<span class="sig-name descname"><span class="pre">COMPOUND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'compound'</span></em><a class="headerlink" href="#openrig.constants.AttributeType.COMPOUND" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.AttributeType.get_numeric_types">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_numeric_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#openrig.constants.AttributeType" title="openrig.constants.AttributeType"><span class="pre">AttributeType</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/openrig/constants.html#AttributeType.get_numeric_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.AttributeType.get_numeric_types" title="Link to this definition"></a></dt>
+<dd><p>Gets a tuple of all single-value numeric attribute types.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.AttributeType.get_compound_numeric_types">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_compound_numeric_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#openrig.constants.AttributeType" title="openrig.constants.AttributeType"><span class="pre">AttributeType</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/openrig/constants.html#AttributeType.get_compound_numeric_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.AttributeType.get_compound_numeric_types" title="Link to this definition"></a></dt>
+<dd><p>Gets a tuple of all compound numeric attribute types, including aliases.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.AttributeType.__format__">
+<span class="sig-name descname"><span class="pre">__format__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openrig.constants.AttributeType.__format__" title="Link to this definition"></a></dt>
+<dd><p>Returns format using actual value type unless __str__ has been overridden.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.constants.RotateOrder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.constants.</span></span><span class="sig-name descname"><span class="pre">RotateOrder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/openrig/constants.html#RotateOrder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.RotateOrder" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Represents a Maya rotate order, holding both its string and index value.</p>
+<p>This provides a single source of truth for rotate orders, preventing
+discrepancies between string and integer representations.</p>
+<p>The default rotate order for the project can be set by changing the
+<cite>DEFAULT</cite> class attribute.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.RotateOrder.XYZ">
+<span class="sig-name descname"><span class="pre">XYZ</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('xyz',</span> <span class="pre">0)</span></em><a class="headerlink" href="#openrig.constants.RotateOrder.XYZ" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.RotateOrder.YZX">
+<span class="sig-name descname"><span class="pre">YZX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('yzx',</span> <span class="pre">1)</span></em><a class="headerlink" href="#openrig.constants.RotateOrder.YZX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.RotateOrder.ZXY">
+<span class="sig-name descname"><span class="pre">ZXY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('zxy',</span> <span class="pre">2)</span></em><a class="headerlink" href="#openrig.constants.RotateOrder.ZXY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.RotateOrder.XZY">
+<span class="sig-name descname"><span class="pre">XZY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('xzy',</span> <span class="pre">3)</span></em><a class="headerlink" href="#openrig.constants.RotateOrder.XZY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.RotateOrder.YXZ">
+<span class="sig-name descname"><span class="pre">YXZ</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('yxz',</span> <span class="pre">4)</span></em><a class="headerlink" href="#openrig.constants.RotateOrder.YXZ" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.RotateOrder.ZYX">
+<span class="sig-name descname"><span class="pre">ZYX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('zyx',</span> <span class="pre">5)</span></em><a class="headerlink" href="#openrig.constants.RotateOrder.ZYX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="openrig.constants.RotateOrder.as_string">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">as_string</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#openrig.constants.RotateOrder.as_string" title="Link to this definition"></a></dt>
+<dd><p>The string representation of the rotate order (e.g., ‘xyz’).</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="openrig.constants.RotateOrder.as_index">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">as_index</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#openrig.constants.RotateOrder.as_index" title="Link to this definition"></a></dt>
+<dd><p>The integer index of the rotate order (e.g., 0).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.RotateOrder.DEFAULT">
+<span class="sig-name descname"><span class="pre">DEFAULT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('xyz',</span> <span class="pre">0)</span></em><a class="headerlink" href="#openrig.constants.RotateOrder.DEFAULT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.constants.VectorIndex">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.constants.</span></span><span class="sig-name descname"><span class="pre">VectorIndex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/openrig/constants.html#VectorIndex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.VectorIndex" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>Low-level integer indices for accessing components of vector attributes.</p>
+<p>This enum is intentionally a simple <cite>IntEnum</cite> to be used directly for
+indexing lists or tuples returned by Maya commands (e.g., <cite>vector[VectorIndex.Y]</cite>).</p>
+<p>For a higher-level, more descriptive representation of axes, see the <cite>Axis</cite> class.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.VectorIndex.X">
+<span class="sig-name descname"><span class="pre">X</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#openrig.constants.VectorIndex.X" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.VectorIndex.Y">
+<span class="sig-name descname"><span class="pre">Y</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#openrig.constants.VectorIndex.Y" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.VectorIndex.Z">
+<span class="sig-name descname"><span class="pre">Z</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#openrig.constants.VectorIndex.Z" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.VectorIndex.W">
+<span class="sig-name descname"><span class="pre">W</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#openrig.constants.VectorIndex.W" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.VectorIndex.DEFAULT">
+<span class="sig-name descname"><span class="pre">DEFAULT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#openrig.constants.VectorIndex.DEFAULT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.constants.</span></span><span class="sig-name descname"><span class="pre">ColorIndex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/openrig/constants.html#ColorIndex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.ColorIndex" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>Maya Index Colors for Drawing Overrides.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.DEFAULT">
+<span class="sig-name descname"><span class="pre">DEFAULT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.DEFAULT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.BLACK">
+<span class="sig-name descname"><span class="pre">BLACK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.BLACK" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.DARK_GREY">
+<span class="sig-name descname"><span class="pre">DARK_GREY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.DARK_GREY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.LIGHT_GREY">
+<span class="sig-name descname"><span class="pre">LIGHT_GREY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.LIGHT_GREY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.BURGUNDY">
+<span class="sig-name descname"><span class="pre">BURGUNDY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.BURGUNDY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.NAVY_BLUE">
+<span class="sig-name descname"><span class="pre">NAVY_BLUE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.NAVY_BLUE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.BLUE">
+<span class="sig-name descname"><span class="pre">BLUE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.BLUE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.DARK_GREEN">
+<span class="sig-name descname"><span class="pre">DARK_GREEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.DARK_GREEN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.DARK_PURPLE">
+<span class="sig-name descname"><span class="pre">DARK_PURPLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.DARK_PURPLE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.MAGENTA">
+<span class="sig-name descname"><span class="pre">MAGENTA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">9</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.MAGENTA" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.BROWN">
+<span class="sig-name descname"><span class="pre">BROWN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.BROWN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.DARK_BROWN">
+<span class="sig-name descname"><span class="pre">DARK_BROWN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">11</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.DARK_BROWN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.DULL_RED">
+<span class="sig-name descname"><span class="pre">DULL_RED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">12</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.DULL_RED" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.RED">
+<span class="sig-name descname"><span class="pre">RED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">13</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.RED" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.GREEN">
+<span class="sig-name descname"><span class="pre">GREEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">14</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.GREEN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.BLUE_SKY">
+<span class="sig-name descname"><span class="pre">BLUE_SKY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">15</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.BLUE_SKY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.WHITE">
+<span class="sig-name descname"><span class="pre">WHITE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">16</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.WHITE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.YELLOW">
+<span class="sig-name descname"><span class="pre">YELLOW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">17</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.YELLOW" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.CYAN">
+<span class="sig-name descname"><span class="pre">CYAN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">18</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.CYAN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.LIGHT_GREEN">
+<span class="sig-name descname"><span class="pre">LIGHT_GREEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">19</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.LIGHT_GREEN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.PINK">
+<span class="sig-name descname"><span class="pre">PINK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">20</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.PINK" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.PEACH">
+<span class="sig-name descname"><span class="pre">PEACH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">21</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.PEACH" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.LIGHT_YELLOW">
+<span class="sig-name descname"><span class="pre">LIGHT_YELLOW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">22</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.LIGHT_YELLOW" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.SEA_GREEN">
+<span class="sig-name descname"><span class="pre">SEA_GREEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">23</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.SEA_GREEN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.LIGHT_BROWN">
+<span class="sig-name descname"><span class="pre">LIGHT_BROWN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">24</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.LIGHT_BROWN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.OLIVE">
+<span class="sig-name descname"><span class="pre">OLIVE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">25</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.OLIVE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.LIME_GREEN">
+<span class="sig-name descname"><span class="pre">LIME_GREEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">26</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.LIME_GREEN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.TEAL_GREEN">
+<span class="sig-name descname"><span class="pre">TEAL_GREEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">27</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.TEAL_GREEN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.LIGHT_BLUE">
+<span class="sig-name descname"><span class="pre">LIGHT_BLUE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">28</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.LIGHT_BLUE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.DARK_BLUE">
+<span class="sig-name descname"><span class="pre">DARK_BLUE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">29</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.DARK_BLUE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.PURPLE">
+<span class="sig-name descname"><span class="pre">PURPLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">30</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.PURPLE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorIndex.DARK_MAGENTA">
+<span class="sig-name descname"><span class="pre">DARK_MAGENTA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">31</span></em><a class="headerlink" href="#openrig.constants.ColorIndex.DARK_MAGENTA" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.constants.</span></span><span class="sig-name descname"><span class="pre">ColorRGB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/openrig/constants.html#ColorRGB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.ColorRGB" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Standard RGB Float Colors.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.WHITE">
+<span class="sig-name descname"><span class="pre">WHITE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(1.0,</span> <span class="pre">1.0,</span> <span class="pre">1.0)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.WHITE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.BLACK">
+<span class="sig-name descname"><span class="pre">BLACK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.BLACK" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.RED">
+<span class="sig-name descname"><span class="pre">RED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(1.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.RED" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.GREEN">
+<span class="sig-name descname"><span class="pre">GREEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.0,</span> <span class="pre">1.0,</span> <span class="pre">0.0)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.GREEN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.BLUE">
+<span class="sig-name descname"><span class="pre">BLUE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.0,</span> <span class="pre">0.0,</span> <span class="pre">1.0)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.BLUE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.YELLOW">
+<span class="sig-name descname"><span class="pre">YELLOW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(1.0,</span> <span class="pre">1.0,</span> <span class="pre">0.0)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.YELLOW" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.CYAN">
+<span class="sig-name descname"><span class="pre">CYAN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.0,</span> <span class="pre">1.0,</span> <span class="pre">1.0)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.CYAN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.MAGENTA">
+<span class="sig-name descname"><span class="pre">MAGENTA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(1.0,</span> <span class="pre">0.0,</span> <span class="pre">1.0)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.MAGENTA" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.ORANGE">
+<span class="sig-name descname"><span class="pre">ORANGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(1.0,</span> <span class="pre">0.5,</span> <span class="pre">0.0)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.ORANGE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.PURPLE">
+<span class="sig-name descname"><span class="pre">PURPLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.5,</span> <span class="pre">0.0,</span> <span class="pre">0.5)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.PURPLE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.BROWN">
+<span class="sig-name descname"><span class="pre">BROWN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.5,</span> <span class="pre">0.25,</span> <span class="pre">0.0)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.BROWN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.PINK">
+<span class="sig-name descname"><span class="pre">PINK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(1.0,</span> <span class="pre">0.75,</span> <span class="pre">0.8)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.PINK" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.GREY">
+<span class="sig-name descname"><span class="pre">GREY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.5,</span> <span class="pre">0.5,</span> <span class="pre">0.5)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.GREY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.DARK_GREY">
+<span class="sig-name descname"><span class="pre">DARK_GREY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.25,</span> <span class="pre">0.25,</span> <span class="pre">0.25)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.DARK_GREY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.LIGHT_GREY">
+<span class="sig-name descname"><span class="pre">LIGHT_GREY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.75,</span> <span class="pre">0.75,</span> <span class="pre">0.75)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.LIGHT_GREY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.LIGHT_RED">
+<span class="sig-name descname"><span class="pre">LIGHT_RED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(1.0,</span> <span class="pre">0.5,</span> <span class="pre">0.5)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.LIGHT_RED" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.LIGHT_GREEN">
+<span class="sig-name descname"><span class="pre">LIGHT_GREEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.5,</span> <span class="pre">1.0,</span> <span class="pre">0.5)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.LIGHT_GREEN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.LIGHT_BLUE">
+<span class="sig-name descname"><span class="pre">LIGHT_BLUE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.5,</span> <span class="pre">0.5,</span> <span class="pre">1.0)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.LIGHT_BLUE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.LIGHT_YELLOW">
+<span class="sig-name descname"><span class="pre">LIGHT_YELLOW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(1.0,</span> <span class="pre">1.0,</span> <span class="pre">0.5)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.LIGHT_YELLOW" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.DARK_RED">
+<span class="sig-name descname"><span class="pre">DARK_RED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.5,</span> <span class="pre">0.0,</span> <span class="pre">0.0)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.DARK_RED" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.DARK_GREEN">
+<span class="sig-name descname"><span class="pre">DARK_GREEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.0,</span> <span class="pre">0.5,</span> <span class="pre">0.0)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.DARK_GREEN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.DARK_BLUE">
+<span class="sig-name descname"><span class="pre">DARK_BLUE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.5)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.DARK_BLUE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.DARK_YELLOW">
+<span class="sig-name descname"><span class="pre">DARK_YELLOW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.5,</span> <span class="pre">0.5,</span> <span class="pre">0.0)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.DARK_YELLOW" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.DARK_CYAN">
+<span class="sig-name descname"><span class="pre">DARK_CYAN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.0,</span> <span class="pre">0.5,</span> <span class="pre">0.5)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.DARK_CYAN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.DARK_MAGENTA">
+<span class="sig-name descname"><span class="pre">DARK_MAGENTA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.5,</span> <span class="pre">0.0,</span> <span class="pre">0.5)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.DARK_MAGENTA" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.DARK_ORANGE">
+<span class="sig-name descname"><span class="pre">DARK_ORANGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.5,</span> <span class="pre">0.25,</span> <span class="pre">0.0)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.DARK_ORANGE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.DARK_PURPLE">
+<span class="sig-name descname"><span class="pre">DARK_PURPLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.25,</span> <span class="pre">0.0,</span> <span class="pre">0.25)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.DARK_PURPLE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.DARK_BROWN">
+<span class="sig-name descname"><span class="pre">DARK_BROWN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.25,</span> <span class="pre">0.125,</span> <span class="pre">0.0)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.DARK_BROWN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.DARK_PINK">
+<span class="sig-name descname"><span class="pre">DARK_PINK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.5,</span> <span class="pre">0.25,</span> <span class="pre">0.5)</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.DARK_PINK" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.ColorRGB.CHANNELS">
+<span class="sig-name descname"><span class="pre">CHANNELS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('R',</span> <span class="pre">'G',</span> <span class="pre">'B')</span></em><a class="headerlink" href="#openrig.constants.ColorRGB.CHANNELS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.constants.Axis">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.constants.</span></span><span class="sig-name descname"><span class="pre">Axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/openrig/constants.html#Axis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Axis" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Common axis tokens for naming conventions and vector operations.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Axis.X">
+<span class="sig-name descname"><span class="pre">X</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'X'</span></em><a class="headerlink" href="#openrig.constants.Axis.X" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Axis.Y">
+<span class="sig-name descname"><span class="pre">Y</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Y'</span></em><a class="headerlink" href="#openrig.constants.Axis.Y" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Axis.Z">
+<span class="sig-name descname"><span class="pre">Z</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Z'</span></em><a class="headerlink" href="#openrig.constants.Axis.Z" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Axis.X_NEGATIVE">
+<span class="sig-name descname"><span class="pre">X_NEGATIVE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'-X'</span></em><a class="headerlink" href="#openrig.constants.Axis.X_NEGATIVE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Axis.Y_NEGATIVE">
+<span class="sig-name descname"><span class="pre">Y_NEGATIVE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'-Y'</span></em><a class="headerlink" href="#openrig.constants.Axis.Y_NEGATIVE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Axis.Z_NEGATIVE">
+<span class="sig-name descname"><span class="pre">Z_NEGATIVE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'-Z'</span></em><a class="headerlink" href="#openrig.constants.Axis.Z_NEGATIVE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Axis.AIM">
+<span class="sig-name descname"><span class="pre">AIM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'X'</span></em><a class="headerlink" href="#openrig.constants.Axis.AIM" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Axis.UP">
+<span class="sig-name descname"><span class="pre">UP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Y'</span></em><a class="headerlink" href="#openrig.constants.Axis.UP" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Axis.SIDE">
+<span class="sig-name descname"><span class="pre">SIDE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Z'</span></em><a class="headerlink" href="#openrig.constants.Axis.SIDE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Axis.DEFAULT">
+<span class="sig-name descname"><span class="pre">DEFAULT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'X'</span></em><a class="headerlink" href="#openrig.constants.Axis.DEFAULT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="openrig.constants.Axis.is_negative">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_negative</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#openrig.constants.Axis.is_negative" title="Link to this definition"></a></dt>
+<dd><p>Checks if the axis is negative (e.g., ‘-X’).</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="openrig.constants.Axis.is_positive">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_positive</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#openrig.constants.Axis.is_positive" title="Link to this definition"></a></dt>
+<dd><p>Checks if the axis is positive (e.g., ‘X’).</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="openrig.constants.Axis.as_index">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">as_index</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#openrig.constants.Axis.as_index" title="Link to this definition"></a></dt>
+<dd><p>Gets the corresponding integer index for the axis (0 for X, 1 for Y, 2 for Z).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method ignores the sign of the axis (e.g., both ‘X’ and ‘-X’ return 0).</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The integer index (0, 1, or 2).</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the axis does not have a corresponding index.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Axis.mirror">
+<span class="sig-name descname"><span class="pre">mirror</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#openrig.constants.Axis" title="openrig.constants.Axis"><span class="pre">Axis</span></a></span></span><a class="reference internal" href="_modules/openrig/constants.html#Axis.mirror"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Axis.mirror" title="Link to this definition"></a></dt>
+<dd><p>Gets the mirrored axis.</p>
+<p>For example, ‘X’ becomes ‘-X’ and ‘-Y’ becomes ‘Y’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The mirrored Axis member.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Axis.get_default_order">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_default_order</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#openrig.constants.Axis" title="openrig.constants.Axis"><span class="pre">Axis</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#openrig.constants.Axis" title="openrig.constants.Axis"><span class="pre">Axis</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#openrig.constants.Axis" title="openrig.constants.Axis"><span class="pre">Axis</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/openrig/constants.html#Axis.get_default_order"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Axis.get_default_order" title="Link to this definition"></a></dt>
+<dd><p>Gets the default axis order tuple defined by (AIM, UP, SIDE).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A tuple containing the default aim, up, and side axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Axis.get_axis_orders">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_axis_orders</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#openrig.constants.Axis" title="openrig.constants.Axis"><span class="pre">Axis</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/openrig/constants.html#Axis.get_axis_orders"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Axis.get_axis_orders" title="Link to this definition"></a></dt>
+<dd><p>Gets a dictionary of all supported axis orders.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary mapping rotate order strings to tuples of Axis members.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Axis.__format__">
+<span class="sig-name descname"><span class="pre">__format__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openrig.constants.Axis.__format__" title="Link to this definition"></a></dt>
+<dd><p>Returns format using actual value type unless __str__ has been overridden.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.constants.Vector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.constants.</span></span><span class="sig-name descname"><span class="pre">Vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/openrig/constants.html#Vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Vector" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Constants related to vector definitions. Inherits from tuple.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Vector.X">
+<span class="sig-name descname"><span class="pre">X</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(1,</span> <span class="pre">0,</span> <span class="pre">0)</span></em><a class="headerlink" href="#openrig.constants.Vector.X" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Vector.Y">
+<span class="sig-name descname"><span class="pre">Y</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0,</span> <span class="pre">1,</span> <span class="pre">0)</span></em><a class="headerlink" href="#openrig.constants.Vector.Y" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Vector.Z">
+<span class="sig-name descname"><span class="pre">Z</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">1)</span></em><a class="headerlink" href="#openrig.constants.Vector.Z" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Vector.AIM">
+<span class="sig-name descname"><span class="pre">AIM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(1,</span> <span class="pre">0,</span> <span class="pre">0)</span></em><a class="headerlink" href="#openrig.constants.Vector.AIM" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Vector.UP">
+<span class="sig-name descname"><span class="pre">UP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0,</span> <span class="pre">1,</span> <span class="pre">0)</span></em><a class="headerlink" href="#openrig.constants.Vector.UP" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Vector.SIDE">
+<span class="sig-name descname"><span class="pre">SIDE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">1)</span></em><a class="headerlink" href="#openrig.constants.Vector.SIDE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Vector.get_default_order">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_default_order</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#openrig.constants.Vector" title="openrig.constants.Vector"><span class="pre">Vector</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#openrig.constants.Vector" title="openrig.constants.Vector"><span class="pre">Vector</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#openrig.constants.Vector" title="openrig.constants.Vector"><span class="pre">Vector</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/openrig/constants.html#Vector.get_default_order"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Vector.get_default_order" title="Link to this definition"></a></dt>
+<dd><p>Gets the default vector tuple defined by (AIM, UP, SIDE).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A tuple containing the default aim, up, and side vectors.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.constants.Attribute">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.constants.</span></span><span class="sig-name descname"><span class="pre">Attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/openrig/constants.html#Attribute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Attribute" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Common attribute names for rigging elements.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.MESSAGE">
+<span class="sig-name descname"><span class="pre">MESSAGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'message'</span></em><a class="headerlink" href="#openrig.constants.Attribute.MESSAGE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.NODE_STATE">
+<span class="sig-name descname"><span class="pre">NODE_STATE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nodeState'</span></em><a class="headerlink" href="#openrig.constants.Attribute.NODE_STATE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.TRANSLATE">
+<span class="sig-name descname"><span class="pre">TRANSLATE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'translate'</span></em><a class="headerlink" href="#openrig.constants.Attribute.TRANSLATE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.ROTATE">
+<span class="sig-name descname"><span class="pre">ROTATE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'rotate'</span></em><a class="headerlink" href="#openrig.constants.Attribute.ROTATE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.SCALE">
+<span class="sig-name descname"><span class="pre">SCALE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'scale'</span></em><a class="headerlink" href="#openrig.constants.Attribute.SCALE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.SHEAR">
+<span class="sig-name descname"><span class="pre">SHEAR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'shear'</span></em><a class="headerlink" href="#openrig.constants.Attribute.SHEAR" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.ROTATE_ORDER">
+<span class="sig-name descname"><span class="pre">ROTATE_ORDER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'rotateOrder'</span></em><a class="headerlink" href="#openrig.constants.Attribute.ROTATE_ORDER" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.ROTATE_PIVOT">
+<span class="sig-name descname"><span class="pre">ROTATE_PIVOT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'rotatePivot'</span></em><a class="headerlink" href="#openrig.constants.Attribute.ROTATE_PIVOT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.SCALE_PIVOT">
+<span class="sig-name descname"><span class="pre">SCALE_PIVOT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'scalePivot'</span></em><a class="headerlink" href="#openrig.constants.Attribute.SCALE_PIVOT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.JOINT_ORIENT">
+<span class="sig-name descname"><span class="pre">JOINT_ORIENT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'jointOrient'</span></em><a class="headerlink" href="#openrig.constants.Attribute.JOINT_ORIENT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.ROTATE_AXIS">
+<span class="sig-name descname"><span class="pre">ROTATE_AXIS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'rotateAxis'</span></em><a class="headerlink" href="#openrig.constants.Attribute.ROTATE_AXIS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.MATRIX">
+<span class="sig-name descname"><span class="pre">MATRIX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'matrix'</span></em><a class="headerlink" href="#openrig.constants.Attribute.MATRIX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.WORLD_MATRIX">
+<span class="sig-name descname"><span class="pre">WORLD_MATRIX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'worldMatrix'</span></em><a class="headerlink" href="#openrig.constants.Attribute.WORLD_MATRIX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.WORLD_INVERSE_MATRIX">
+<span class="sig-name descname"><span class="pre">WORLD_INVERSE_MATRIX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'worldInverseMatrix'</span></em><a class="headerlink" href="#openrig.constants.Attribute.WORLD_INVERSE_MATRIX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.PARENT_MATRIX">
+<span class="sig-name descname"><span class="pre">PARENT_MATRIX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'parentMatrix'</span></em><a class="headerlink" href="#openrig.constants.Attribute.PARENT_MATRIX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.PARENT_INVERSE_MATRIX">
+<span class="sig-name descname"><span class="pre">PARENT_INVERSE_MATRIX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'parentInverseMatrix'</span></em><a class="headerlink" href="#openrig.constants.Attribute.PARENT_INVERSE_MATRIX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.OFFSET_PARENT_MATRIX">
+<span class="sig-name descname"><span class="pre">OFFSET_PARENT_MATRIX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'offsetParentMatrix'</span></em><a class="headerlink" href="#openrig.constants.Attribute.OFFSET_PARENT_MATRIX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.VISIBILITY">
+<span class="sig-name descname"><span class="pre">VISIBILITY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'visibility'</span></em><a class="headerlink" href="#openrig.constants.Attribute.VISIBILITY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.INTERMEDIATE_OBJECT">
+<span class="sig-name descname"><span class="pre">INTERMEDIATE_OBJECT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'intermediateObject'</span></em><a class="headerlink" href="#openrig.constants.Attribute.INTERMEDIATE_OBJECT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.TEMPLATE">
+<span class="sig-name descname"><span class="pre">TEMPLATE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'template'</span></em><a class="headerlink" href="#openrig.constants.Attribute.TEMPLATE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.LOD_VISIBILITY">
+<span class="sig-name descname"><span class="pre">LOD_VISIBILITY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'lodVisibility'</span></em><a class="headerlink" href="#openrig.constants.Attribute.LOD_VISIBILITY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.OVERRIDE_ENABLED">
+<span class="sig-name descname"><span class="pre">OVERRIDE_ENABLED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'overrideEnabled'</span></em><a class="headerlink" href="#openrig.constants.Attribute.OVERRIDE_ENABLED" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.OVERRIDE_DISPLAY_TYPE">
+<span class="sig-name descname"><span class="pre">OVERRIDE_DISPLAY_TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'overrideDisplayType'</span></em><a class="headerlink" href="#openrig.constants.Attribute.OVERRIDE_DISPLAY_TYPE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.OVERRIDE_LOD">
+<span class="sig-name descname"><span class="pre">OVERRIDE_LOD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'overrideLevelOfDetail'</span></em><a class="headerlink" href="#openrig.constants.Attribute.OVERRIDE_LOD" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.OVERRIDE_COLOR">
+<span class="sig-name descname"><span class="pre">OVERRIDE_COLOR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'overrideColor'</span></em><a class="headerlink" href="#openrig.constants.Attribute.OVERRIDE_COLOR" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.OVERRIDE_COLOR_RGB">
+<span class="sig-name descname"><span class="pre">OVERRIDE_COLOR_RGB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'overrideColorRGB'</span></em><a class="headerlink" href="#openrig.constants.Attribute.OVERRIDE_COLOR_RGB" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Attribute.__format__">
+<span class="sig-name descname"><span class="pre">__format__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openrig.constants.Attribute.__format__" title="Link to this definition"></a></dt>
+<dd><p>Returns format using actual value type unless __str__ has been overridden.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.constants.NodeType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.constants.</span></span><span class="sig-name descname"><span class="pre">NodeType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/openrig/constants.html#NodeType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.NodeType" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Standard Maya node type names.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.NodeType.TRANSFORM">
+<span class="sig-name descname"><span class="pre">TRANSFORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'transform'</span></em><a class="headerlink" href="#openrig.constants.NodeType.TRANSFORM" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.NodeType.JOINT">
+<span class="sig-name descname"><span class="pre">JOINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'joint'</span></em><a class="headerlink" href="#openrig.constants.NodeType.JOINT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.NodeType.MESH">
+<span class="sig-name descname"><span class="pre">MESH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'mesh'</span></em><a class="headerlink" href="#openrig.constants.NodeType.MESH" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.NodeType.NURBS_CURVE">
+<span class="sig-name descname"><span class="pre">NURBS_CURVE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nurbsCurve'</span></em><a class="headerlink" href="#openrig.constants.NodeType.NURBS_CURVE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.NodeType.LOCATOR">
+<span class="sig-name descname"><span class="pre">LOCATOR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'locator'</span></em><a class="headerlink" href="#openrig.constants.NodeType.LOCATOR" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.NodeType.PARENT_CONSTRAINT">
+<span class="sig-name descname"><span class="pre">PARENT_CONSTRAINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'parentConstraint'</span></em><a class="headerlink" href="#openrig.constants.NodeType.PARENT_CONSTRAINT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.NodeType.POINT_CONSTRAINT">
+<span class="sig-name descname"><span class="pre">POINT_CONSTRAINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'pointConstraint'</span></em><a class="headerlink" href="#openrig.constants.NodeType.POINT_CONSTRAINT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.NodeType.ORIENT_CONSTRAINT">
+<span class="sig-name descname"><span class="pre">ORIENT_CONSTRAINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'orientConstraint'</span></em><a class="headerlink" href="#openrig.constants.NodeType.ORIENT_CONSTRAINT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.NodeType.SCALE_CONSTRAINT">
+<span class="sig-name descname"><span class="pre">SCALE_CONSTRAINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'scaleConstraint'</span></em><a class="headerlink" href="#openrig.constants.NodeType.SCALE_CONSTRAINT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.NodeType.AIM_CONSTRAINT">
+<span class="sig-name descname"><span class="pre">AIM_CONSTRAINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'aimConstraint'</span></em><a class="headerlink" href="#openrig.constants.NodeType.AIM_CONSTRAINT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.NodeType.POLE_VECTOR_CONSTRAINT">
+<span class="sig-name descname"><span class="pre">POLE_VECTOR_CONSTRAINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'poleVectorConstraint'</span></em><a class="headerlink" href="#openrig.constants.NodeType.POLE_VECTOR_CONSTRAINT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.NodeType.MULTIPLY_DIVIDE">
+<span class="sig-name descname"><span class="pre">MULTIPLY_DIVIDE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'multiplyDivide'</span></em><a class="headerlink" href="#openrig.constants.NodeType.MULTIPLY_DIVIDE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.NodeType.PLUS_MINUS_AVERAGE">
+<span class="sig-name descname"><span class="pre">PLUS_MINUS_AVERAGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'plusMinusAverage'</span></em><a class="headerlink" href="#openrig.constants.NodeType.PLUS_MINUS_AVERAGE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.NodeType.CONDITION">
+<span class="sig-name descname"><span class="pre">CONDITION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'condition'</span></em><a class="headerlink" href="#openrig.constants.NodeType.CONDITION" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.NodeType.REVERSE">
+<span class="sig-name descname"><span class="pre">REVERSE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'reverse'</span></em><a class="headerlink" href="#openrig.constants.NodeType.REVERSE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.NodeType.MULT_MATRIX">
+<span class="sig-name descname"><span class="pre">MULT_MATRIX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'multMatrix'</span></em><a class="headerlink" href="#openrig.constants.NodeType.MULT_MATRIX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.NodeType.DECOMPOSE_MATRIX">
+<span class="sig-name descname"><span class="pre">DECOMPOSE_MATRIX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'decomposeMatrix'</span></em><a class="headerlink" href="#openrig.constants.NodeType.DECOMPOSE_MATRIX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.NodeType.__format__">
+<span class="sig-name descname"><span class="pre">__format__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openrig.constants.NodeType.__format__" title="Link to this definition"></a></dt>
+<dd><p>Returns format using actual value type unless __str__ has been overridden.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.constants.Matrix">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.constants.</span></span><span class="sig-name descname"><span class="pre">Matrix</span></span><a class="reference internal" href="_modules/openrig/constants.html#Matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Matrix" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Constants and factory methods related to matrix definitions.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Matrix.IDENTITY_XYZ">
+<span class="sig-name descname"><span class="pre">IDENTITY_XYZ</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(1.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">1.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">1.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">1.0)</span></em><a class="headerlink" href="#openrig.constants.Matrix.IDENTITY_XYZ" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.constants.Matrix.ZERO">
+<span class="sig-name descname"><span class="pre">ZERO</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0)</span></em><a class="headerlink" href="#openrig.constants.Matrix.ZERO" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Matrix.get_identity">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_identity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">aim_axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#openrig.constants.Axis" title="openrig.constants.Axis"><span class="pre">Axis</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">up_axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#openrig.constants.Axis" title="openrig.constants.Axis"><span class="pre">Axis</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">side_axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#openrig.constants.Axis" title="openrig.constants.Axis"><span class="pre">Axis</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/openrig/constants.html#Matrix.get_identity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Matrix.get_identity" title="Link to this definition"></a></dt>
+<dd><p>Builds a 4x4 identity matrix for a specific coordinate system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>aim_axis</strong> – The axis that represents the forward/aim direction (new X).</p></li>
+<li><p><strong>up_axis</strong> – The axis that represents the up direction (new Y).</p></li>
+<li><p><strong>side_axis</strong> – The axis that represents the side direction (new Z).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A 16-element tuple representing the row-major identity matrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Matrix.get_default">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_default</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/openrig/constants.html#Matrix.get_default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Matrix.get_default" title="Link to this definition"></a></dt>
+<dd><p>Gets the default identity matrix based on the axis order from the Axis class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A 16-element tuple for the default identity matrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Matrix.get_inverse">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_inverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/openrig/constants.html#Matrix.get_inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Matrix.get_inverse" title="Link to this definition"></a></dt>
+<dd><p>Calculates the inverse of a 4x4 orthonormal rotation matrix by transposing it.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is efficient for pure rotation matrices (like an identity matrix)
+but will produce incorrect results for matrices with translation.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>matrix</strong> – A 16-element tuple representing the row-major matrix.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A 16-element tuple for the inverted (transposed) matrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.constants.Matrix.get_default_inverse">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_default_inverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/openrig/constants.html#Matrix.get_default_inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.constants.Matrix.get_default_inverse" title="Link to this definition"></a></dt>
+<dd><p>Gets the inverse of the default identity matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A 16-element tuple for the inverted default identity matrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="openrig.utils.html" class="btn btn-neutral float-left" title="openrig.utils package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Iván Cuenca Ruiz &amp; Luis de Campos.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

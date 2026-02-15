@@ -1,0 +1,7 @@
+openrig.constants module
+========================
+
+.. automodule:: openrig.constants
+   :members:
+   :undoc-members:
+   :show-inheritance:

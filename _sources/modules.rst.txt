@@ -1,7 +1,7 @@
-Naming Package
-==============
+openrig
+=======
 
-.. automodule:: openrig.naming.utils
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. toctree::
+   :maxdepth: 4
+
+   openrig

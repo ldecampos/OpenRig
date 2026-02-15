@@ -1,0 +1,832 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>openrig.constants &mdash; OpenRig 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenRig
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../style_guide/coding_standards.html">Python Coding Style Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">openrig</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenRig</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">openrig.constants</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for openrig.constants</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module defines a set of constants used throughout the project.</span>
+<span class="sd">These include common values for rigging-related properties to ensure consistency.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">IntEnum</span>
+
+
+<div class="viewcode-block" id="Tokens">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Tokens">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Tokens</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Defines the core components for the procedural naming system.</span>
+
+<span class="sd">    These tokens represent the fundamental parts of a name</span>
+<span class="sd">    assembled by the naming manager. The order and usage of these tokens</span>
+<span class="sd">    will define the final naming convention across the project.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">DESCRIPTOR</span> <span class="o">=</span> <span class="s2">&quot;descriptor&quot;</span>
+    <span class="n">SIDE</span> <span class="o">=</span> <span class="s2">&quot;side&quot;</span>
+    <span class="n">USAGE</span> <span class="o">=</span> <span class="s2">&quot;usage&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="Side">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Side">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Side</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Common side tokens for naming conventions.&quot;&quot;&quot;</span>
+    <span class="n">LEFT</span> <span class="o">=</span> <span class="s2">&quot;l&quot;</span>
+    <span class="n">RIGHT</span> <span class="o">=</span> <span class="s2">&quot;r&quot;</span>
+    <span class="n">CENTER</span> <span class="o">=</span> <span class="s2">&quot;c&quot;</span>
+    <span class="n">MIDDLE</span> <span class="o">=</span> <span class="s2">&quot;m&quot;</span>
+
+    <span class="n">LEFT_LONG</span> <span class="o">=</span> <span class="s2">&quot;left&quot;</span>
+    <span class="n">RIGHT_LONG</span> <span class="o">=</span> <span class="s2">&quot;right&quot;</span>
+    <span class="n">CENTER_LONG</span> <span class="o">=</span> <span class="s2">&quot;center&quot;</span>
+    <span class="n">MIDDLE_LONG</span> <span class="o">=</span> <span class="s2">&quot;middle&quot;</span>
+
+    <span class="n">DEFAULT</span> <span class="o">=</span> <span class="n">CENTER</span>
+
+<div class="viewcode-block" id="Side.mirror">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Side.mirror">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mirror</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Side&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the mirrored side token.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The mirrored side token (e.g., LEFT becomes RIGHT).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">Side</span><span class="o">.</span><span class="n">LEFT</span><span class="p">:</span> <span class="n">Side</span><span class="o">.</span><span class="n">RIGHT</span><span class="p">,</span>
+            <span class="n">Side</span><span class="o">.</span><span class="n">RIGHT</span><span class="p">:</span> <span class="n">Side</span><span class="o">.</span><span class="n">LEFT</span><span class="p">,</span>
+            <span class="n">Side</span><span class="o">.</span><span class="n">LEFT_LONG</span><span class="p">:</span> <span class="n">Side</span><span class="o">.</span><span class="n">RIGHT_LONG</span><span class="p">,</span>
+            <span class="n">Side</span><span class="o">.</span><span class="n">RIGHT_LONG</span><span class="p">:</span> <span class="n">Side</span><span class="o">.</span><span class="n">LEFT_LONG</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="c1"># For center/middle or any other unmapped side, return itself.</span>
+        <span class="k">return</span> <span class="n">mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Side.is_left">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Side.is_left">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_left</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the side is &#39;left&#39;.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True if the side is LEFT or LEFT_LONG, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Side</span><span class="o">.</span><span class="n">LEFT</span><span class="p">,</span> <span class="n">Side</span><span class="o">.</span><span class="n">LEFT_LONG</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Side.is_right">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Side.is_right">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_right</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the side is &#39;right&#39;.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True if the side is RIGHT or RIGHT_LONG, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Side</span><span class="o">.</span><span class="n">RIGHT</span><span class="p">,</span> <span class="n">Side</span><span class="o">.</span><span class="n">RIGHT_LONG</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Side.is_center">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Side.is_center">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_center</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the side is &#39;center&#39;.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True if the side is CENTER or CENTER_LONG, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Side</span><span class="o">.</span><span class="n">CENTER</span><span class="p">,</span> <span class="n">Side</span><span class="o">.</span><span class="n">CENTER_LONG</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Position">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Position">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Position</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Common position tokens for naming conventions.&quot;&quot;&quot;</span>
+    <span class="n">FRONT</span> <span class="o">=</span> <span class="s2">&quot;front&quot;</span>
+    <span class="n">BACK</span> <span class="o">=</span> <span class="s2">&quot;back&quot;</span>
+    <span class="n">UP</span> <span class="o">=</span> <span class="s1">&#39;up&#39;</span>
+    <span class="n">DOWN</span> <span class="o">=</span> <span class="s1">&#39;dw&#39;</span>
+    <span class="n">MIDDLE</span> <span class="o">=</span> <span class="s2">&quot;middle&quot;</span>
+    <span class="n">INTERNAL</span> <span class="o">=</span> <span class="s1">&#39;int&#39;</span>
+    <span class="n">EXTERNAL</span> <span class="o">=</span> <span class="s1">&#39;ext&#39;</span>
+
+<div class="viewcode-block" id="Position.mirror">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Position.mirror">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mirror</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Position&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the mirrored position token.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The mirrored position token (e.g., FRONT becomes BACK).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">Position</span><span class="o">.</span><span class="n">FRONT</span><span class="p">:</span> <span class="n">Position</span><span class="o">.</span><span class="n">BACK</span><span class="p">,</span>
+            <span class="n">Position</span><span class="o">.</span><span class="n">BACK</span><span class="p">:</span> <span class="n">Position</span><span class="o">.</span><span class="n">FRONT</span><span class="p">,</span>
+            <span class="n">Position</span><span class="o">.</span><span class="n">UP</span><span class="p">:</span> <span class="n">Position</span><span class="o">.</span><span class="n">DOWN</span><span class="p">,</span>
+            <span class="n">Position</span><span class="o">.</span><span class="n">DOWN</span><span class="p">:</span> <span class="n">Position</span><span class="o">.</span><span class="n">UP</span><span class="p">,</span>
+            <span class="n">Position</span><span class="o">.</span><span class="n">INTERNAL</span><span class="p">:</span> <span class="n">Position</span><span class="o">.</span><span class="n">EXTERNAL</span><span class="p">,</span>
+            <span class="n">Position</span><span class="o">.</span><span class="n">EXTERNAL</span><span class="p">:</span> <span class="n">Position</span><span class="o">.</span><span class="n">INTERNAL</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="c1"># For &#39;middle&#39; or any other unmapped position, return itself.</span>
+        <span class="k">return</span> <span class="n">mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Usage">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Usage">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Usage</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Defines common usage tokens for naming conventions.</span>
+
+<span class="sd">    These tokens describe the purpose or type of an object in the rig.</span>
+<span class="sd">    While this enum provides a set of standardized usages for consistency</span>
+<span class="sd">    (e.g., for controls, groups), the naming system should also be</span>
+<span class="sd">    flexible enough to accept custom string values for scalability.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># --- General Organization ---</span>
+    <span class="n">COMPONENT</span> <span class="o">=</span> <span class="s2">&quot;cmp&quot;</span>
+    <span class="n">IN</span> <span class="o">=</span> <span class="s2">&quot;in&quot;</span>
+    <span class="n">CONTROLS</span> <span class="o">=</span> <span class="s2">&quot;controls&quot;</span>
+    <span class="n">LOGIC</span> <span class="o">=</span> <span class="s2">&quot;logic&quot;</span>
+    <span class="n">DEFORM</span> <span class="o">=</span> <span class="s2">&quot;deform&quot;</span>
+    <span class="n">SETTINGS</span> <span class="o">=</span> <span class="s2">&quot;settings&quot;</span>
+    <span class="n">LOCAL</span> <span class="o">=</span> <span class="s2">&quot;local&quot;</span>
+    <span class="n">GROUP</span> <span class="o">=</span> <span class="s2">&quot;grp&quot;</span>
+    <span class="n">OFFSET</span> <span class="o">=</span> <span class="s2">&quot;offset&quot;</span>
+    <span class="n">OUT</span> <span class="o">=</span> <span class="s2">&quot;out&quot;</span>
+
+    <span class="c1"># --- Rigging Components ---</span>
+    <span class="n">CONTROL</span> <span class="o">=</span> <span class="s2">&quot;ctr&quot;</span>        <span class="c1"># A primary animation control</span>
+    <span class="n">JOINT</span> <span class="o">=</span> <span class="s2">&quot;jnt&quot;</span>          <span class="c1"># A deformation joint</span>
+    <span class="n">SKIN_JOINT</span> <span class="o">=</span> <span class="s2">&quot;skn&quot;</span>
+    <span class="n">IK_HANDLE</span> <span class="o">=</span> <span class="s2">&quot;ikh&quot;</span>      <span class="c1"># An IK handle</span>
+    <span class="n">POLE_VECTOR</span> <span class="o">=</span> <span class="s2">&quot;pv&quot;</span>     <span class="c1"># A pole vector control or locator</span>
+    <span class="n">LOCATOR</span> <span class="o">=</span> <span class="s2">&quot;loc&quot;</span>        <span class="c1"># A generic locator</span>
+    <span class="n">GUIDE</span> <span class="o">=</span> <span class="s2">&quot;guide&quot;</span>        <span class="c1"># A guide or template object</span>
+
+    <span class="c1"># --- Geometry ---</span>
+    <span class="n">GEOMETRY</span> <span class="o">=</span> <span class="s2">&quot;geo&quot;</span>       <span class="c1"># Renderable or final geometry</span>
+    <span class="n">PROXY</span> <span class="o">=</span> <span class="s2">&quot;proxy&quot;</span>        <span class="c1"># Low-resolution proxy geometry</span>
+    <span class="n">NURBS</span> <span class="o">=</span> <span class="s2">&quot;nurbs&quot;</span>
+
+
+    <span class="c1"># --- Default ---</span>
+    <span class="n">DEFAULT</span> <span class="o">=</span> <span class="n">GROUP</span></div>
+
+
+
+<div class="viewcode-block" id="Extension">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Extension">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Extension</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Common file extensions for export and import operations.&quot;&quot;&quot;</span>
+    <span class="c1"># Scene files</span>
+    <span class="n">MAYA_ASCII</span> <span class="o">=</span> <span class="s2">&quot;ma&quot;</span>
+    <span class="n">MAYA_BINARY</span> <span class="o">=</span> <span class="s2">&quot;mb&quot;</span>
+
+    <span class="c1"># Geometry/Cache files</span>
+    <span class="n">OBJ</span> <span class="o">=</span> <span class="s2">&quot;obj&quot;</span>
+    <span class="n">FBX</span> <span class="o">=</span> <span class="s2">&quot;fbx&quot;</span>
+    <span class="n">ABC</span> <span class="o">=</span> <span class="s2">&quot;abc&quot;</span>
+
+    <span class="c1"># Data files</span>
+    <span class="n">JSON</span> <span class="o">=</span> <span class="s2">&quot;json&quot;</span>
+    <span class="n">XML</span> <span class="o">=</span> <span class="s2">&quot;xml&quot;</span>
+
+    <span class="c1"># Script files</span>
+    <span class="n">PYTHON</span> <span class="o">=</span> <span class="s2">&quot;py&quot;</span>
+    <span class="n">MEL</span> <span class="o">=</span> <span class="s2">&quot;mel&quot;</span>
+
+    <span class="c1"># Image files</span>
+    <span class="n">PNG</span> <span class="o">=</span> <span class="s2">&quot;png&quot;</span>
+    <span class="n">JPG</span> <span class="o">=</span> <span class="s2">&quot;jpg&quot;</span>
+    <span class="n">EXR</span> <span class="o">=</span> <span class="s2">&quot;exr&quot;</span>
+    <span class="n">TIFF</span> <span class="o">=</span> <span class="s2">&quot;tif&quot;</span>
+
+<div class="viewcode-block" id="Extension.get_scene_formats">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Extension.get_scene_formats">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_scene_formats</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="s2">&quot;Extension&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets a tuple of all Maya scene file extensions.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">MAYA_ASCII</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">MAYA_BINARY</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Extension.get_geometry_formats">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Extension.get_geometry_formats">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_geometry_formats</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="s2">&quot;Extension&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets a tuple of all common geometry cache/export extensions.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">OBJ</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">FBX</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">ABC</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Extension.get_image_formats">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Extension.get_image_formats">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_image_formats</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="s2">&quot;Extension&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets a tuple of all common image file extensions.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">PNG</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">JPG</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">EXR</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">TIFF</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Extension.get_data_formats">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Extension.get_data_formats">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_data_formats</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="s2">&quot;Extension&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets a tuple of all common data file extensions.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">JSON</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">XML</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Extension.get_script_formats">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Extension.get_script_formats">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_script_formats</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="s2">&quot;Extension&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets a tuple of all common script file extensions.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">PYTHON</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">MEL</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="AttributeType">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.AttributeType">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AttributeType</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Common attribute types for Maya nodes.&quot;&quot;&quot;</span>
+    <span class="c1"># --- Single Value Numeric Types ---</span>
+    <span class="n">BOOL</span> <span class="o">=</span> <span class="s2">&quot;bool&quot;</span>
+    <span class="n">LONG</span> <span class="o">=</span> <span class="s2">&quot;long&quot;</span>  <span class="c1"># Default integer type in Maya&#39;s addAttr</span>
+    <span class="n">DOUBLE</span> <span class="o">=</span> <span class="s2">&quot;double&quot;</span>  <span class="c1"># Default float type in Maya&#39;s addAttr</span>
+    <span class="n">FLOAT</span> <span class="o">=</span> <span class="s2">&quot;float&quot;</span>
+    <span class="n">TIME</span> <span class="o">=</span> <span class="s2">&quot;time&quot;</span>
+    <span class="n">ANGLE</span> <span class="o">=</span> <span class="s2">&quot;angle&quot;</span>
+
+    <span class="c1"># --- Compound Numeric Types ---</span>
+    <span class="n">DOUBLE2</span> <span class="o">=</span> <span class="s2">&quot;double2&quot;</span>
+    <span class="n">DOUBLE3</span> <span class="o">=</span> <span class="s2">&quot;double3&quot;</span>
+    <span class="n">FLOAT2</span> <span class="o">=</span> <span class="s2">&quot;float2&quot;</span>
+    <span class="n">FLOAT3</span> <span class="o">=</span> <span class="s2">&quot;float3&quot;</span>
+
+    <span class="c1"># --- Alias Types ---</span>
+    <span class="n">VECTOR</span> <span class="o">=</span> <span class="s2">&quot;vector&quot;</span>  <span class="c1"># Alias for double3</span>
+    <span class="n">COLOR</span> <span class="o">=</span> <span class="s2">&quot;color&quot;</span>    <span class="c1"># Alias for float3</span>
+
+    <span class="c1"># --- Other Data Types ---</span>
+    <span class="n">ENUM</span> <span class="o">=</span> <span class="s2">&quot;enum&quot;</span>
+    <span class="n">STRING</span> <span class="o">=</span> <span class="s2">&quot;string&quot;</span>
+    <span class="n">MESSAGE</span> <span class="o">=</span> <span class="s2">&quot;message&quot;</span>
+    <span class="n">MATRIX</span> <span class="o">=</span> <span class="s2">&quot;matrix&quot;</span>
+    <span class="n">COMPOUND</span> <span class="o">=</span> <span class="s2">&quot;compound&quot;</span>  <span class="c1"># Generic compound for custom structures</span>
+
+<div class="viewcode-block" id="AttributeType.get_numeric_types">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.AttributeType.get_numeric_types">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_numeric_types</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="s2">&quot;AttributeType&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets a tuple of all single-value numeric attribute types.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">BOOL</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">LONG</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">DOUBLE</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">FLOAT</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">TIME</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">ANGLE</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AttributeType.get_compound_numeric_types">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.AttributeType.get_compound_numeric_types">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_compound_numeric_types</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="s2">&quot;AttributeType&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets a tuple of all compound numeric attribute types, including aliases.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">DOUBLE2</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">DOUBLE3</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">FLOAT2</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">FLOAT3</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">VECTOR</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">COLOR</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="RotateOrder">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.RotateOrder">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RotateOrder</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a Maya rotate order, holding both its string and index value.</span>
+
+<span class="sd">    This provides a single source of truth for rotate orders, preventing</span>
+<span class="sd">    discrepancies between string and integer representations.</span>
+
+<span class="sd">    The default rotate order for the project can be set by changing the</span>
+<span class="sd">    `DEFAULT` class attribute.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">XYZ</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">YZX</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;yzx&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">ZXY</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;zxy&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">XZY</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;xzy&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">YXZ</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;yxz&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">ZYX</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;zyx&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">index_value</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_string_value</span> <span class="o">=</span> <span class="n">string_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_index_value</span> <span class="o">=</span> <span class="n">index_value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The string representation of the rotate order (e.g., &#39;xyz&#39;).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_string_value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The integer index of the rotate order (e.g., 0).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index_value</span>
+
+    <span class="c1"># This line defines the default rotate order for the project.</span>
+    <span class="c1"># To change it, simply point to a different member (e.g., DEFAULT = XYZ).</span>
+    <span class="n">DEFAULT</span> <span class="o">=</span> <span class="n">XYZ</span></div>
+
+
+
+<div class="viewcode-block" id="VectorIndex">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.VectorIndex">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">VectorIndex</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Low-level integer indices for accessing components of vector attributes.</span>
+
+<span class="sd">    This enum is intentionally a simple `IntEnum` to be used directly for</span>
+<span class="sd">    indexing lists or tuples returned by Maya commands (e.g., `vector[VectorIndex.Y]`).</span>
+
+<span class="sd">    For a higher-level, more descriptive representation of axes, see the `Axis` class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">W</span> <span class="o">=</span> <span class="mi">3</span>
+
+    <span class="n">DEFAULT</span> <span class="o">=</span> <span class="n">X</span></div>
+
+
+
+<div class="viewcode-block" id="ColorIndex">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.ColorIndex">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ColorIndex</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Maya Index Colors for Drawing Overrides.&quot;&quot;&quot;</span>
+    <span class="n">DEFAULT</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">BLACK</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">DARK_GREY</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">LIGHT_GREY</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">BURGUNDY</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">NAVY_BLUE</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">BLUE</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">DARK_GREEN</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">DARK_PURPLE</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">MAGENTA</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="n">BROWN</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">DARK_BROWN</span> <span class="o">=</span> <span class="mi">11</span>
+    <span class="n">DULL_RED</span> <span class="o">=</span> <span class="mi">12</span>
+    <span class="n">RED</span> <span class="o">=</span> <span class="mi">13</span>
+    <span class="n">GREEN</span> <span class="o">=</span> <span class="mi">14</span>
+    <span class="n">BLUE_SKY</span> <span class="o">=</span> <span class="mi">15</span>
+    <span class="n">WHITE</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="n">YELLOW</span> <span class="o">=</span> <span class="mi">17</span>
+    <span class="n">CYAN</span> <span class="o">=</span> <span class="mi">18</span>
+    <span class="n">LIGHT_GREEN</span> <span class="o">=</span> <span class="mi">19</span>
+    <span class="n">PINK</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="n">PEACH</span> <span class="o">=</span> <span class="mi">21</span>
+    <span class="n">LIGHT_YELLOW</span> <span class="o">=</span> <span class="mi">22</span>
+    <span class="n">SEA_GREEN</span> <span class="o">=</span> <span class="mi">23</span>
+    <span class="n">LIGHT_BROWN</span> <span class="o">=</span> <span class="mi">24</span>
+    <span class="n">OLIVE</span> <span class="o">=</span> <span class="mi">25</span>
+    <span class="n">LIME_GREEN</span> <span class="o">=</span> <span class="mi">26</span>
+    <span class="n">TEAL_GREEN</span> <span class="o">=</span> <span class="mi">27</span>
+    <span class="n">LIGHT_BLUE</span> <span class="o">=</span> <span class="mi">28</span>
+    <span class="n">DARK_BLUE</span> <span class="o">=</span> <span class="mi">29</span>
+    <span class="n">PURPLE</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">DARK_MAGENTA</span> <span class="o">=</span> <span class="mi">31</span></div>
+
+
+
+<div class="viewcode-block" id="ColorRGB">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.ColorRGB">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ColorRGB</span><span class="p">(</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Standard RGB Float Colors.&quot;&quot;&quot;</span>
+    <span class="n">WHITE</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">BLACK</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">RED</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">GREEN</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">BLUE</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">YELLOW</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">CYAN</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">MAGENTA</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">ORANGE</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">PURPLE</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">BROWN</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">PINK</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
+    <span class="n">GREY</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">DARK_GREY</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span>
+    <span class="n">LIGHT_GREY</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">)</span>
+    <span class="n">LIGHT_RED</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">LIGHT_GREEN</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">LIGHT_BLUE</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">LIGHT_YELLOW</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">DARK_RED</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">DARK_GREEN</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">DARK_BLUE</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">DARK_YELLOW</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">DARK_CYAN</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">DARK_MAGENTA</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">DARK_ORANGE</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">DARK_PURPLE</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span>
+    <span class="n">DARK_BROWN</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.125</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">DARK_PINK</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="n">CHANNELS</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;R&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Axis">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Axis">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Axis</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Common axis tokens for naming conventions and vector operations.&quot;&quot;&quot;</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="s1">&#39;X&#39;</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="s1">&#39;Y&#39;</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="s1">&#39;Z&#39;</span>
+    <span class="n">X_NEGATIVE</span> <span class="o">=</span> <span class="s1">&#39;-X&#39;</span>
+    <span class="n">Y_NEGATIVE</span> <span class="o">=</span> <span class="s1">&#39;-Y&#39;</span>
+    <span class="n">Z_NEGATIVE</span> <span class="o">=</span> <span class="s1">&#39;-Z&#39;</span>
+
+    <span class="c1"># This tuple unpacking defines the default axis system for the project.</span>
+    <span class="c1"># To change the default (e.g., to a Y-up system), modify this line.</span>
+    <span class="n">AIM</span><span class="p">,</span> <span class="n">UP</span><span class="p">,</span> <span class="n">SIDE</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">)</span>
+
+    <span class="n">DEFAULT</span> <span class="o">=</span> <span class="n">AIM</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_negative</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the axis is negative (e.g., &#39;-X&#39;).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_positive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the axis is positive (e.g., &#39;X&#39;).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_negative</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the corresponding integer index for the axis (0 for X, 1 for Y, 2 for Z).</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This method ignores the sign of the axis (e.g., both &#39;X&#39; and &#39;-X&#39; return 0).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The integer index (0, 1, or 2).</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the axis does not have a corresponding index.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">positive_self</span> <span class="o">=</span> <span class="n">Axis</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">))</span>
+        <span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">Axis</span><span class="o">.</span><span class="n">X</span><span class="p">:</span> <span class="n">VectorIndex</span><span class="o">.</span><span class="n">X</span><span class="p">,</span>
+            <span class="n">Axis</span><span class="o">.</span><span class="n">Y</span><span class="p">:</span> <span class="n">VectorIndex</span><span class="o">.</span><span class="n">Y</span><span class="p">,</span>
+            <span class="n">Axis</span><span class="o">.</span><span class="n">Z</span><span class="p">:</span> <span class="n">VectorIndex</span><span class="o">.</span><span class="n">Z</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">mapping</span><span class="p">[</span><span class="n">positive_self</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Axis &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&#39; does not have a corresponding vector index.&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+
+<div class="viewcode-block" id="Axis.mirror">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Axis.mirror">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mirror</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Axis&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the mirrored axis.</span>
+
+<span class="sd">        For example, &#39;X&#39; becomes &#39;-X&#39; and &#39;-Y&#39; becomes &#39;Y&#39;.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The mirrored Axis member.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_negative</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Axis</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="k">return</span> <span class="n">Axis</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Axis.get_default_order">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Axis.get_default_order">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_default_order</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="s2">&quot;Axis&quot;</span><span class="p">,</span> <span class="s2">&quot;Axis&quot;</span><span class="p">,</span> <span class="s2">&quot;Axis&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the default axis order tuple defined by (AIM, UP, SIDE).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A tuple containing the default aim, up, and side axes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">AIM</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">UP</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">SIDE</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Axis.get_axis_orders">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Axis.get_axis_orders">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_axis_orders</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="s2">&quot;Axis&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets a dictionary of all supported axis orders.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A dictionary mapping rotate order strings to tuples of Axis members.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;xyz&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">Y</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">Z</span><span class="p">),</span>
+            <span class="s2">&quot;yzx&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">Y</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">Z</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">X</span><span class="p">),</span>
+            <span class="s2">&quot;zxy&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">Z</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">Y</span><span class="p">),</span>
+            <span class="s2">&quot;xzy&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">Z</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">Y</span><span class="p">),</span>
+            <span class="s2">&quot;yxz&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">Y</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">Z</span><span class="p">),</span>
+            <span class="s2">&quot;zyx&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">Z</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">Y</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">X</span><span class="p">),</span>
+        <span class="p">}</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Vector">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Vector">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Vector</span><span class="p">(</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Constants related to vector definitions. Inherits from tuple.&quot;&quot;&quot;</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># This tuple unpacking defines the default vectors for the project.</span>
+    <span class="n">AIM</span><span class="p">,</span> <span class="n">UP</span><span class="p">,</span> <span class="n">SIDE</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Vector.get_default_order">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Vector.get_default_order">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_default_order</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="s2">&quot;Vector&quot;</span><span class="p">,</span> <span class="s2">&quot;Vector&quot;</span><span class="p">,</span> <span class="s2">&quot;Vector&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the default vector tuple defined by (AIM, UP, SIDE).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A tuple containing the default aim, up, and side vectors.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">AIM</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">UP</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">SIDE</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Attribute">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Attribute">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Attribute</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Common attribute names for rigging elements.&quot;&quot;&quot;</span>
+    <span class="c1"># --- General Node Attributes ---</span>
+    <span class="n">MESSAGE</span> <span class="o">=</span> <span class="s1">&#39;message&#39;</span>
+    <span class="n">NODE_STATE</span> <span class="o">=</span> <span class="s1">&#39;nodeState&#39;</span>
+
+    <span class="c1"># --- Transform Attributes ---</span>
+    <span class="n">TRANSLATE</span> <span class="o">=</span> <span class="s1">&#39;translate&#39;</span>
+    <span class="n">ROTATE</span> <span class="o">=</span> <span class="s1">&#39;rotate&#39;</span>
+    <span class="n">SCALE</span> <span class="o">=</span> <span class="s1">&#39;scale&#39;</span>
+    <span class="n">SHEAR</span> <span class="o">=</span> <span class="s1">&#39;shear&#39;</span>
+    <span class="n">ROTATE_ORDER</span> <span class="o">=</span> <span class="s1">&#39;rotateOrder&#39;</span>
+    <span class="n">ROTATE_PIVOT</span> <span class="o">=</span> <span class="s1">&#39;rotatePivot&#39;</span>
+    <span class="n">SCALE_PIVOT</span> <span class="o">=</span> <span class="s1">&#39;scalePivot&#39;</span>
+
+    <span class="c1"># --- Joint Specific Attributes ---</span>
+    <span class="n">JOINT_ORIENT</span> <span class="o">=</span> <span class="s1">&#39;jointOrient&#39;</span>
+    <span class="n">ROTATE_AXIS</span> <span class="o">=</span> <span class="s1">&#39;rotateAxis&#39;</span>
+
+    <span class="c1"># --- Matrix Attributes ---</span>
+    <span class="n">MATRIX</span> <span class="o">=</span> <span class="s1">&#39;matrix&#39;</span>
+    <span class="n">WORLD_MATRIX</span> <span class="o">=</span> <span class="s1">&#39;worldMatrix&#39;</span>
+    <span class="n">WORLD_INVERSE_MATRIX</span> <span class="o">=</span> <span class="s1">&#39;worldInverseMatrix&#39;</span>
+    <span class="n">PARENT_MATRIX</span> <span class="o">=</span> <span class="s1">&#39;parentMatrix&#39;</span>
+    <span class="n">PARENT_INVERSE_MATRIX</span> <span class="o">=</span> <span class="s1">&#39;parentInverseMatrix&#39;</span>
+    <span class="n">OFFSET_PARENT_MATRIX</span> <span class="o">=</span> <span class="s1">&#39;offsetParentMatrix&#39;</span>
+
+    <span class="c1"># --- Dag Node Attributes ---</span>
+    <span class="n">VISIBILITY</span> <span class="o">=</span> <span class="s1">&#39;visibility&#39;</span>
+    <span class="n">INTERMEDIATE_OBJECT</span> <span class="o">=</span> <span class="s1">&#39;intermediateObject&#39;</span>
+    <span class="n">TEMPLATE</span> <span class="o">=</span> <span class="s1">&#39;template&#39;</span>
+    <span class="n">LOD_VISIBILITY</span> <span class="o">=</span> <span class="s1">&#39;lodVisibility&#39;</span>
+
+    <span class="c1"># --- Drawing Overrides ---</span>
+    <span class="n">OVERRIDE_ENABLED</span> <span class="o">=</span> <span class="s1">&#39;overrideEnabled&#39;</span>
+    <span class="n">OVERRIDE_DISPLAY_TYPE</span> <span class="o">=</span> <span class="s1">&#39;overrideDisplayType&#39;</span>
+    <span class="n">OVERRIDE_LOD</span> <span class="o">=</span> <span class="s1">&#39;overrideLevelOfDetail&#39;</span>
+    <span class="n">OVERRIDE_COLOR</span> <span class="o">=</span> <span class="s1">&#39;overrideColor&#39;</span>
+    <span class="n">OVERRIDE_COLOR_RGB</span> <span class="o">=</span> <span class="s1">&#39;overrideColorRGB&#39;</span></div>
+
+
+
+<div class="viewcode-block" id="NodeType">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.NodeType">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NodeType</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Standard Maya node type names.&quot;&quot;&quot;</span>
+    <span class="c1"># --- General ---</span>
+    <span class="n">TRANSFORM</span> <span class="o">=</span> <span class="s2">&quot;transform&quot;</span>
+    <span class="n">JOINT</span> <span class="o">=</span> <span class="s2">&quot;joint&quot;</span>
+    <span class="n">MESH</span> <span class="o">=</span> <span class="s2">&quot;mesh&quot;</span>
+    <span class="n">NURBS_CURVE</span> <span class="o">=</span> <span class="s2">&quot;nurbsCurve&quot;</span>
+    <span class="n">LOCATOR</span> <span class="o">=</span> <span class="s2">&quot;locator&quot;</span>
+
+    <span class="c1"># --- Constraints ---</span>
+    <span class="n">PARENT_CONSTRAINT</span> <span class="o">=</span> <span class="s2">&quot;parentConstraint&quot;</span>
+    <span class="n">POINT_CONSTRAINT</span> <span class="o">=</span> <span class="s2">&quot;pointConstraint&quot;</span>
+    <span class="n">ORIENT_CONSTRAINT</span> <span class="o">=</span> <span class="s2">&quot;orientConstraint&quot;</span>
+    <span class="n">SCALE_CONSTRAINT</span> <span class="o">=</span> <span class="s2">&quot;scaleConstraint&quot;</span>
+    <span class="n">AIM_CONSTRAINT</span> <span class="o">=</span> <span class="s2">&quot;aimConstraint&quot;</span>
+    <span class="n">POLE_VECTOR_CONSTRAINT</span> <span class="o">=</span> <span class="s2">&quot;poleVectorConstraint&quot;</span>
+
+    <span class="c1"># --- Utility Nodes ---</span>
+    <span class="n">MULTIPLY_DIVIDE</span> <span class="o">=</span> <span class="s2">&quot;multiplyDivide&quot;</span>
+    <span class="n">PLUS_MINUS_AVERAGE</span> <span class="o">=</span> <span class="s2">&quot;plusMinusAverage&quot;</span>
+    <span class="n">CONDITION</span> <span class="o">=</span> <span class="s2">&quot;condition&quot;</span>
+    <span class="n">REVERSE</span> <span class="o">=</span> <span class="s2">&quot;reverse&quot;</span>
+    <span class="n">MULT_MATRIX</span> <span class="o">=</span> <span class="s2">&quot;multMatrix&quot;</span>
+    <span class="n">DECOMPOSE_MATRIX</span> <span class="o">=</span> <span class="s2">&quot;decomposeMatrix&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="Matrix">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Matrix">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Matrix</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Constants and factory methods related to matrix definitions.&quot;&quot;&quot;</span>
+    <span class="n">IDENTITY_XYZ</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span>
+                                       <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span>
+                                       <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span>
+                                       <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+    <span class="n">ZERO</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span>
+                               <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span>
+                               <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span>
+                               <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_vector_from_axis</span><span class="p">(</span><span class="n">axis</span><span class="p">:</span> <span class="n">Axis</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Helper to convert an Axis enum member to a vector tuple.&quot;&quot;&quot;</span>
+        <span class="n">base_axis_map</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">Axis</span><span class="o">.</span><span class="n">X</span><span class="p">:</span> <span class="n">Vector</span><span class="o">.</span><span class="n">X</span><span class="p">,</span>
+            <span class="n">Axis</span><span class="o">.</span><span class="n">Y</span><span class="p">:</span> <span class="n">Vector</span><span class="o">.</span><span class="n">Y</span><span class="p">,</span>
+            <span class="n">Axis</span><span class="o">.</span><span class="n">Z</span><span class="p">:</span> <span class="n">Vector</span><span class="o">.</span><span class="n">Z</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="c1"># Get the positive axis (e.g., from &#39;-X&#39; get &#39;X&#39;)</span>
+        <span class="n">positive_axis</span> <span class="o">=</span> <span class="n">Axis</span><span class="p">(</span><span class="n">axis</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">))</span>
+        <span class="n">base_vector</span> <span class="o">=</span> <span class="n">base_axis_map</span><span class="p">[</span><span class="n">positive_axis</span><span class="p">]</span>
+ 
+        <span class="n">multiplier</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="k">if</span> <span class="n">axis</span><span class="o">.</span><span class="n">is_negative</span> <span class="k">else</span> <span class="mf">1.0</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">multiplier</span> <span class="o">*</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">base_vector</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Matrix.get_identity">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Matrix.get_identity">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_identity</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">aim_axis</span><span class="p">:</span> <span class="n">Axis</span><span class="p">,</span>
+        <span class="n">up_axis</span><span class="p">:</span> <span class="n">Axis</span><span class="p">,</span>
+        <span class="n">side_axis</span><span class="p">:</span> <span class="n">Axis</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Builds a 4x4 identity matrix for a specific coordinate system.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            aim_axis: The axis that represents the forward/aim direction (new X).</span>
+<span class="sd">            up_axis: The axis that represents the up direction (new Y).</span>
+<span class="sd">            side_axis: The axis that represents the side direction (new Z).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A 16-element tuple representing the row-major identity matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">aim_vec</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_vector_from_axis</span><span class="p">(</span><span class="n">aim_axis</span><span class="p">)</span>
+        <span class="n">up_vec</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_vector_from_axis</span><span class="p">(</span><span class="n">up_axis</span><span class="p">)</span>
+        <span class="n">side_vec</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_vector_from_axis</span><span class="p">(</span><span class="n">side_axis</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">aim_vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>  <span class="n">aim_vec</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>  <span class="n">aim_vec</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>  <span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">up_vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>   <span class="n">up_vec</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>   <span class="n">up_vec</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>   <span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">side_vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">side_vec</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">side_vec</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="mf">0.0</span><span class="p">,</span>         <span class="mf">0.0</span><span class="p">,</span>         <span class="mf">0.0</span><span class="p">,</span>         <span class="mf">1.0</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Matrix.get_default">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Matrix.get_default">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_default</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the default identity matrix based on the axis order from the Axis class.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A 16-element tuple for the default identity matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_identity</span><span class="p">(</span><span class="n">Axis</span><span class="o">.</span><span class="n">AIM</span><span class="p">,</span> <span class="n">Axis</span><span class="o">.</span><span class="n">UP</span><span class="p">,</span> <span class="n">Axis</span><span class="o">.</span><span class="n">SIDE</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Matrix.get_inverse">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Matrix.get_inverse">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_inverse</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">matrix</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates the inverse of a 4x4 orthonormal rotation matrix by transposing it.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This method is efficient for pure rotation matrices (like an identity matrix)</span>
+<span class="sd">            but will produce incorrect results for matrices with translation.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            matrix: A 16-element tuple representing the row-major matrix.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A 16-element tuple for the inverted (transposed) matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">matrix</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">matrix</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span>  <span class="n">matrix</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span>
+            <span class="n">matrix</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">matrix</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">matrix</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span>  <span class="n">matrix</span><span class="p">[</span><span class="mi">13</span><span class="p">],</span>
+            <span class="n">matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">matrix</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">matrix</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">matrix</span><span class="p">[</span><span class="mi">14</span><span class="p">],</span>
+            <span class="n">matrix</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">matrix</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="n">matrix</span><span class="p">[</span><span class="mi">11</span><span class="p">],</span> <span class="n">matrix</span><span class="p">[</span><span class="mi">15</span><span class="p">],</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Matrix.get_default_inverse">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Matrix.get_default_inverse">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_default_inverse</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the inverse of the default identity matrix.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A 16-element tuple for the inverted default identity matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">default_identity</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_default</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_inverse</span><span class="p">(</span><span class="n">default_identity</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Iván Cuenca Ruiz &amp; Luis de Campos.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+openrig package
+===============
+
+.. automodule:: openrig
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   openrig.components
+   openrig.core
+   openrig.naming
+   openrig.ops
+   openrig.ui
+   openrig.utils
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   openrig.constants

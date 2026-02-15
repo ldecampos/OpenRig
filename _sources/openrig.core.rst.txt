@@ -1,0 +1,7 @@
+openrig.core package
+====================
+
+.. automodule:: openrig.core
+   :members:
+   :undoc-members:
+   :show-inheritance:
