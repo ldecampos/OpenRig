@@ -1,6 +1,6 @@
-"""
-This module defines a set of constants used throughout the project.
-These include common values for rigging-related properties to ensure consistency.
+"""Module that defines a set of constants used throughout the project.
+
+Include common values for rigging-related properties to ensure consistency.
 """
 
 from enum import Enum, IntEnum
@@ -13,6 +13,7 @@ class Tokens(str, Enum):
     assembled by the naming manager. The order and usage of these tokens
     will define the final naming convention across the project.
     """
+
     DESCRIPTOR = "descriptor"
     SIDE = "side"
     USAGE = "usage"
@@ -20,6 +21,7 @@ class Tokens(str, Enum):
 
 class Side(str, Enum):
     """Common side tokens for naming conventions."""
+
     LEFT = "l"
     RIGHT = "r"
     CENTER = "c"
@@ -74,13 +76,14 @@ class Side(str, Enum):
 
 class Position(str, Enum):
     """Common position tokens for naming conventions."""
+
     FRONT = "front"
     BACK = "back"
-    UP = 'up'
-    DOWN = 'dw'
+    UP = "up"
+    DOWN = "down"
     MIDDLE = "middle"
-    INTERNAL = 'int'
-    EXTERNAL = 'ext'
+    INTERNAL = "internal"
+    EXTERNAL = "external"
 
     def mirror(self) -> "Position":
         """Gets the mirrored position token.
@@ -101,14 +104,10 @@ class Position(str, Enum):
 
 
 class Usage(str, Enum):
-    """Defines common usage tokens for naming conventions.
+    """Defines common usage tokens."""
 
-    These tokens describe the purpose or type of an object in the rig.
-    While this enum provides a set of standardized usages for consistency
-    (e.g., for controls, groups), the naming system should also be
-    flexible enough to accept custom string values for scalability.
-    """
     # --- General Organization ---
+    GUIDES = "guides"
     COMPONENT = "cmp"
     IN = "in"
     CONTROLS = "controls"
@@ -116,31 +115,12 @@ class Usage(str, Enum):
     DEFORM = "deform"
     SETTINGS = "settings"
     LOCAL = "local"
-    GROUP = "grp"
-    OFFSET = "offset"
     OUT = "out"
-
-    # --- Rigging Components ---
-    CONTROL = "ctr"        # A primary animation control
-    JOINT = "jnt"          # A deformation joint
-    SKIN_JOINT = "skn"
-    IK_HANDLE = "ikh"      # An IK handle
-    POLE_VECTOR = "pv"     # A pole vector control or locator
-    LOCATOR = "loc"        # A generic locator
-    GUIDE = "guide"        # A guide or template object
-
-    # --- Geometry ---
-    GEOMETRY = "geo"       # Renderable or final geometry
-    PROXY = "proxy"        # Low-resolution proxy geometry
-    NURBS = "nurbs"
-
-
-    # --- Default ---
-    DEFAULT = GROUP
 
 
 class Extension(str, Enum):
     """Common file extensions for export and import operations."""
+
     # Scene files
     MAYA_ASCII = "ma"
     MAYA_BINARY = "mb"
@@ -192,6 +172,7 @@ class Extension(str, Enum):
 
 class AttributeType(str, Enum):
     """Common attribute types for Maya nodes."""
+
     # --- Single Value Numeric Types ---
     BOOL = "bool"
     LONG = "long"  # Default integer type in Maya's addAttr
@@ -208,7 +189,7 @@ class AttributeType(str, Enum):
 
     # --- Alias Types ---
     VECTOR = "vector"  # Alias for double3
-    COLOR = "color"    # Alias for float3
+    COLOR = "color"  # Alias for float3
 
     # --- Other Data Types ---
     ENUM = "enum"
@@ -225,7 +206,14 @@ class AttributeType(str, Enum):
     @classmethod
     def get_compound_numeric_types(cls) -> tuple["AttributeType", ...]:
         """Gets a tuple of all compound numeric attribute types, including aliases."""
-        return (cls.DOUBLE2, cls.DOUBLE3, cls.FLOAT2, cls.FLOAT3, cls.VECTOR, cls.COLOR)
+        return (
+            cls.DOUBLE2,
+            cls.DOUBLE3,
+            cls.FLOAT2,
+            cls.FLOAT3,
+            cls.VECTOR,
+            cls.COLOR,
+        )
 
 
 class RotateOrder(Enum):
@@ -237,6 +225,7 @@ class RotateOrder(Enum):
     The default rotate order for the project can be set by changing the
     `DEFAULT` class attribute.
     """
+
     XYZ = ("xyz", 0)
     YZX = ("yzx", 1)
     ZXY = ("zxy", 2)
@@ -245,6 +234,12 @@ class RotateOrder(Enum):
     ZYX = ("zyx", 5)
 
     def __init__(self, string_value: str, index_value: int):
+        """Initializes the RotateOrder enum member.
+
+        Args:
+            string_value (str): The string representation of the rotate order.
+            index_value (int): The integer index of the rotate order.
+        """
         self._string_value = string_value
         self._index_value = index_value
 
@@ -271,6 +266,7 @@ class VectorIndex(IntEnum):
 
     For a higher-level, more descriptive representation of axes, see the `Axis` class.
     """
+
     X = 0
     Y = 1
     Z = 2
@@ -281,6 +277,7 @@ class VectorIndex(IntEnum):
 
 class ColorIndex(IntEnum):
     """Maya Index Colors for Drawing Overrides."""
+
     DEFAULT = 0
     BLACK = 1
     DARK_GREY = 2
@@ -317,6 +314,7 @@ class ColorIndex(IntEnum):
 
 class ColorRGB(tuple[float, float, float], Enum):
     """Standard RGB Float Colors."""
+
     WHITE = (1.0, 1.0, 1.0)
     BLACK = (0.0, 0.0, 0.0)
     RED = (1.0, 0.0, 0.0)
@@ -347,27 +345,29 @@ class ColorRGB(tuple[float, float, float], Enum):
     DARK_BROWN = (0.25, 0.125, 0.0)
     DARK_PINK = (0.5, 0.25, 0.5)
 
-    CHANNELS = ('R', 'G', 'B')
+    CHANNELS = ("R", "G", "B")
 
 
 class Axis(str, Enum):
     """Common axis tokens for naming conventions and vector operations."""
-    X = 'X'
-    Y = 'Y'
-    Z = 'Z'
-    X_NEGATIVE = '-X'
-    Y_NEGATIVE = '-Y'
-    Z_NEGATIVE = '-Z'
+
+    X = "X"
+    Y = "Y"
+    Z = "Z"
+    X_NEGATIVE = "-X"
+    Y_NEGATIVE = "-Y"
+    Z_NEGATIVE = "-Z"
 
     # This tuple unpacking defines the default axis system for the project.
     # To change the default (e.g., to a Y-up system), modify this line.
     AIM, UP, SIDE = (X, Y, Z)
 
     DEFAULT = AIM
+
     @property
     def is_negative(self) -> bool:
         """Checks if the axis is negative (e.g., '-X')."""
-        return self.value.startswith('-')
+        return self.value.startswith("-")
 
     @property
     def is_positive(self) -> bool:
@@ -376,7 +376,7 @@ class Axis(str, Enum):
 
     @property
     def as_index(self) -> int:
-        """Gets the corresponding integer index for the axis (0 for X, 1 for Y, 2 for Z).
+        """Gets the corresponding integer index for axis (0 for X, 1 for Y, 2 for Z).
 
         Note:
             This method ignores the sign of the axis (e.g., both 'X' and '-X' return 0).
@@ -387,7 +387,7 @@ class Axis(str, Enum):
         Raises:
             ValueError: If the axis does not have a corresponding index.
         """
-        positive_self = Axis(self.value.strip('-'))
+        positive_self = Axis(self.value.strip("-"))
         mapping = {
             Axis.X: VectorIndex.X,
             Axis.Y: VectorIndex.Y,
@@ -396,7 +396,9 @@ class Axis(str, Enum):
         try:
             return mapping[positive_self]
         except KeyError:
-            raise ValueError(f"Axis '{self.value}' does not have a corresponding vector index.") from None
+            raise ValueError(
+                f"Axis '{self.value}' does not have a corresponding vector index."
+            ) from None
 
     def mirror(self) -> "Axis":
         """Gets the mirrored axis.
@@ -438,6 +440,7 @@ class Axis(str, Enum):
 
 class Vector(tuple[int, int, int], Enum):
     """Constants related to vector definitions. Inherits from tuple."""
+
     X = (1, 0, 0)
     Y = (0, 1, 0)
     Z = (0, 0, 1)
@@ -457,82 +460,86 @@ class Vector(tuple[int, int, int], Enum):
 
 class Attribute(str, Enum):
     """Common attribute names for rigging elements."""
+
     # --- General Node Attributes ---
-    MESSAGE = 'message'
-    NODE_STATE = 'nodeState'
+    MESSAGE = "message"
+    NODE_STATE = "nodeState"
 
     # --- Transform Attributes ---
-    TRANSLATE = 'translate'
-    ROTATE = 'rotate'
-    SCALE = 'scale'
-    SHEAR = 'shear'
-    ROTATE_ORDER = 'rotateOrder'
-    ROTATE_PIVOT = 'rotatePivot'
-    SCALE_PIVOT = 'scalePivot'
+    TRANSLATE = "translate"
+    ROTATE = "rotate"
+    SCALE = "scale"
+    SHEAR = "shear"
+    ROTATE_ORDER = "rotateOrder"
+    ROTATE_PIVOT = "rotatePivot"
+    SCALE_PIVOT = "scalePivot"
 
     # --- Joint Specific Attributes ---
-    JOINT_ORIENT = 'jointOrient'
-    ROTATE_AXIS = 'rotateAxis'
+    JOINT_ORIENT = "jointOrient"
+    ROTATE_AXIS = "rotateAxis"
 
     # --- Matrix Attributes ---
-    MATRIX = 'matrix'
-    WORLD_MATRIX = 'worldMatrix'
-    WORLD_INVERSE_MATRIX = 'worldInverseMatrix'
-    PARENT_MATRIX = 'parentMatrix'
-    PARENT_INVERSE_MATRIX = 'parentInverseMatrix'
-    OFFSET_PARENT_MATRIX = 'offsetParentMatrix'
+    MATRIX = "matrix"
+    WORLD_MATRIX = "worldMatrix"
+    WORLD_INVERSE_MATRIX = "worldInverseMatrix"
+    PARENT_MATRIX = "parentMatrix"
+    PARENT_INVERSE_MATRIX = "parentInverseMatrix"
+    OFFSET_PARENT_MATRIX = "offsetParentMatrix"
 
     # --- Dag Node Attributes ---
-    VISIBILITY = 'visibility'
-    INTERMEDIATE_OBJECT = 'intermediateObject'
-    TEMPLATE = 'template'
-    LOD_VISIBILITY = 'lodVisibility'
+    VISIBILITY = "visibility"
+    INTERMEDIATE_OBJECT = "intermediateObject"
+    TEMPLATE = "template"
+    LOD_VISIBILITY = "lodVisibility"
 
     # --- Drawing Overrides ---
-    OVERRIDE_ENABLED = 'overrideEnabled'
-    OVERRIDE_DISPLAY_TYPE = 'overrideDisplayType'
-    OVERRIDE_LOD = 'overrideLevelOfDetail'
-    OVERRIDE_COLOR = 'overrideColor'
-    OVERRIDE_COLOR_RGB = 'overrideColorRGB'
-
-
-class NodeType(str, Enum):
-    """Standard Maya node type names."""
-    # --- General ---
-    TRANSFORM = "transform"
-    JOINT = "joint"
-    MESH = "mesh"
-    NURBS_CURVE = "nurbsCurve"
-    LOCATOR = "locator"
-
-    # --- Constraints ---
-    PARENT_CONSTRAINT = "parentConstraint"
-    POINT_CONSTRAINT = "pointConstraint"
-    ORIENT_CONSTRAINT = "orientConstraint"
-    SCALE_CONSTRAINT = "scaleConstraint"
-    AIM_CONSTRAINT = "aimConstraint"
-    POLE_VECTOR_CONSTRAINT = "poleVectorConstraint"
-
-    # --- Utility Nodes ---
-    MULTIPLY_DIVIDE = "multiplyDivide"
-    PLUS_MINUS_AVERAGE = "plusMinusAverage"
-    CONDITION = "condition"
-    REVERSE = "reverse"
-    MULT_MATRIX = "multMatrix"
-    DECOMPOSE_MATRIX = "decomposeMatrix"
+    OVERRIDE_ENABLED = "overrideEnabled"
+    OVERRIDE_DISPLAY_TYPE = "overrideDisplayType"
+    OVERRIDE_LOD = "overrideLevelOfDetail"
+    OVERRIDE_COLOR = "overrideColor"
+    OVERRIDE_COLOR_RGB = "overrideColorRGB"
 
 
 class Matrix:
     """Constants and factory methods related to matrix definitions."""
-    IDENTITY_XYZ: tuple[float, ...] = (1.0, 0.0, 0.0, 0.0,
-                                       0.0, 1.0, 0.0, 0.0,
-                                       0.0, 0.0, 1.0, 0.0,
-                                       0.0, 0.0, 0.0, 1.0)
 
-    ZERO: tuple[float, ...] = (0.0, 0.0, 0.0, 0.0,
-                               0.0, 0.0, 0.0, 0.0,
-                               0.0, 0.0, 0.0, 0.0,
-                               0.0, 0.0, 0.0, 0.0)
+    IDENTITY_XYZ: tuple[float, ...] = (
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+    )
+
+    ZERO: tuple[float, ...] = (
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+    )
 
     @staticmethod
     def _get_vector_from_axis(axis: Axis) -> tuple[float, ...]:
@@ -543,21 +550,17 @@ class Matrix:
             Axis.Z: Vector.Z,
         }
         # Get the positive axis (e.g., from '-X' get 'X')
-        positive_axis = Axis(axis.value.strip('-'))
+        positive_axis = Axis(axis.value.strip("-"))
         base_vector = base_axis_map[positive_axis]
- 
+
         multiplier = -1.0 if axis.is_negative else 1.0
         return tuple(multiplier * v for v in base_vector)
 
     @classmethod
     def get_identity(
-        cls,
-        aim_axis: Axis,
-        up_axis: Axis,
-        side_axis: Axis
+        cls, aim_axis: Axis, up_axis: Axis, side_axis: Axis
     ) -> tuple[float, ...]:
-        """
-        Builds a 4x4 identity matrix for a specific coordinate system.
+        """Builds a 4x4 identity matrix for a specific coordinate system.
 
         Args:
             aim_axis: The axis that represents the forward/aim direction (new X).
@@ -572,16 +575,27 @@ class Matrix:
         side_vec = cls._get_vector_from_axis(side_axis)
 
         return (
-            aim_vec[0],  aim_vec[1],  aim_vec[2],  0.0,
-            up_vec[0],   up_vec[1],   up_vec[2],   0.0,
-            side_vec[0], side_vec[1], side_vec[2], 0.0,
-            0.0,         0.0,         0.0,         1.0
+            aim_vec[0],
+            aim_vec[1],
+            aim_vec[2],
+            0.0,
+            up_vec[0],
+            up_vec[1],
+            up_vec[2],
+            0.0,
+            side_vec[0],
+            side_vec[1],
+            side_vec[2],
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
         )
 
     @classmethod
     def get_default(cls) -> tuple[float, ...]:
-        """
-        Gets the default identity matrix based on the axis order from the Axis class.
+        """Gets the default identity matrix based on the axis order from the Axis class.
 
         Returns:
             A 16-element tuple for the default identity matrix.
@@ -590,12 +604,9 @@ class Matrix:
 
     @classmethod
     def get_inverse(cls, matrix: tuple[float, ...]) -> tuple[float, ...]:
-        """
-        Calculates the inverse of a 4x4 orthonormal rotation matrix by transposing it.
+        """Calculates the inverse of a 4x4 orthonormal rotation matrix.
 
-        Note:
-            This method is efficient for pure rotation matrices (like an identity matrix)
-            but will produce incorrect results for matrices with translation.
+        The calculation is performed by transposing the matrix.
 
         Args:
             matrix: A 16-element tuple representing the row-major matrix.
@@ -604,16 +615,27 @@ class Matrix:
             A 16-element tuple for the inverted (transposed) matrix.
         """
         return (
-            matrix[0], matrix[4], matrix[8],  matrix[12],
-            matrix[1], matrix[5], matrix[9],  matrix[13],
-            matrix[2], matrix[6], matrix[10], matrix[14],
-            matrix[3], matrix[7], matrix[11], matrix[15],
+            matrix[0],
+            matrix[4],
+            matrix[8],
+            matrix[12],
+            matrix[1],
+            matrix[5],
+            matrix[9],
+            matrix[13],
+            matrix[2],
+            matrix[6],
+            matrix[10],
+            matrix[14],
+            matrix[3],
+            matrix[7],
+            matrix[11],
+            matrix[15],
         )
 
     @classmethod
     def get_default_inverse(cls) -> tuple[float, ...]:
-        """
-        Gets the inverse of the default identity matrix.
+        """Gets the inverse of the default identity matrix.
 
         Returns:
             A 16-element tuple for the inverted default identity matrix.
