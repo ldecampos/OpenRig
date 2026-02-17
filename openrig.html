@@ -60,6 +60,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="openrig.config.html">openrig.config module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="openrig.constants.html">openrig.constants module</a></li>
 </ul>
 </li>
@@ -168,6 +169,10 @@
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="openrig.config.html">openrig.config module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="openrig.config.html#openrig.config.get_settings"><code class="docutils literal notranslate"><span class="pre">get_settings()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="openrig.constants.html">openrig.constants module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="openrig.constants.html#openrig.constants.Tokens"><code class="docutils literal notranslate"><span class="pre">Tokens</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Tokens.DESCRIPTOR"><code class="docutils literal notranslate"><span class="pre">Tokens.DESCRIPTOR</span></code></a></li>
@@ -185,11 +190,11 @@
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Side.RIGHT_LONG"><code class="docutils literal notranslate"><span class="pre">Side.RIGHT_LONG</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Side.CENTER_LONG"><code class="docutils literal notranslate"><span class="pre">Side.CENTER_LONG</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Side.MIDDLE_LONG"><code class="docutils literal notranslate"><span class="pre">Side.MIDDLE_LONG</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Side.DEFAULT"><code class="docutils literal notranslate"><span class="pre">Side.DEFAULT</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Side.mirror"><code class="docutils literal notranslate"><span class="pre">Side.mirror()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Side.is_left"><code class="docutils literal notranslate"><span class="pre">Side.is_left()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Side.is_right"><code class="docutils literal notranslate"><span class="pre">Side.is_right()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Side.is_center"><code class="docutils literal notranslate"><span class="pre">Side.is_center()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Side.DEFAULT"><code class="docutils literal notranslate"><span class="pre">Side.DEFAULT</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Side.__format__"><code class="docutils literal notranslate"><span class="pre">Side.__format__()</span></code></a></li>
 </ul>
 </li>
@@ -206,16 +211,155 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage"><code class="docutils literal notranslate"><span class="pre">Usage</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.GUIDES"><code class="docutils literal notranslate"><span class="pre">Usage.GUIDES</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.COMPONENT"><code class="docutils literal notranslate"><span class="pre">Usage.COMPONENT</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.IN"><code class="docutils literal notranslate"><span class="pre">Usage.IN</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.CONTROLS"><code class="docutils literal notranslate"><span class="pre">Usage.CONTROLS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.LOGIC"><code class="docutils literal notranslate"><span class="pre">Usage.LOGIC</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.DEFORM"><code class="docutils literal notranslate"><span class="pre">Usage.DEFORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.CONTROL"><code class="docutils literal notranslate"><span class="pre">Usage.CONTROL</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.OFFSET"><code class="docutils literal notranslate"><span class="pre">Usage.OFFSET</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.GROUP"><code class="docutils literal notranslate"><span class="pre">Usage.GROUP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.PIVOT"><code class="docutils literal notranslate"><span class="pre">Usage.PIVOT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.ROOT"><code class="docutils literal notranslate"><span class="pre">Usage.ROOT</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.SETTINGS"><code class="docutils literal notranslate"><span class="pre">Usage.SETTINGS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.SNAP"><code class="docutils literal notranslate"><span class="pre">Usage.SNAP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.TRIGGER"><code class="docutils literal notranslate"><span class="pre">Usage.TRIGGER</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.AUTO"><code class="docutils literal notranslate"><span class="pre">Usage.AUTO</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.ZERO"><code class="docutils literal notranslate"><span class="pre">Usage.ZERO</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.SPLINE"><code class="docutils literal notranslate"><span class="pre">Usage.SPLINE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.RIG_TYPE"><code class="docutils literal notranslate"><span class="pre">Usage.RIG_TYPE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.COMPONENT"><code class="docutils literal notranslate"><span class="pre">Usage.COMPONENT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.MODULE"><code class="docutils literal notranslate"><span class="pre">Usage.MODULE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.INPUTS"><code class="docutils literal notranslate"><span class="pre">Usage.INPUTS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.OUTPUTS"><code class="docutils literal notranslate"><span class="pre">Usage.OUTPUTS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.CONTROLS"><code class="docutils literal notranslate"><span class="pre">Usage.CONTROLS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.JOINTS"><code class="docutils literal notranslate"><span class="pre">Usage.JOINTS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.SKELETON"><code class="docutils literal notranslate"><span class="pre">Usage.SKELETON</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.LOGIC"><code class="docutils literal notranslate"><span class="pre">Usage.LOGIC</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.RIG"><code class="docutils literal notranslate"><span class="pre">Usage.RIG</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.LOCAL"><code class="docutils literal notranslate"><span class="pre">Usage.LOCAL</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.LOCALS"><code class="docutils literal notranslate"><span class="pre">Usage.LOCALS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.IN"><code class="docutils literal notranslate"><span class="pre">Usage.IN</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.OUT"><code class="docutils literal notranslate"><span class="pre">Usage.OUT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.END"><code class="docutils literal notranslate"><span class="pre">Usage.END</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.GEOMETRY"><code class="docutils literal notranslate"><span class="pre">Usage.GEOMETRY</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.MESH"><code class="docutils literal notranslate"><span class="pre">Usage.MESH</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.CURVE"><code class="docutils literal notranslate"><span class="pre">Usage.CURVE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.NURBS"><code class="docutils literal notranslate"><span class="pre">Usage.NURBS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.LATTICE"><code class="docutils literal notranslate"><span class="pre">Usage.LATTICE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.LATTICE_BASE"><code class="docutils literal notranslate"><span class="pre">Usage.LATTICE_BASE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.VERTEX"><code class="docutils literal notranslate"><span class="pre">Usage.VERTEX</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.CV"><code class="docutils literal notranslate"><span class="pre">Usage.CV</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.JOINT"><code class="docutils literal notranslate"><span class="pre">Usage.JOINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.GEO_SKIN_JOINT"><code class="docutils literal notranslate"><span class="pre">Usage.GEO_SKIN_JOINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.CURVE_SKIN_JOINT"><code class="docutils literal notranslate"><span class="pre">Usage.CURVE_SKIN_JOINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.NURBS_SKIN_JOINT"><code class="docutils literal notranslate"><span class="pre">Usage.NURBS_SKIN_JOINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.LATTICE_SKIN_JOINT"><code class="docutils literal notranslate"><span class="pre">Usage.LATTICE_SKIN_JOINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.PREBIND"><code class="docutils literal notranslate"><span class="pre">Usage.PREBIND</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.SKIN_SET"><code class="docutils literal notranslate"><span class="pre">Usage.SKIN_SET</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.IK_HANDLE"><code class="docutils literal notranslate"><span class="pre">Usage.IK_HANDLE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.EFFECTOR"><code class="docutils literal notranslate"><span class="pre">Usage.EFFECTOR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.IK_SPLINE"><code class="docutils literal notranslate"><span class="pre">Usage.IK_SPLINE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.POLE_VECTOR"><code class="docutils literal notranslate"><span class="pre">Usage.POLE_VECTOR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.DRIVER"><code class="docutils literal notranslate"><span class="pre">Usage.DRIVER</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.DRIVERS"><code class="docutils literal notranslate"><span class="pre">Usage.DRIVERS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.GUIDE"><code class="docutils literal notranslate"><span class="pre">Usage.GUIDE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.GUIDES"><code class="docutils literal notranslate"><span class="pre">Usage.GUIDES</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.REFERENCE"><code class="docutils literal notranslate"><span class="pre">Usage.REFERENCE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.LOCATOR"><code class="docutils literal notranslate"><span class="pre">Usage.LOCATOR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.ANCHOR"><code class="docutils literal notranslate"><span class="pre">Usage.ANCHOR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.ANIMATION_CURVE"><code class="docutils literal notranslate"><span class="pre">Usage.ANIMATION_CURVE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.SET_DRIVEN_KEY"><code class="docutils literal notranslate"><span class="pre">Usage.SET_DRIVEN_KEY</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.TEST"><code class="docutils literal notranslate"><span class="pre">Usage.TEST</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.TEMP"><code class="docutils literal notranslate"><span class="pre">Usage.TEMP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.RBF"><code class="docutils literal notranslate"><span class="pre">Usage.RBF</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.ZIP"><code class="docutils literal notranslate"><span class="pre">Usage.ZIP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.PUSH"><code class="docutils literal notranslate"><span class="pre">Usage.PUSH</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.PULL"><code class="docutils literal notranslate"><span class="pre">Usage.PULL</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.MACRO"><code class="docutils literal notranslate"><span class="pre">Usage.MACRO</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.MICRO"><code class="docutils literal notranslate"><span class="pre">Usage.MICRO</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Usage.__format__"><code class="docutils literal notranslate"><span class="pre">Usage.__format__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageComponent"><code class="docutils literal notranslate"><span class="pre">UsageComponent</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageComponent.BODY"><code class="docutils literal notranslate"><span class="pre">UsageComponent.BODY</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageComponent.FACE"><code class="docutils literal notranslate"><span class="pre">UsageComponent.FACE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageComponent.EXTRA"><code class="docutils literal notranslate"><span class="pre">UsageComponent.EXTRA</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageComponent.CUSTOM"><code class="docutils literal notranslate"><span class="pre">UsageComponent.CUSTOM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageComponent.GENERIC"><code class="docutils literal notranslate"><span class="pre">UsageComponent.GENERIC</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageComponent.HAIR"><code class="docutils literal notranslate"><span class="pre">UsageComponent.HAIR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageComponent.CLOTH"><code class="docutils literal notranslate"><span class="pre">UsageComponent.CLOTH</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageComponent.UTILS"><code class="docutils literal notranslate"><span class="pre">UsageComponent.UTILS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageComponent.PROP"><code class="docutils literal notranslate"><span class="pre">UsageComponent.PROP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageComponent.ELEMENT"><code class="docutils literal notranslate"><span class="pre">UsageComponent.ELEMENT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageComponent.__format__"><code class="docutils literal notranslate"><span class="pre">UsageComponent.__format__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageDeformer"><code class="docutils literal notranslate"><span class="pre">UsageDeformer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageDeformer.SKIN_CLUSTER"><code class="docutils literal notranslate"><span class="pre">UsageDeformer.SKIN_CLUSTER</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageDeformer.BLEND_SHAPE"><code class="docutils literal notranslate"><span class="pre">UsageDeformer.BLEND_SHAPE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageDeformer.SQUASH"><code class="docutils literal notranslate"><span class="pre">UsageDeformer.SQUASH</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageDeformer.BEND"><code class="docutils literal notranslate"><span class="pre">UsageDeformer.BEND</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageDeformer.TWIST"><code class="docutils literal notranslate"><span class="pre">UsageDeformer.TWIST</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageDeformer.WRAP"><code class="docutils literal notranslate"><span class="pre">UsageDeformer.WRAP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageDeformer.WAVE"><code class="docutils literal notranslate"><span class="pre">UsageDeformer.WAVE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageDeformer.CORRECTIVE"><code class="docutils literal notranslate"><span class="pre">UsageDeformer.CORRECTIVE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageDeformer.DELTA_MUSH"><code class="docutils literal notranslate"><span class="pre">UsageDeformer.DELTA_MUSH</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageDeformer.FFD"><code class="docutils literal notranslate"><span class="pre">UsageDeformer.FFD</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageDeformer.__format__"><code class="docutils literal notranslate"><span class="pre">UsageDeformer.__format__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageConstraint"><code class="docutils literal notranslate"><span class="pre">UsageConstraint</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageConstraint.PARENT_CONSTRAINT"><code class="docutils literal notranslate"><span class="pre">UsageConstraint.PARENT_CONSTRAINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageConstraint.POINT_CONSTRAINT"><code class="docutils literal notranslate"><span class="pre">UsageConstraint.POINT_CONSTRAINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageConstraint.ORIENT_CONSTRAINT"><code class="docutils literal notranslate"><span class="pre">UsageConstraint.ORIENT_CONSTRAINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageConstraint.SCALE_CONSTRAINT"><code class="docutils literal notranslate"><span class="pre">UsageConstraint.SCALE_CONSTRAINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageConstraint.AIM_CONSTRAINT"><code class="docutils literal notranslate"><span class="pre">UsageConstraint.AIM_CONSTRAINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageConstraint.POLE_VECTOR_CONSTRAINT"><code class="docutils literal notranslate"><span class="pre">UsageConstraint.POLE_VECTOR_CONSTRAINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageConstraint.MATRIX_CONSTRAINT"><code class="docutils literal notranslate"><span class="pre">UsageConstraint.MATRIX_CONSTRAINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageConstraint.COMPONENT_MATCH"><code class="docutils literal notranslate"><span class="pre">UsageConstraint.COMPONENT_MATCH</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageConstraint.__format__"><code class="docutils literal notranslate"><span class="pre">UsageConstraint.__format__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility"><code class="docutils literal notranslate"><span class="pre">UsageUtility</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.ADD"><code class="docutils literal notranslate"><span class="pre">UsageUtility.ADD</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.SUBTRACT"><code class="docutils literal notranslate"><span class="pre">UsageUtility.SUBTRACT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.PRODUCT"><code class="docutils literal notranslate"><span class="pre">UsageUtility.PRODUCT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.MULTIPLY"><code class="docutils literal notranslate"><span class="pre">UsageUtility.MULTIPLY</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.DIVIDE"><code class="docutils literal notranslate"><span class="pre">UsageUtility.DIVIDE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.POWER"><code class="docutils literal notranslate"><span class="pre">UsageUtility.POWER</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.REVERSE"><code class="docutils literal notranslate"><span class="pre">UsageUtility.REVERSE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.CONDITION"><code class="docutils literal notranslate"><span class="pre">UsageUtility.CONDITION</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.CLAMP"><code class="docutils literal notranslate"><span class="pre">UsageUtility.CLAMP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.REMAP"><code class="docutils literal notranslate"><span class="pre">UsageUtility.REMAP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.PLUS_MINUS_AVERAGE"><code class="docutils literal notranslate"><span class="pre">UsageUtility.PLUS_MINUS_AVERAGE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.BLEND"><code class="docutils literal notranslate"><span class="pre">UsageUtility.BLEND</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.DISTANCE"><code class="docutils literal notranslate"><span class="pre">UsageUtility.DISTANCE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.MAX"><code class="docutils literal notranslate"><span class="pre">UsageUtility.MAX</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.MIN"><code class="docutils literal notranslate"><span class="pre">UsageUtility.MIN</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.NORMALIZE"><code class="docutils literal notranslate"><span class="pre">UsageUtility.NORMALIZE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.ANGLE_BETWEEN"><code class="docutils literal notranslate"><span class="pre">UsageUtility.ANGLE_BETWEEN</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.SQUARE_ROOT"><code class="docutils literal notranslate"><span class="pre">UsageUtility.SQUARE_ROOT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.ABSOLUTE"><code class="docutils literal notranslate"><span class="pre">UsageUtility.ABSOLUTE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.COMPOSE_MATRIX"><code class="docutils literal notranslate"><span class="pre">UsageUtility.COMPOSE_MATRIX</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.DECOMPOSE_MATRIX"><code class="docutils literal notranslate"><span class="pre">UsageUtility.DECOMPOSE_MATRIX</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.MULTIPLY_MATRIX"><code class="docutils literal notranslate"><span class="pre">UsageUtility.MULTIPLY_MATRIX</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.INVERSE_MATRIX"><code class="docutils literal notranslate"><span class="pre">UsageUtility.INVERSE_MATRIX</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.BLEND_MATRIX"><code class="docutils literal notranslate"><span class="pre">UsageUtility.BLEND_MATRIX</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.PICK_MATRIX"><code class="docutils literal notranslate"><span class="pre">UsageUtility.PICK_MATRIX</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.FOUR_BY_FOUR_MATRIX"><code class="docutils literal notranslate"><span class="pre">UsageUtility.FOUR_BY_FOUR_MATRIX</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.AIM_MATRIX"><code class="docutils literal notranslate"><span class="pre">UsageUtility.AIM_MATRIX</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.POINT_MATRIX_MULT"><code class="docutils literal notranslate"><span class="pre">UsageUtility.POINT_MATRIX_MULT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.PROXIMITY_PIN"><code class="docutils literal notranslate"><span class="pre">UsageUtility.PROXIMITY_PIN</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.UV_PIN"><code class="docutils literal notranslate"><span class="pre">UsageUtility.UV_PIN</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.VECTOR_PRODUCT"><code class="docutils literal notranslate"><span class="pre">UsageUtility.VECTOR_PRODUCT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.EULER_TO_QUAT"><code class="docutils literal notranslate"><span class="pre">UsageUtility.EULER_TO_QUAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.QUAT_TO_EULER"><code class="docutils literal notranslate"><span class="pre">UsageUtility.QUAT_TO_EULER</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.QUAT_SLERP"><code class="docutils literal notranslate"><span class="pre">UsageUtility.QUAT_SLERP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.QUAT_INVERT"><code class="docutils literal notranslate"><span class="pre">UsageUtility.QUAT_INVERT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.QUAT_PRODUCT"><code class="docutils literal notranslate"><span class="pre">UsageUtility.QUAT_PRODUCT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.CURVE_INFO"><code class="docutils literal notranslate"><span class="pre">UsageUtility.CURVE_INFO</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.POINT_ON_CURVE_INFO"><code class="docutils literal notranslate"><span class="pre">UsageUtility.POINT_ON_CURVE_INFO</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.NEAREST_POINT_ON_CURVE"><code class="docutils literal notranslate"><span class="pre">UsageUtility.NEAREST_POINT_ON_CURVE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.SURFACE_INFO"><code class="docutils literal notranslate"><span class="pre">UsageUtility.SURFACE_INFO</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.CLOSEST_POINT_ON_SURFACE"><code class="docutils literal notranslate"><span class="pre">UsageUtility.CLOSEST_POINT_ON_SURFACE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.CLOSEST_POINT_ON_MESH"><code class="docutils literal notranslate"><span class="pre">UsageUtility.CLOSEST_POINT_ON_MESH</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.UsageUtility.__format__"><code class="docutils literal notranslate"><span class="pre">UsageUtility.__format__()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="openrig.constants.html#openrig.constants.Extension"><code class="docutils literal notranslate"><span class="pre">Extension</span></code></a><ul>
@@ -359,16 +503,16 @@
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Axis.X_NEGATIVE"><code class="docutils literal notranslate"><span class="pre">Axis.X_NEGATIVE</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Axis.Y_NEGATIVE"><code class="docutils literal notranslate"><span class="pre">Axis.Y_NEGATIVE</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Axis.Z_NEGATIVE"><code class="docutils literal notranslate"><span class="pre">Axis.Z_NEGATIVE</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Axis.AIM"><code class="docutils literal notranslate"><span class="pre">Axis.AIM</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Axis.UP"><code class="docutils literal notranslate"><span class="pre">Axis.UP</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Axis.SIDE"><code class="docutils literal notranslate"><span class="pre">Axis.SIDE</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Axis.DEFAULT"><code class="docutils literal notranslate"><span class="pre">Axis.DEFAULT</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Axis.is_negative"><code class="docutils literal notranslate"><span class="pre">Axis.is_negative</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Axis.is_positive"><code class="docutils literal notranslate"><span class="pre">Axis.is_positive</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Axis.as_index"><code class="docutils literal notranslate"><span class="pre">Axis.as_index</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Axis.mirror"><code class="docutils literal notranslate"><span class="pre">Axis.mirror()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Axis.get_default_order"><code class="docutils literal notranslate"><span class="pre">Axis.get_default_order()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Axis.get_axis_orders"><code class="docutils literal notranslate"><span class="pre">Axis.get_axis_orders()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Axis.AIM"><code class="docutils literal notranslate"><span class="pre">Axis.AIM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Axis.UP"><code class="docutils literal notranslate"><span class="pre">Axis.UP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Axis.SIDE"><code class="docutils literal notranslate"><span class="pre">Axis.SIDE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Axis.DEFAULT"><code class="docutils literal notranslate"><span class="pre">Axis.DEFAULT</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Axis.__format__"><code class="docutils literal notranslate"><span class="pre">Axis.__format__()</span></code></a></li>
 </ul>
 </li>
@@ -376,10 +520,6 @@
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Vector.X"><code class="docutils literal notranslate"><span class="pre">Vector.X</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Vector.Y"><code class="docutils literal notranslate"><span class="pre">Vector.Y</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Vector.Z"><code class="docutils literal notranslate"><span class="pre">Vector.Z</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Vector.AIM"><code class="docutils literal notranslate"><span class="pre">Vector.AIM</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Vector.UP"><code class="docutils literal notranslate"><span class="pre">Vector.UP</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Vector.SIDE"><code class="docutils literal notranslate"><span class="pre">Vector.SIDE</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Vector.get_default_order"><code class="docutils literal notranslate"><span class="pre">Vector.get_default_order()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="openrig.constants.html#openrig.constants.Attribute"><code class="docutils literal notranslate"><span class="pre">Attribute</span></code></a><ul>
@@ -413,12 +553,38 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="openrig.constants.html#openrig.constants.Matrix"><code class="docutils literal notranslate"><span class="pre">Matrix</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Matrix.IDENTITY_XYZ"><code class="docutils literal notranslate"><span class="pre">Matrix.IDENTITY_XYZ</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Matrix.IDENTITY"><code class="docutils literal notranslate"><span class="pre">Matrix.IDENTITY</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Matrix.ZERO"><code class="docutils literal notranslate"><span class="pre">Matrix.ZERO</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Matrix.get_identity"><code class="docutils literal notranslate"><span class="pre">Matrix.get_identity()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Matrix.get_default"><code class="docutils literal notranslate"><span class="pre">Matrix.get_default()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Matrix.get_inverse"><code class="docutils literal notranslate"><span class="pre">Matrix.get_inverse()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.Matrix.get_default_inverse"><code class="docutils literal notranslate"><span class="pre">Matrix.get_default_inverse()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType"><code class="docutils literal notranslate"><span class="pre">ShapeType</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.LOCATOR"><code class="docutils literal notranslate"><span class="pre">ShapeType.LOCATOR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.CIRCLE"><code class="docutils literal notranslate"><span class="pre">ShapeType.CIRCLE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.SQUARE"><code class="docutils literal notranslate"><span class="pre">ShapeType.SQUARE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.TRIANGLE"><code class="docutils literal notranslate"><span class="pre">ShapeType.TRIANGLE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.SPHERE"><code class="docutils literal notranslate"><span class="pre">ShapeType.SPHERE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.CUBE"><code class="docutils literal notranslate"><span class="pre">ShapeType.CUBE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.LINE"><code class="docutils literal notranslate"><span class="pre">ShapeType.LINE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.LOLLIPOP"><code class="docutils literal notranslate"><span class="pre">ShapeType.LOLLIPOP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.INFO"><code class="docutils literal notranslate"><span class="pre">ShapeType.INFO</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.UMBRELLA"><code class="docutils literal notranslate"><span class="pre">ShapeType.UMBRELLA</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.DUMBBELL"><code class="docutils literal notranslate"><span class="pre">ShapeType.DUMBBELL</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.ARROW"><code class="docutils literal notranslate"><span class="pre">ShapeType.ARROW</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.DOUBLEARROW"><code class="docutils literal notranslate"><span class="pre">ShapeType.DOUBLEARROW</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.TUBE"><code class="docutils literal notranslate"><span class="pre">ShapeType.TUBE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.FK"><code class="docutils literal notranslate"><span class="pre">ShapeType.FK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.OCTAGON"><code class="docutils literal notranslate"><span class="pre">ShapeType.OCTAGON</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.MAIN"><code class="docutils literal notranslate"><span class="pre">ShapeType.MAIN</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.ROOT"><code class="docutils literal notranslate"><span class="pre">ShapeType.ROOT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.WINGS"><code class="docutils literal notranslate"><span class="pre">ShapeType.WINGS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.CHEST"><code class="docutils literal notranslate"><span class="pre">ShapeType.CHEST</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.HIPS"><code class="docutils literal notranslate"><span class="pre">ShapeType.HIPS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.PELVIS"><code class="docutils literal notranslate"><span class="pre">ShapeType.PELVIS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.FOOT"><code class="docutils literal notranslate"><span class="pre">ShapeType.FOOT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.NECK"><code class="docutils literal notranslate"><span class="pre">ShapeType.NECK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.HEAD"><code class="docutils literal notranslate"><span class="pre">ShapeType.HEAD</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.DEFAULT"><code class="docutils literal notranslate"><span class="pre">ShapeType.DEFAULT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.constants.html#openrig.constants.ShapeType.__format__"><code class="docutils literal notranslate"><span class="pre">ShapeType.__format__()</span></code></a></li>
 </ul>
 </li>
 </ul>

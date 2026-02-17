@@ -79,6 +79,9 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">IntEnum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassVar</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">openrig.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">SETTINGS</span>
 
 
 <div class="viewcode-block" id="Tokens">
@@ -111,8 +114,6 @@
     <span class="n">RIGHT_LONG</span> <span class="o">=</span> <span class="s2">&quot;right&quot;</span>
     <span class="n">CENTER_LONG</span> <span class="o">=</span> <span class="s2">&quot;center&quot;</span>
     <span class="n">MIDDLE_LONG</span> <span class="o">=</span> <span class="s2">&quot;middle&quot;</span>
-
-    <span class="n">DEFAULT</span> <span class="o">=</span> <span class="n">CENTER</span>
 
 <div class="viewcode-block" id="Side.mirror">
 <a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Side.mirror">[docs]</a>
@@ -163,8 +164,14 @@
 <span class="sd">            True if the side is CENTER or CENTER_LONG, False otherwise.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Side</span><span class="o">.</span><span class="n">CENTER</span><span class="p">,</span> <span class="n">Side</span><span class="o">.</span><span class="n">CENTER_LONG</span><span class="p">)</span></div>
-</div>
 
+
+    <span class="n">DEFAULT</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="s2">&quot;Side&quot;</span><span class="p">]</span></div>
+
+
+
+<span class="c1"># Set default side from configuration</span>
+<span class="n">Side</span><span class="o">.</span><span class="n">DEFAULT</span> <span class="o">=</span> <span class="n">Side</span><span class="p">(</span><span class="n">SETTINGS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;side_default&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">))</span>
 
 
 <div class="viewcode-block" id="Position">
@@ -205,18 +212,191 @@
 <div class="viewcode-block" id="Usage">
 <a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Usage">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Usage</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Defines common usage tokens.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Defines core rigging usage tokens (Structure, Hierarchy, Mechanics).&quot;&quot;&quot;</span>
 
-    <span class="c1"># --- General Organization ---</span>
-    <span class="n">GUIDES</span> <span class="o">=</span> <span class="s2">&quot;guides&quot;</span>
-    <span class="n">COMPONENT</span> <span class="o">=</span> <span class="s2">&quot;cmp&quot;</span>
-    <span class="n">IN</span> <span class="o">=</span> <span class="s2">&quot;in&quot;</span>
-    <span class="n">CONTROLS</span> <span class="o">=</span> <span class="s2">&quot;controls&quot;</span>
-    <span class="n">LOGIC</span> <span class="o">=</span> <span class="s2">&quot;logic&quot;</span>
-    <span class="n">DEFORM</span> <span class="o">=</span> <span class="s2">&quot;deform&quot;</span>
+    <span class="c1"># --- Core ---</span>
+    <span class="n">CONTROL</span> <span class="o">=</span> <span class="s2">&quot;ctr&quot;</span>
+    <span class="n">OFFSET</span> <span class="o">=</span> <span class="s2">&quot;offset&quot;</span>
+    <span class="n">GROUP</span> <span class="o">=</span> <span class="s2">&quot;grp&quot;</span>
+    <span class="n">PIVOT</span> <span class="o">=</span> <span class="s2">&quot;pivot&quot;</span>
+    <span class="n">ROOT</span> <span class="o">=</span> <span class="s2">&quot;root&quot;</span>
     <span class="n">SETTINGS</span> <span class="o">=</span> <span class="s2">&quot;settings&quot;</span>
+    <span class="n">SNAP</span> <span class="o">=</span> <span class="s2">&quot;snap&quot;</span>
+    <span class="n">TRIGGER</span> <span class="o">=</span> <span class="s2">&quot;trg&quot;</span>
+    <span class="n">AUTO</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span>
+    <span class="n">ZERO</span> <span class="o">=</span> <span class="s2">&quot;zero&quot;</span>
+    <span class="n">SPLINE</span> <span class="o">=</span> <span class="s2">&quot;spl&quot;</span>
+    <span class="n">RIG_TYPE</span> <span class="o">=</span> <span class="s2">&quot;rigType&quot;</span>
+
+    <span class="c1"># --- Organizers ---</span>
+    <span class="n">COMPONENT</span> <span class="o">=</span> <span class="s2">&quot;cmp&quot;</span>
+    <span class="n">MODULE</span> <span class="o">=</span> <span class="s2">&quot;module&quot;</span>
+    <span class="n">INPUTS</span> <span class="o">=</span> <span class="s2">&quot;inputs&quot;</span>
+    <span class="n">OUTPUTS</span> <span class="o">=</span> <span class="s2">&quot;outputs&quot;</span>
+    <span class="n">CONTROLS</span> <span class="o">=</span> <span class="s2">&quot;controls&quot;</span>
+    <span class="n">JOINTS</span> <span class="o">=</span> <span class="s2">&quot;joints&quot;</span>
+    <span class="n">SKELETON</span> <span class="o">=</span> <span class="s2">&quot;skeleton&quot;</span>
+    <span class="n">LOGIC</span> <span class="o">=</span> <span class="s2">&quot;logic&quot;</span>
+    <span class="n">RIG</span> <span class="o">=</span> <span class="s2">&quot;rig&quot;</span>
     <span class="n">LOCAL</span> <span class="o">=</span> <span class="s2">&quot;local&quot;</span>
-    <span class="n">OUT</span> <span class="o">=</span> <span class="s2">&quot;out&quot;</span></div>
+    <span class="n">LOCALS</span> <span class="o">=</span> <span class="s2">&quot;locals&quot;</span>
+    <span class="n">IN</span> <span class="o">=</span> <span class="s2">&quot;in&quot;</span>
+    <span class="n">OUT</span> <span class="o">=</span> <span class="s2">&quot;out&quot;</span>
+    <span class="n">END</span> <span class="o">=</span> <span class="s2">&quot;end&quot;</span>
+
+    <span class="c1"># --- Geometry ---</span>
+    <span class="n">GEOMETRY</span> <span class="o">=</span> <span class="s2">&quot;geo&quot;</span>
+    <span class="n">MESH</span> <span class="o">=</span> <span class="s2">&quot;mesh&quot;</span>
+    <span class="n">CURVE</span> <span class="o">=</span> <span class="s2">&quot;crv&quot;</span>
+    <span class="n">NURBS</span> <span class="o">=</span> <span class="s2">&quot;nurbs&quot;</span>
+    <span class="n">LATTICE</span> <span class="o">=</span> <span class="s2">&quot;lat&quot;</span>
+    <span class="n">LATTICE_BASE</span> <span class="o">=</span> <span class="s2">&quot;latBase&quot;</span>
+    <span class="n">VERTEX</span> <span class="o">=</span> <span class="s2">&quot;vtx&quot;</span>
+    <span class="n">CV</span> <span class="o">=</span> <span class="s2">&quot;cv&quot;</span>
+
+    <span class="c1"># --- Joint ---</span>
+    <span class="n">JOINT</span> <span class="o">=</span> <span class="s2">&quot;jnt&quot;</span>
+    <span class="n">GEO_SKIN_JOINT</span> <span class="o">=</span> <span class="s2">&quot;skn&quot;</span>
+    <span class="n">CURVE_SKIN_JOINT</span> <span class="o">=</span> <span class="s2">&quot;cskn&quot;</span>
+    <span class="n">NURBS_SKIN_JOINT</span> <span class="o">=</span> <span class="s2">&quot;nskn&quot;</span>
+    <span class="n">LATTICE_SKIN_JOINT</span> <span class="o">=</span> <span class="s2">&quot;lskn&quot;</span>
+    <span class="n">PREBIND</span> <span class="o">=</span> <span class="s2">&quot;prebind&quot;</span>
+    <span class="n">SKIN_SET</span> <span class="o">=</span> <span class="s2">&quot;skinSet&quot;</span>
+
+    <span class="c1"># --- Mechanics ---</span>
+    <span class="n">IK_HANDLE</span> <span class="o">=</span> <span class="s2">&quot;ikh&quot;</span>
+    <span class="n">EFFECTOR</span> <span class="o">=</span> <span class="s2">&quot;effector&quot;</span>
+    <span class="n">IK_SPLINE</span> <span class="o">=</span> <span class="s2">&quot;iks&quot;</span>
+
+    <span class="n">POLE_VECTOR</span> <span class="o">=</span> <span class="s2">&quot;pv&quot;</span>
+    <span class="n">DRIVER</span> <span class="o">=</span> <span class="s2">&quot;drv&quot;</span>
+    <span class="n">DRIVERS</span> <span class="o">=</span> <span class="s2">&quot;drivers&quot;</span>
+    <span class="n">GUIDE</span> <span class="o">=</span> <span class="s2">&quot;guide&quot;</span>
+    <span class="n">GUIDES</span> <span class="o">=</span> <span class="s2">&quot;guides&quot;</span>
+    <span class="n">REFERENCE</span> <span class="o">=</span> <span class="s2">&quot;ref&quot;</span>
+    <span class="n">LOCATOR</span> <span class="o">=</span> <span class="s2">&quot;loc&quot;</span>
+    <span class="n">ANCHOR</span> <span class="o">=</span> <span class="s2">&quot;anchor&quot;</span>
+
+    <span class="c1"># --- Miscellaneous ---</span>
+    <span class="n">ANIMATION_CURVE</span> <span class="o">=</span> <span class="s2">&quot;acrv&quot;</span>
+    <span class="n">SET_DRIVEN_KEY</span> <span class="o">=</span> <span class="s2">&quot;sdk&quot;</span>
+    <span class="n">TEST</span> <span class="o">=</span> <span class="s2">&quot;test&quot;</span>
+    <span class="n">TEMP</span> <span class="o">=</span> <span class="s2">&quot;temp&quot;</span>
+    <span class="n">RBF</span> <span class="o">=</span> <span class="s2">&quot;rbf&quot;</span>
+    <span class="n">ZIP</span> <span class="o">=</span> <span class="s2">&quot;zip&quot;</span>
+    <span class="n">PUSH</span> <span class="o">=</span> <span class="s2">&quot;push&quot;</span>
+    <span class="n">PULL</span> <span class="o">=</span> <span class="s2">&quot;pull&quot;</span>
+    <span class="n">MACRO</span> <span class="o">=</span> <span class="s2">&quot;macro&quot;</span>
+    <span class="n">MICRO</span> <span class="o">=</span> <span class="s2">&quot;micro&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="UsageComponent">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.UsageComponent">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UsageComponent</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Defines semantic component types.&quot;&quot;&quot;</span>
+
+    <span class="n">BODY</span> <span class="o">=</span> <span class="s2">&quot;boy&quot;</span>
+    <span class="n">FACE</span> <span class="o">=</span> <span class="s2">&quot;face&quot;</span>
+    <span class="n">EXTRA</span> <span class="o">=</span> <span class="s2">&quot;extra&quot;</span>
+    <span class="n">CUSTOM</span> <span class="o">=</span> <span class="s2">&quot;custom&quot;</span>
+    <span class="n">GENERIC</span> <span class="o">=</span> <span class="s2">&quot;generic&quot;</span>
+    <span class="n">HAIR</span> <span class="o">=</span> <span class="s2">&quot;hair&quot;</span>
+    <span class="n">CLOTH</span> <span class="o">=</span> <span class="s2">&quot;cloth&quot;</span>
+    <span class="n">UTILS</span> <span class="o">=</span> <span class="s2">&quot;utils&quot;</span>
+    <span class="n">PROP</span> <span class="o">=</span> <span class="s2">&quot;prop&quot;</span>
+    <span class="n">ELEMENT</span> <span class="o">=</span> <span class="s2">&quot;elem&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="UsageDeformer">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.UsageDeformer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UsageDeformer</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Defines deformer types.&quot;&quot;&quot;</span>
+
+    <span class="n">SKIN_CLUSTER</span> <span class="o">=</span> <span class="s2">&quot;skin&quot;</span>
+    <span class="n">BLEND_SHAPE</span> <span class="o">=</span> <span class="s2">&quot;bs&quot;</span>
+    <span class="n">SQUASH</span> <span class="o">=</span> <span class="s2">&quot;squash&quot;</span>
+    <span class="n">BEND</span> <span class="o">=</span> <span class="s2">&quot;bend&quot;</span>
+    <span class="n">TWIST</span> <span class="o">=</span> <span class="s2">&quot;twist&quot;</span>
+    <span class="n">WRAP</span> <span class="o">=</span> <span class="s2">&quot;wrap&quot;</span>
+    <span class="n">WAVE</span> <span class="o">=</span> <span class="s2">&quot;wave&quot;</span>
+    <span class="n">CORRECTIVE</span> <span class="o">=</span> <span class="s2">&quot;crr&quot;</span>
+    <span class="n">DELTA_MUSH</span> <span class="o">=</span> <span class="s2">&quot;dm&quot;</span>
+    <span class="n">FFD</span> <span class="o">=</span> <span class="s2">&quot;ffd&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="UsageConstraint">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.UsageConstraint">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UsageConstraint</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Defines constraint types.&quot;&quot;&quot;</span>
+
+    <span class="n">PARENT_CONSTRAINT</span> <span class="o">=</span> <span class="s2">&quot;pasns&quot;</span>
+    <span class="n">POINT_CONSTRAINT</span> <span class="o">=</span> <span class="s2">&quot;posns&quot;</span>
+    <span class="n">ORIENT_CONSTRAINT</span> <span class="o">=</span> <span class="s2">&quot;orsns&quot;</span>
+    <span class="n">SCALE_CONSTRAINT</span> <span class="o">=</span> <span class="s2">&quot;scsns&quot;</span>
+    <span class="n">AIM_CONSTRAINT</span> <span class="o">=</span> <span class="s2">&quot;aimsns&quot;</span>
+    <span class="n">POLE_VECTOR_CONSTRAINT</span> <span class="o">=</span> <span class="s2">&quot;pvsns&quot;</span>
+    <span class="n">MATRIX_CONSTRAINT</span> <span class="o">=</span> <span class="s2">&quot;matcns&quot;</span>
+    <span class="n">COMPONENT_MATCH</span> <span class="o">=</span> <span class="s2">&quot;componentMatch&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="UsageUtility">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.UsageUtility">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UsageUtility</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Defines utility node types (Math, Matrix, Vector, etc).&quot;&quot;&quot;</span>
+
+    <span class="c1"># --- Math &amp; Logic ---</span>
+    <span class="n">ADD</span> <span class="o">=</span> <span class="s2">&quot;add&quot;</span>
+    <span class="n">SUBTRACT</span> <span class="o">=</span> <span class="s2">&quot;sub&quot;</span>
+    <span class="n">PRODUCT</span> <span class="o">=</span> <span class="s2">&quot;prod&quot;</span>
+    <span class="n">MULTIPLY</span> <span class="o">=</span> <span class="s2">&quot;mult&quot;</span>
+    <span class="n">DIVIDE</span> <span class="o">=</span> <span class="s2">&quot;div&quot;</span>
+    <span class="n">POWER</span> <span class="o">=</span> <span class="s2">&quot;pow&quot;</span>
+    <span class="n">REVERSE</span> <span class="o">=</span> <span class="s2">&quot;rev&quot;</span>
+    <span class="n">CONDITION</span> <span class="o">=</span> <span class="s2">&quot;cond&quot;</span>
+    <span class="n">CLAMP</span> <span class="o">=</span> <span class="s2">&quot;clamp&quot;</span>
+    <span class="n">REMAP</span> <span class="o">=</span> <span class="s2">&quot;remap&quot;</span>
+    <span class="n">PLUS_MINUS_AVERAGE</span> <span class="o">=</span> <span class="s2">&quot;pma&quot;</span>
+    <span class="n">BLEND</span> <span class="o">=</span> <span class="s2">&quot;blend&quot;</span>
+    <span class="n">DISTANCE</span> <span class="o">=</span> <span class="s2">&quot;dist&quot;</span>
+    <span class="n">MAX</span> <span class="o">=</span> <span class="s2">&quot;max&quot;</span>
+    <span class="n">MIN</span> <span class="o">=</span> <span class="s2">&quot;min&quot;</span>
+    <span class="n">NORMALIZE</span> <span class="o">=</span> <span class="s2">&quot;norm&quot;</span>
+    <span class="n">ANGLE_BETWEEN</span> <span class="o">=</span> <span class="s2">&quot;ab&quot;</span>
+    <span class="n">SQUARE_ROOT</span> <span class="o">=</span> <span class="s2">&quot;sqrt&quot;</span>
+    <span class="n">ABSOLUTE</span> <span class="o">=</span> <span class="s2">&quot;abs&quot;</span>
+
+    <span class="c1"># --- Matrix ---</span>
+    <span class="n">COMPOSE_MATRIX</span> <span class="o">=</span> <span class="s2">&quot;cmat&quot;</span>
+    <span class="n">DECOMPOSE_MATRIX</span> <span class="o">=</span> <span class="s2">&quot;dmat&quot;</span>
+    <span class="n">MULTIPLY_MATRIX</span> <span class="o">=</span> <span class="s2">&quot;multmat&quot;</span>
+    <span class="n">INVERSE_MATRIX</span> <span class="o">=</span> <span class="s2">&quot;invmat&quot;</span>
+    <span class="n">BLEND_MATRIX</span> <span class="o">=</span> <span class="s2">&quot;blendmat&quot;</span>
+    <span class="n">PICK_MATRIX</span> <span class="o">=</span> <span class="s2">&quot;pickmat&quot;</span>
+    <span class="n">FOUR_BY_FOUR_MATRIX</span> <span class="o">=</span> <span class="s2">&quot;fbfmat&quot;</span>
+    <span class="n">AIM_MATRIX</span> <span class="o">=</span> <span class="s2">&quot;aimmat&quot;</span>
+    <span class="n">POINT_MATRIX_MULT</span> <span class="o">=</span> <span class="s2">&quot;pmatmult&quot;</span>
+    <span class="n">PROXIMITY_PIN</span> <span class="o">=</span> <span class="s2">&quot;pin&quot;</span>
+    <span class="n">UV_PIN</span> <span class="o">=</span> <span class="s2">&quot;uvPin&quot;</span>
+
+    <span class="c1"># --- Vector &amp; Quaternion ---</span>
+    <span class="n">VECTOR_PRODUCT</span> <span class="o">=</span> <span class="s2">&quot;vecp&quot;</span>
+    <span class="n">EULER_TO_QUAT</span> <span class="o">=</span> <span class="s2">&quot;e2q&quot;</span>
+    <span class="n">QUAT_TO_EULER</span> <span class="o">=</span> <span class="s2">&quot;q2e&quot;</span>
+    <span class="n">QUAT_SLERP</span> <span class="o">=</span> <span class="s2">&quot;qslerp&quot;</span>
+    <span class="n">QUAT_INVERT</span> <span class="o">=</span> <span class="s2">&quot;qinv&quot;</span>
+    <span class="n">QUAT_PRODUCT</span> <span class="o">=</span> <span class="s2">&quot;qprod&quot;</span>
+
+    <span class="c1"># --- Curve &amp; Surface ---</span>
+    <span class="n">CURVE_INFO</span> <span class="o">=</span> <span class="s2">&quot;cinfo&quot;</span>
+    <span class="n">POINT_ON_CURVE_INFO</span> <span class="o">=</span> <span class="s2">&quot;pocinfo&quot;</span>
+    <span class="n">NEAREST_POINT_ON_CURVE</span> <span class="o">=</span> <span class="s2">&quot;npoc&quot;</span>
+    <span class="n">SURFACE_INFO</span> <span class="o">=</span> <span class="s2">&quot;sinfo&quot;</span>
+    <span class="n">CLOSEST_POINT_ON_SURFACE</span> <span class="o">=</span> <span class="s2">&quot;cpos&quot;</span>
+    <span class="n">CLOSEST_POINT_ON_MESH</span> <span class="o">=</span> <span class="s2">&quot;cpom&quot;</span></div>
 
 
 
@@ -387,10 +567,12 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The integer index of the rotate order (e.g., 0).&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index_value</span>
 
-    <span class="c1"># This line defines the default rotate order for the project.</span>
-    <span class="c1"># To change it, simply point to a different member (e.g., DEFAULT = XYZ).</span>
-    <span class="n">DEFAULT</span> <span class="o">=</span> <span class="n">XYZ</span></div>
+    <span class="n">DEFAULT</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="s2">&quot;RotateOrder&quot;</span><span class="p">]</span></div>
 
+
+
+<span class="c1"># Set default rotate order from configuration</span>
+<span class="n">RotateOrder</span><span class="o">.</span><span class="n">DEFAULT</span> <span class="o">=</span> <span class="n">RotateOrder</span><span class="p">[</span><span class="n">SETTINGS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rotate_order_default&quot;</span><span class="p">,</span> <span class="s2">&quot;xyz&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span>
 
 
 <div class="viewcode-block" id="VectorIndex">
@@ -504,12 +686,6 @@
     <span class="n">Y_NEGATIVE</span> <span class="o">=</span> <span class="s2">&quot;-Y&quot;</span>
     <span class="n">Z_NEGATIVE</span> <span class="o">=</span> <span class="s2">&quot;-Z&quot;</span>
 
-    <span class="c1"># This tuple unpacking defines the default axis system for the project.</span>
-    <span class="c1"># To change the default (e.g., to a Y-up system), modify this line.</span>
-    <span class="n">AIM</span><span class="p">,</span> <span class="n">UP</span><span class="p">,</span> <span class="n">SIDE</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">)</span>
-
-    <span class="n">DEFAULT</span> <span class="o">=</span> <span class="n">AIM</span>
-
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_negative</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the axis is negative (e.g., &#39;-X&#39;).&quot;&quot;&quot;</span>
@@ -590,8 +766,20 @@
             <span class="s2">&quot;yxz&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">Y</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">Z</span><span class="p">),</span>
             <span class="s2">&quot;zyx&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">Z</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">Y</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">X</span><span class="p">),</span>
         <span class="p">}</span></div>
-</div>
 
+
+    <span class="n">AIM</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="s2">&quot;Axis&quot;</span><span class="p">]</span>
+    <span class="n">UP</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="s2">&quot;Axis&quot;</span><span class="p">]</span>
+    <span class="n">SIDE</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="s2">&quot;Axis&quot;</span><span class="p">]</span>
+    <span class="n">DEFAULT</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="s2">&quot;Axis&quot;</span><span class="p">]</span></div>
+
+
+
+<span class="c1"># Set default axis system from configuration</span>
+<span class="n">Axis</span><span class="o">.</span><span class="n">AIM</span> <span class="o">=</span> <span class="n">Axis</span><span class="p">(</span><span class="n">SETTINGS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;axis_aim&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">))</span>
+<span class="n">Axis</span><span class="o">.</span><span class="n">UP</span> <span class="o">=</span> <span class="n">Axis</span><span class="p">(</span><span class="n">SETTINGS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;axis_up&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">))</span>
+<span class="n">Axis</span><span class="o">.</span><span class="n">SIDE</span> <span class="o">=</span> <span class="n">Axis</span><span class="p">(</span><span class="n">SETTINGS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;axis_side&quot;</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">))</span>
+<span class="n">Axis</span><span class="o">.</span><span class="n">DEFAULT</span> <span class="o">=</span> <span class="n">Axis</span><span class="o">.</span><span class="n">AIM</span>
 
 
 <div class="viewcode-block" id="Vector">
@@ -601,22 +789,7 @@
 
     <span class="n">X</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">Y</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="n">Z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-
-    <span class="c1"># This tuple unpacking defines the default vectors for the project.</span>
-    <span class="n">AIM</span><span class="p">,</span> <span class="n">UP</span><span class="p">,</span> <span class="n">SIDE</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">)</span>
-
-<div class="viewcode-block" id="Vector.get_default_order">
-<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Vector.get_default_order">[docs]</a>
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_default_order</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="s2">&quot;Vector&quot;</span><span class="p">,</span> <span class="s2">&quot;Vector&quot;</span><span class="p">,</span> <span class="s2">&quot;Vector&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the default vector tuple defined by (AIM, UP, SIDE).</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            A tuple containing the default aim, up, and side vectors.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">AIM</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">UP</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">SIDE</span><span class="p">)</span></div>
-</div>
+    <span class="n">Z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span></div>
 
 
 
@@ -668,9 +841,9 @@
 <div class="viewcode-block" id="Matrix">
 <a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Matrix">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Matrix</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Constants and factory methods related to matrix definitions.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Constants related to matrix definitions.&quot;&quot;&quot;</span>
 
-    <span class="n">IDENTITY_XYZ</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">IDENTITY</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
         <span class="mf">1.0</span><span class="p">,</span>
         <span class="mf">0.0</span><span class="p">,</span>
         <span class="mf">0.0</span><span class="p">,</span>
@@ -706,122 +879,47 @@
         <span class="mf">0.0</span><span class="p">,</span>
         <span class="mf">0.0</span><span class="p">,</span>
         <span class="mf">0.0</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_vector_from_axis</span><span class="p">(</span><span class="n">axis</span><span class="p">:</span> <span class="n">Axis</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Helper to convert an Axis enum member to a vector tuple.&quot;&quot;&quot;</span>
-        <span class="n">base_axis_map</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">Axis</span><span class="o">.</span><span class="n">X</span><span class="p">:</span> <span class="n">Vector</span><span class="o">.</span><span class="n">X</span><span class="p">,</span>
-            <span class="n">Axis</span><span class="o">.</span><span class="n">Y</span><span class="p">:</span> <span class="n">Vector</span><span class="o">.</span><span class="n">Y</span><span class="p">,</span>
-            <span class="n">Axis</span><span class="o">.</span><span class="n">Z</span><span class="p">:</span> <span class="n">Vector</span><span class="o">.</span><span class="n">Z</span><span class="p">,</span>
-        <span class="p">}</span>
-        <span class="c1"># Get the positive axis (e.g., from &#39;-X&#39; get &#39;X&#39;)</span>
-        <span class="n">positive_axis</span> <span class="o">=</span> <span class="n">Axis</span><span class="p">(</span><span class="n">axis</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">))</span>
-        <span class="n">base_vector</span> <span class="o">=</span> <span class="n">base_axis_map</span><span class="p">[</span><span class="n">positive_axis</span><span class="p">]</span>
-
-        <span class="n">multiplier</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="k">if</span> <span class="n">axis</span><span class="o">.</span><span class="n">is_negative</span> <span class="k">else</span> <span class="mf">1.0</span>
-        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">multiplier</span> <span class="o">*</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">base_vector</span><span class="p">)</span>
-
-<div class="viewcode-block" id="Matrix.get_identity">
-<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Matrix.get_identity">[docs]</a>
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_identity</span><span class="p">(</span>
-        <span class="bp">cls</span><span class="p">,</span> <span class="n">aim_axis</span><span class="p">:</span> <span class="n">Axis</span><span class="p">,</span> <span class="n">up_axis</span><span class="p">:</span> <span class="n">Axis</span><span class="p">,</span> <span class="n">side_axis</span><span class="p">:</span> <span class="n">Axis</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Builds a 4x4 identity matrix for a specific coordinate system.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            aim_axis: The axis that represents the forward/aim direction (new X).</span>
-<span class="sd">            up_axis: The axis that represents the up direction (new Y).</span>
-<span class="sd">            side_axis: The axis that represents the side direction (new Z).</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            A 16-element tuple representing the row-major identity matrix.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">aim_vec</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_vector_from_axis</span><span class="p">(</span><span class="n">aim_axis</span><span class="p">)</span>
-        <span class="n">up_vec</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_vector_from_axis</span><span class="p">(</span><span class="n">up_axis</span><span class="p">)</span>
-        <span class="n">side_vec</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_vector_from_axis</span><span class="p">(</span><span class="n">side_axis</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="p">(</span>
-            <span class="n">aim_vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="n">aim_vec</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-            <span class="n">aim_vec</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-            <span class="mf">0.0</span><span class="p">,</span>
-            <span class="n">up_vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="n">up_vec</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-            <span class="n">up_vec</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-            <span class="mf">0.0</span><span class="p">,</span>
-            <span class="n">side_vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="n">side_vec</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-            <span class="n">side_vec</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-            <span class="mf">0.0</span><span class="p">,</span>
-            <span class="mf">0.0</span><span class="p">,</span>
-            <span class="mf">0.0</span><span class="p">,</span>
-            <span class="mf">0.0</span><span class="p">,</span>
-            <span class="mf">1.0</span><span class="p">,</span>
-        <span class="p">)</span></div>
+    <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Matrix.get_default">
-<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Matrix.get_default">[docs]</a>
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_default</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the default identity matrix based on the axis order from the Axis class.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            A 16-element tuple for the default identity matrix.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_identity</span><span class="p">(</span><span class="n">Axis</span><span class="o">.</span><span class="n">AIM</span><span class="p">,</span> <span class="n">Axis</span><span class="o">.</span><span class="n">UP</span><span class="p">,</span> <span class="n">Axis</span><span class="o">.</span><span class="n">SIDE</span><span class="p">)</span></div>
+<div class="viewcode-block" id="ShapeType">
+<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.ShapeType">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ShapeType</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Common shape types for control curves.&quot;&quot;&quot;</span>
 
+    <span class="n">LOCATOR</span> <span class="o">=</span> <span class="s2">&quot;locator&quot;</span>
+    <span class="n">CIRCLE</span> <span class="o">=</span> <span class="s2">&quot;circle&quot;</span>
+    <span class="n">SQUARE</span> <span class="o">=</span> <span class="s2">&quot;square&quot;</span>
+    <span class="n">TRIANGLE</span> <span class="o">=</span> <span class="s2">&quot;triangle&quot;</span>
+    <span class="n">SPHERE</span> <span class="o">=</span> <span class="s2">&quot;sphere&quot;</span>
+    <span class="n">CUBE</span> <span class="o">=</span> <span class="s2">&quot;cube&quot;</span>
+    <span class="n">LINE</span> <span class="o">=</span> <span class="s2">&quot;line&quot;</span>
+    <span class="n">LOLLIPOP</span> <span class="o">=</span> <span class="s2">&quot;lollipop&quot;</span>
+    <span class="n">INFO</span> <span class="o">=</span> <span class="s2">&quot;info&quot;</span>
+    <span class="n">UMBRELLA</span> <span class="o">=</span> <span class="s2">&quot;umbrella&quot;</span>
+    <span class="n">DUMBBELL</span> <span class="o">=</span> <span class="s2">&quot;dumbbell&quot;</span>
+    <span class="n">ARROW</span> <span class="o">=</span> <span class="s2">&quot;arrow&quot;</span>
+    <span class="n">DOUBLEARROW</span> <span class="o">=</span> <span class="s2">&quot;doubleArrow&quot;</span>
+    <span class="n">TUBE</span> <span class="o">=</span> <span class="s2">&quot;tube&quot;</span>
+    <span class="n">FK</span> <span class="o">=</span> <span class="s2">&quot;fk&quot;</span>
+    <span class="n">OCTAGON</span> <span class="o">=</span> <span class="s2">&quot;octagon&quot;</span>
+    <span class="n">MAIN</span> <span class="o">=</span> <span class="s2">&quot;main&quot;</span>
+    <span class="n">ROOT</span> <span class="o">=</span> <span class="s2">&quot;root&quot;</span>
+    <span class="n">WINGS</span> <span class="o">=</span> <span class="s2">&quot;wings&quot;</span>
+    <span class="n">CHEST</span> <span class="o">=</span> <span class="s2">&quot;chest&quot;</span>
+    <span class="n">HIPS</span> <span class="o">=</span> <span class="s2">&quot;hips&quot;</span>
+    <span class="n">PELVIS</span> <span class="o">=</span> <span class="s2">&quot;pelvis&quot;</span>
+    <span class="n">FOOT</span> <span class="o">=</span> <span class="s2">&quot;foot&quot;</span>
+    <span class="n">NECK</span> <span class="o">=</span> <span class="s2">&quot;neck&quot;</span>
+    <span class="n">HEAD</span> <span class="o">=</span> <span class="s2">&quot;head&quot;</span>
 
-<div class="viewcode-block" id="Matrix.get_inverse">
-<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Matrix.get_inverse">[docs]</a>
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_inverse</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">matrix</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates the inverse of a 4x4 orthonormal rotation matrix.</span>
-
-<span class="sd">        The calculation is performed by transposing the matrix.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            matrix: A 16-element tuple representing the row-major matrix.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            A 16-element tuple for the inverted (transposed) matrix.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">(</span>
-            <span class="n">matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="n">matrix</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
-            <span class="n">matrix</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span>
-            <span class="n">matrix</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span>
-            <span class="n">matrix</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-            <span class="n">matrix</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span>
-            <span class="n">matrix</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span>
-            <span class="n">matrix</span><span class="p">[</span><span class="mi">13</span><span class="p">],</span>
-            <span class="n">matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-            <span class="n">matrix</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span>
-            <span class="n">matrix</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span>
-            <span class="n">matrix</span><span class="p">[</span><span class="mi">14</span><span class="p">],</span>
-            <span class="n">matrix</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
-            <span class="n">matrix</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span>
-            <span class="n">matrix</span><span class="p">[</span><span class="mi">11</span><span class="p">],</span>
-            <span class="n">matrix</span><span class="p">[</span><span class="mi">15</span><span class="p">],</span>
-        <span class="p">)</span></div>
+    <span class="n">DEFAULT</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="s2">&quot;ShapeType&quot;</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="Matrix.get_default_inverse">
-<a class="viewcode-back" href="../../openrig.constants.html#openrig.constants.Matrix.get_default_inverse">[docs]</a>
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_default_inverse</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the inverse of the default identity matrix.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            A 16-element tuple for the inverted default identity matrix.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">default_identity</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_default</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_inverse</span><span class="p">(</span><span class="n">default_identity</span><span class="p">)</span></div>
-</div>
-
+<span class="c1"># Set default shape type from configuration</span>
+<span class="n">ShapeType</span><span class="o">.</span><span class="n">DEFAULT</span> <span class="o">=</span> <span class="n">ShapeType</span><span class="p">(</span><span class="n">SETTINGS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;shape_type_default&quot;</span><span class="p">,</span> <span class="s2">&quot;circle&quot;</span><span class="p">))</span>
 </pre></div>
 
            </div>
