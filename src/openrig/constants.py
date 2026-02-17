@@ -4,6 +4,9 @@ Include common values for rigging-related properties to ensure consistency.
 """
 
 from enum import Enum, IntEnum
+from typing import ClassVar
+
+from openrig.config import SETTINGS
 
 
 class Tokens(str, Enum):
@@ -31,8 +34,6 @@ class Side(str, Enum):
     RIGHT_LONG = "right"
     CENTER_LONG = "center"
     MIDDLE_LONG = "middle"
-
-    DEFAULT = CENTER
 
     def mirror(self) -> "Side":
         """Gets the mirrored side token.
@@ -73,6 +74,12 @@ class Side(str, Enum):
         """
         return self in (Side.CENTER, Side.CENTER_LONG)
 
+    DEFAULT: ClassVar["Side"]
+
+
+# Set default side from configuration
+Side.DEFAULT = Side(SETTINGS.get("side_default", "c"))
+
 
 class Position(str, Enum):
     """Common position tokens for naming conventions."""
@@ -104,18 +111,179 @@ class Position(str, Enum):
 
 
 class Usage(str, Enum):
-    """Defines common usage tokens."""
+    """Defines core rigging usage tokens (Structure, Hierarchy, Mechanics)."""
 
-    # --- General Organization ---
-    GUIDES = "guides"
-    COMPONENT = "cmp"
-    IN = "in"
-    CONTROLS = "controls"
-    LOGIC = "logic"
-    DEFORM = "deform"
+    # --- Core ---
+    CONTROL = "ctr"
+    OFFSET = "offset"
+    GROUP = "grp"
+    PIVOT = "pivot"
+    ROOT = "root"
     SETTINGS = "settings"
+    SNAP = "snap"
+    TRIGGER = "trg"
+    AUTO = "auto"
+    ZERO = "zero"
+    SPLINE = "spl"
+    RIG_TYPE = "rigType"
+
+    # --- Organizers ---
+    COMPONENT = "cmp"
+    MODULE = "module"
+    INPUTS = "inputs"
+    OUTPUTS = "outputs"
+    CONTROLS = "controls"
+    JOINTS = "joints"
+    SKELETON = "skeleton"
+    LOGIC = "logic"
+    RIG = "rig"
     LOCAL = "local"
+    LOCALS = "locals"
+    IN = "in"
     OUT = "out"
+    END = "end"
+
+    # --- Geometry ---
+    GEOMETRY = "geo"
+    MESH = "mesh"
+    CURVE = "crv"
+    NURBS = "nurbs"
+    LATTICE = "lat"
+    LATTICE_BASE = "latBase"
+    VERTEX = "vtx"
+    CV = "cv"
+
+    # --- Joint ---
+    JOINT = "jnt"
+    GEO_SKIN_JOINT = "skn"
+    CURVE_SKIN_JOINT = "cskn"
+    NURBS_SKIN_JOINT = "nskn"
+    LATTICE_SKIN_JOINT = "lskn"
+    PREBIND = "prebind"
+    SKIN_SET = "skinSet"
+
+    # --- Mechanics ---
+    IK_HANDLE = "ikh"
+    EFFECTOR = "effector"
+    IK_SPLINE = "iks"
+
+    POLE_VECTOR = "pv"
+    DRIVER = "drv"
+    DRIVERS = "drivers"
+    GUIDE = "guide"
+    GUIDES = "guides"
+    REFERENCE = "ref"
+    LOCATOR = "loc"
+    ANCHOR = "anchor"
+
+    # --- Miscellaneous ---
+    ANIMATION_CURVE = "acrv"
+    SET_DRIVEN_KEY = "sdk"
+    TEST = "test"
+    TEMP = "temp"
+    RBF = "rbf"
+    ZIP = "zip"
+    PUSH = "push"
+    PULL = "pull"
+    MACRO = "macro"
+    MICRO = "micro"
+
+
+class UsageComponent(str, Enum):
+    """Defines semantic component types."""
+
+    BODY = "boy"
+    FACE = "face"
+    EXTRA = "extra"
+    CUSTOM = "custom"
+    GENERIC = "generic"
+    HAIR = "hair"
+    CLOTH = "cloth"
+    UTILS = "utils"
+    PROP = "prop"
+    ELEMENT = "elem"
+
+
+class UsageDeformer(str, Enum):
+    """Defines deformer types."""
+
+    SKIN_CLUSTER = "skin"
+    BLEND_SHAPE = "bs"
+    SQUASH = "squash"
+    BEND = "bend"
+    TWIST = "twist"
+    WRAP = "wrap"
+    WAVE = "wave"
+    CORRECTIVE = "crr"
+    DELTA_MUSH = "dm"
+    FFD = "ffd"
+
+
+class UsageConstraint(str, Enum):
+    """Defines constraint types."""
+
+    PARENT_CONSTRAINT = "pasns"
+    POINT_CONSTRAINT = "posns"
+    ORIENT_CONSTRAINT = "orsns"
+    SCALE_CONSTRAINT = "scsns"
+    AIM_CONSTRAINT = "aimsns"
+    POLE_VECTOR_CONSTRAINT = "pvsns"
+    MATRIX_CONSTRAINT = "matcns"
+    COMPONENT_MATCH = "componentMatch"
+
+
+class UsageUtility(str, Enum):
+    """Defines utility node types (Math, Matrix, Vector, etc)."""
+
+    # --- Math & Logic ---
+    ADD = "add"
+    SUBTRACT = "sub"
+    PRODUCT = "prod"
+    MULTIPLY = "mult"
+    DIVIDE = "div"
+    POWER = "pow"
+    REVERSE = "rev"
+    CONDITION = "cond"
+    CLAMP = "clamp"
+    REMAP = "remap"
+    PLUS_MINUS_AVERAGE = "pma"
+    BLEND = "blend"
+    DISTANCE = "dist"
+    MAX = "max"
+    MIN = "min"
+    NORMALIZE = "norm"
+    ANGLE_BETWEEN = "ab"
+    SQUARE_ROOT = "sqrt"
+    ABSOLUTE = "abs"
+
+    # --- Matrix ---
+    COMPOSE_MATRIX = "cmat"
+    DECOMPOSE_MATRIX = "dmat"
+    MULTIPLY_MATRIX = "multmat"
+    INVERSE_MATRIX = "invmat"
+    BLEND_MATRIX = "blendmat"
+    PICK_MATRIX = "pickmat"
+    FOUR_BY_FOUR_MATRIX = "fbfmat"
+    AIM_MATRIX = "aimmat"
+    POINT_MATRIX_MULT = "pmatmult"
+    PROXIMITY_PIN = "pin"
+    UV_PIN = "uvPin"
+
+    # --- Vector & Quaternion ---
+    VECTOR_PRODUCT = "vecp"
+    EULER_TO_QUAT = "e2q"
+    QUAT_TO_EULER = "q2e"
+    QUAT_SLERP = "qslerp"
+    QUAT_INVERT = "qinv"
+    QUAT_PRODUCT = "qprod"
+
+    # --- Curve & Surface ---
+    CURVE_INFO = "cinfo"
+    POINT_ON_CURVE_INFO = "pocinfo"
+    NEAREST_POINT_ON_CURVE = "npoc"
+    SURFACE_INFO = "sinfo"
+    CLOSEST_POINT_ON_SURFACE = "cpos"
+    CLOSEST_POINT_ON_MESH = "cpom"
 
 
 class Extension(str, Enum):
@@ -253,9 +421,11 @@ class RotateOrder(Enum):
         """The integer index of the rotate order (e.g., 0)."""
         return self._index_value
 
-    # This line defines the default rotate order for the project.
-    # To change it, simply point to a different member (e.g., DEFAULT = XYZ).
-    DEFAULT = XYZ
+    DEFAULT: ClassVar["RotateOrder"]
+
+
+# Set default rotate order from configuration
+RotateOrder.DEFAULT = RotateOrder[SETTINGS.get("rotate_order_default", "xyz").upper()]
 
 
 class VectorIndex(IntEnum):
@@ -358,12 +528,6 @@ class Axis(str, Enum):
     Y_NEGATIVE = "-Y"
     Z_NEGATIVE = "-Z"
 
-    # This tuple unpacking defines the default axis system for the project.
-    # To change the default (e.g., to a Y-up system), modify this line.
-    AIM, UP, SIDE = (X, Y, Z)
-
-    DEFAULT = AIM
-
     @property
     def is_negative(self) -> bool:
         """Checks if the axis is negative (e.g., '-X')."""
@@ -437,6 +601,18 @@ class Axis(str, Enum):
             "zyx": (cls.Z, cls.Y, cls.X),
         }
 
+    AIM: ClassVar["Axis"]
+    UP: ClassVar["Axis"]
+    SIDE: ClassVar["Axis"]
+    DEFAULT: ClassVar["Axis"]
+
+
+# Set default axis system from configuration
+Axis.AIM = Axis(SETTINGS.get("axis_aim", "X"))
+Axis.UP = Axis(SETTINGS.get("axis_up", "Y"))
+Axis.SIDE = Axis(SETTINGS.get("axis_side", "Z"))
+Axis.DEFAULT = Axis.AIM
+
 
 class Vector(tuple[int, int, int], Enum):
     """Constants related to vector definitions. Inherits from tuple."""
@@ -444,18 +620,6 @@ class Vector(tuple[int, int, int], Enum):
     X = (1, 0, 0)
     Y = (0, 1, 0)
     Z = (0, 0, 1)
-
-    # This tuple unpacking defines the default vectors for the project.
-    AIM, UP, SIDE = (X, Y, Z)
-
-    @classmethod
-    def get_default_order(cls) -> tuple["Vector", "Vector", "Vector"]:
-        """Gets the default vector tuple defined by (AIM, UP, SIDE).
-
-        Returns:
-            A tuple containing the default aim, up, and side vectors.
-        """
-        return (cls.AIM, cls.UP, cls.SIDE)
 
 
 class Attribute(str, Enum):
@@ -501,9 +665,9 @@ class Attribute(str, Enum):
 
 
 class Matrix:
-    """Constants and factory methods related to matrix definitions."""
+    """Constants related to matrix definitions."""
 
-    IDENTITY_XYZ: tuple[float, ...] = (
+    IDENTITY: tuple[float, ...] = (
         1.0,
         0.0,
         0.0,
@@ -541,104 +705,38 @@ class Matrix:
         0.0,
     )
 
-    @staticmethod
-    def _get_vector_from_axis(axis: Axis) -> tuple[float, ...]:
-        """Helper to convert an Axis enum member to a vector tuple."""
-        base_axis_map = {
-            Axis.X: Vector.X,
-            Axis.Y: Vector.Y,
-            Axis.Z: Vector.Z,
-        }
-        # Get the positive axis (e.g., from '-X' get 'X')
-        positive_axis = Axis(axis.value.strip("-"))
-        base_vector = base_axis_map[positive_axis]
 
-        multiplier = -1.0 if axis.is_negative else 1.0
-        return tuple(multiplier * v for v in base_vector)
+class ShapeType(str, Enum):
+    """Common shape types for control curves."""
 
-    @classmethod
-    def get_identity(
-        cls, aim_axis: Axis, up_axis: Axis, side_axis: Axis
-    ) -> tuple[float, ...]:
-        """Builds a 4x4 identity matrix for a specific coordinate system.
+    LOCATOR = "locator"
+    CIRCLE = "circle"
+    SQUARE = "square"
+    TRIANGLE = "triangle"
+    SPHERE = "sphere"
+    CUBE = "cube"
+    LINE = "line"
+    LOLLIPOP = "lollipop"
+    INFO = "info"
+    UMBRELLA = "umbrella"
+    DUMBBELL = "dumbbell"
+    ARROW = "arrow"
+    DOUBLEARROW = "doubleArrow"
+    TUBE = "tube"
+    FK = "fk"
+    OCTAGON = "octagon"
+    MAIN = "main"
+    ROOT = "root"
+    WINGS = "wings"
+    CHEST = "chest"
+    HIPS = "hips"
+    PELVIS = "pelvis"
+    FOOT = "foot"
+    NECK = "neck"
+    HEAD = "head"
 
-        Args:
-            aim_axis: The axis that represents the forward/aim direction (new X).
-            up_axis: The axis that represents the up direction (new Y).
-            side_axis: The axis that represents the side direction (new Z).
+    DEFAULT: ClassVar["ShapeType"]
 
-        Returns:
-            A 16-element tuple representing the row-major identity matrix.
-        """
-        aim_vec = cls._get_vector_from_axis(aim_axis)
-        up_vec = cls._get_vector_from_axis(up_axis)
-        side_vec = cls._get_vector_from_axis(side_axis)
 
-        return (
-            aim_vec[0],
-            aim_vec[1],
-            aim_vec[2],
-            0.0,
-            up_vec[0],
-            up_vec[1],
-            up_vec[2],
-            0.0,
-            side_vec[0],
-            side_vec[1],
-            side_vec[2],
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            1.0,
-        )
-
-    @classmethod
-    def get_default(cls) -> tuple[float, ...]:
-        """Gets the default identity matrix based on the axis order from the Axis class.
-
-        Returns:
-            A 16-element tuple for the default identity matrix.
-        """
-        return cls.get_identity(Axis.AIM, Axis.UP, Axis.SIDE)
-
-    @classmethod
-    def get_inverse(cls, matrix: tuple[float, ...]) -> tuple[float, ...]:
-        """Calculates the inverse of a 4x4 orthonormal rotation matrix.
-
-        The calculation is performed by transposing the matrix.
-
-        Args:
-            matrix: A 16-element tuple representing the row-major matrix.
-
-        Returns:
-            A 16-element tuple for the inverted (transposed) matrix.
-        """
-        return (
-            matrix[0],
-            matrix[4],
-            matrix[8],
-            matrix[12],
-            matrix[1],
-            matrix[5],
-            matrix[9],
-            matrix[13],
-            matrix[2],
-            matrix[6],
-            matrix[10],
-            matrix[14],
-            matrix[3],
-            matrix[7],
-            matrix[11],
-            matrix[15],
-        )
-
-    @classmethod
-    def get_default_inverse(cls) -> tuple[float, ...]:
-        """Gets the inverse of the default identity matrix.
-
-        Returns:
-            A 16-element tuple for the inverted default identity matrix.
-        """
-        default_identity = cls.get_default()
-        return cls.get_inverse(default_identity)
+# Set default shape type from configuration
+ShapeType.DEFAULT = ShapeType(SETTINGS.get("shape_type_default", "circle"))
