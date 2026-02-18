@@ -1,12 +1,8 @@
-OpenRig Modules
-===============
+API Reference
+=============
 
-.. automodule:: openrig.naming.utils
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. toctree::
+   :maxdepth: 2
+   :caption: Modules
 
-.. automodule:: openrig.constants
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   api/modules
