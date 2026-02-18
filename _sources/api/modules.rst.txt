@@ -1,0 +1,7 @@
+openrig
+=======
+
+.. toctree::
+   :maxdepth: 4
+
+   openrig
