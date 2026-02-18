@@ -3,10 +3,13 @@
 import os
 import sys
 
+from sphinx.application import Sphinx
+from sphinx.ext.apidoc import main
+
 # -- Path setup --------------------------------------------------------------
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here.
-sys.path.insert(0, os.path.abspath("../src"))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")))
 
 # -- Project information -----------------------------------------------------
 project = "OpenRig"
@@ -57,12 +60,9 @@ autodoc_default_options = {
 
 
 # -- Auto-generate API documentation -----------------------------------------
-def run_apidoc(_):
+def run_apidoc(_: Sphinx):
     """Runs sphinx-apidoc automatically when building docs."""
-    from sphinx.ext.apidoc import main
-
     cur_dir = os.path.abspath(os.path.dirname(__file__))
-    # Generamos la documentación de la API en una carpeta separada 'api'
     output_path = os.path.join(cur_dir, "api")
     module_path = os.path.abspath(os.path.join(cur_dir, "..", "src", "openrig"))
 
@@ -73,5 +73,6 @@ def run_apidoc(_):
     main(["-f", "-e", "-M", "-o", output_path, module_path, "**/tests/*"])
 
 
-def setup(app):
+def setup(app: Sphinx):
+    """Connects the run_apidoc function to the builder-inited event."""
     app.connect("builder-inited", run_apidoc)
