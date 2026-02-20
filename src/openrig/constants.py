@@ -6,7 +6,7 @@ Include common values for rigging-related properties to ensure consistency.
 from enum import Enum, IntEnum
 from typing import ClassVar
 
-from openrig.config import SETTINGS
+from openrig.settings import SETTINGS
 
 
 class Tokens(str, Enum):
@@ -78,7 +78,7 @@ class Side(str, Enum):
 
 
 # Set default side from configuration
-Side.DEFAULT = Side(SETTINGS.get("side_default", "c"))
+Side.DEFAULT = Side(SETTINGS.rigging.side_default)
 
 
 class Position(str, Enum):
@@ -425,7 +425,7 @@ class RotateOrder(Enum):
 
 
 # Set default rotate order from configuration
-RotateOrder.DEFAULT = RotateOrder[SETTINGS.get("rotate_order_default", "xyz").upper()]
+RotateOrder.DEFAULT = RotateOrder[SETTINGS.rigging.rotate_order_default.upper()]
 
 
 class VectorIndex(IntEnum):
@@ -608,9 +608,9 @@ class Axis(str, Enum):
 
 
 # Set default axis system from configuration
-Axis.AIM = Axis(SETTINGS.get("axis_aim", "X"))
-Axis.UP = Axis(SETTINGS.get("axis_up", "Y"))
-Axis.SIDE = Axis(SETTINGS.get("axis_side", "Z"))
+Axis.AIM = Axis(SETTINGS.rigging.axis_aim)
+Axis.UP = Axis(SETTINGS.rigging.axis_up)
+Axis.SIDE = Axis(SETTINGS.rigging.axis_side)
 Axis.DEFAULT = Axis.AIM
 
 
@@ -739,4 +739,4 @@ class ShapeType(str, Enum):
 
 
 # Set default shape type from configuration
-ShapeType.DEFAULT = ShapeType(SETTINGS.get("shape_type_default", "circle"))
+ShapeType.DEFAULT = ShapeType(SETTINGS.shapes.default)

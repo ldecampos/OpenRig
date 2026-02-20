@@ -1,0 +1,51 @@
+{
+  "rigging": {
+    "side_default": "c",
+    "rotate_order_default": "xyz",
+    "axis_aim": "X",
+    "axis_up": "Y",
+    "axis_side": "Z"
+  },
+  "naming": {
+    "separator": "_",
+    "tokens": ["descriptor", "side", "usage"],
+    "rules": {
+      "__global__": {
+        "max_length": 80,
+        "forbidden_patterns": ["__", "--", ".."],
+        "separator_rule": {
+          "type": "regex",
+          "value": "^[^a-zA-Z0-9]$"
+        }
+      },
+      "descriptor": {
+        "type": "regex",
+        "value": "^[a-z][a-zA-Z0-9]*([A-Z][a-z0-9]*)*$"
+      },
+      "side": {
+        "type": "list",
+        "value": ["l", "r", "c", "m"]
+      },
+      "usage": {
+        "type": "from_enums",
+        "sources": [
+          "Usage",
+          "UsageComponent",
+          "UsageDeformer",
+          "UsageConstraint",
+          "UsageUtility"
+        ]
+      }
+    },
+    "normalizers": {
+      "descriptor": "descriptor",
+      "side": "side"
+    }
+  },
+  "shapes": {
+    "default": "circle"
+  },
+  "colors": {},
+  "export": {},
+  "skin": {}
+}

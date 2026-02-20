@@ -1,7 +1,18 @@
-"""Module providing string manipulation facilities."""
+"""String manipulation utilities for the OpenRig naming system.
+
+Provides validators, getters, converters, and incrementers for building
+and transforming name strings used throughout the rigging pipeline.
+
+Categories:
+    Validators: ``is_string``, ``is_digit``, ``is_camel_case``, etc.
+    Getters: ``get_digits``, ``get_version``, ``get_namespace``, etc.
+    Converters: ``to_camel_case``, ``to_snake_case``, ``to_kebab_case``, etc.
+    Incrementers: ``increment_digit``, ``increment_character``, etc.
+    Decrementers: ``decrement_digit``, ``decrement_character``, etc.
+"""
 
 import re
-from typing import Any, Iterable
+from typing import Iterable
 
 # Compiled Regex Patterns for performance
 _CAMEL_CASE_RE = re.compile(r"^[a-z][a-z0-9]*([A-Z][a-z0-9]*)*$")
@@ -40,6 +51,14 @@ _SIDE_MAPPING = {
     "_Right": "_Left",
     "Center": "Center",
     "center": "center",
+    "Middle": "Middle",
+    "middle": "middle",
+    "_M_": "_M_",
+    "_m_": "_m_",
+    "M_": "M_",
+    "m_": "m_",
+    "_M": "_M",
+    "_m": "_m",
     "left": "right",
     "right": "left",
     "_left": "_right",
@@ -48,26 +67,26 @@ _SIDE_MAPPING = {
 
 
 # VALIDATORS
-def is_string(text: Any) -> bool:
-    """Validates if a variable is a string.
+def is_string(text: object) -> bool:
+    """Validates whether a variable is a string.
 
     Args:
-        text: String to validate.
+        text: The value to validate.
 
     Returns:
-        True if successful, False otherwise.
+        True if ``text`` is a ``str`` instance, False otherwise.
     """
     return isinstance(text, str)
 
 
-def is_digit(value: Any) -> bool:
-    """Validates if a variable is a number (int or float).
+def is_digit(value: object) -> bool:
+    """Validates whether a variable is a number.
 
     Args:
-        value: Value to validate.
+        value: The value to validate.
 
     Returns:
-        True if successful, False otherwise.
+        True if ``value`` is an ``int`` or ``float`` instance, False otherwise.
     """
     return isinstance(value, (int, float))
 
@@ -413,17 +432,16 @@ def to_kebab_case(text: str, remove_digits: bool = False) -> str:
 
 
 def value_to_str(value: float | int) -> str:
-    """Converts a digit to a string with the following format: MxDx.
+    """Converts a numeric value to a filesystem-safe string in ``MxDx`` format.
 
-    where M is the sign (M for negative digits),
-    x is the integer part,
-    D is the decimal point (d), and x is the decimal part.
+    The ``M`` prefix indicates a negative value; the decimal point is
+    replaced by ``d`` (e.g. ``-1.5`` → ``"M1d5"``, ``2.0`` → ``"2d0"``).
 
     Args:
-        value: Value to convert to string.
+        value: The numeric value to encode.
 
     Returns:
-        Converted value.
+        The encoded string representation.
     """
     sign = ""
     if value < 0:
@@ -434,11 +452,10 @@ def value_to_str(value: float | int) -> str:
 
 
 def str_to_value(text: str) -> float:
-    """Converts a formatted string (MxDx) into a digit.
+    """Converts a formatted ``MxDx`` string back into a numeric value.
 
-    Where M is the sign (M for negative digits),
-    x is the integer part,
-    D is the decimal point (d), and x is the decimal part.
+    Reverses the encoding applied by ``value_to_str``: strips the ``M``
+    sign prefix and replaces ``d`` with a decimal point.
 
     Args:
         text: Formatted text to convert into a digit.
@@ -467,9 +484,9 @@ def strip_digits(text: str) -> str:
 
 
 def split_text(text: str) -> list[str]:
-    """Splits text into individual word.
+    """Splits text into individual words.
 
-    Handling camelCase, PascalCase, and delimiters like _ and -.
+    Handles camelCase, PascalCase, and delimiters like ``_`` and ``-``.
 
     Args:
         text: The text to split.
@@ -536,9 +553,10 @@ def remove_suffix(text: str, suffix: str) -> str:
 
 
 def clean_txt(text: str, replace_with: str = "_") -> str:
-    """Cleans a string.
+    """Cleans a string by replacing illegal characters.
 
-    by replacing illegal characters and ensuring it doesn't start with a digit.
+    Ensures the result does not start with a digit by prepending
+    ``replace_with`` if necessary.
 
     Args:
         text: Text to clean.
