@@ -58,6 +58,9 @@ autodoc_default_options = {
     "show-inheritance": True,
 }
 
+# -- Options for Mocking -----------------------------------------------------
+autodoc_mock_imports = ["maya", "pymel", "PySide2", "shiboken6"]
+
 
 # -- Auto-generate API documentation -----------------------------------------
 def run_apidoc(_: Sphinx):
