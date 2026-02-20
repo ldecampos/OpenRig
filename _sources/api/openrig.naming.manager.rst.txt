@@ -1,0 +1,7 @@
+openrig.naming.manager module
+=============================
+
+.. automodule:: openrig.naming.manager
+   :members:
+   :undoc-members:
+   :show-inheritance:

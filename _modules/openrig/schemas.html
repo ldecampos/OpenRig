@@ -1,0 +1,586 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>openrig.schemas &mdash; OpenRig 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenRig
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../style_guide/coding_standards.html">Python Coding Style Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenRig</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">openrig.schemas</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for openrig.schemas</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Data schemas for OpenRig configuration.</span>
+
+<span class="sd">Defines the core data contracts used throughout the system, split into</span>
+<span class="sd">two groups:</span>
+
+<span class="sd">**Naming system types** (used by ``rules.py``, ``manager.py``):</span>
+<span class="sd">    - ``TokenValue``: accepted raw input for a token before normalization.</span>
+<span class="sd">    - ``TokenData``: canonical post-normalization form (always ``str`` values).</span>
+<span class="sd">    - ``RuleValidator``: ``Protocol`` that every rule type must satisfy.</span>
+<span class="sd">    - ``RegexRule``, ``ListRule``, ``CallableRule``: concrete rule implementations.</span>
+<span class="sd">    - ``ConcreteRule``: union of all concrete rule types.</span>
+<span class="sd">    - ``RuleConfig``, ``GlobalRules``: intermediate config representations.</span>
+
+<span class="sd">**Settings dataclasses** (populated by ``settings.py`` from ``config.json``):</span>
+<span class="sd">    - ``RiggingSettings``: rigging conventions (side, rotate order, axes).</span>
+<span class="sd">    - ``NamingSettings``: naming convention (separator, tokens, rules, normalizers).</span>
+<span class="sd">    - ``ShapesSettings``: control curve shape defaults.</span>
+<span class="sd">    - ``ColorsSettings``: color conventions per side/usage (reserved).</span>
+<span class="sd">    - ``ExportSettings``: export paths and format defaults (reserved).</span>
+<span class="sd">    - ``SkinSettings``: skinning configuration defaults (reserved).</span>
+<span class="sd">    - ``Settings``: root dataclass aggregating all sections.</span>
+
+<span class="sd">Each settings section corresponds directly to a top-level key in</span>
+<span class="sd">``config.json``, making it trivial to locate any value&#39;s origin.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">FrozenSet</span><span class="p">,</span>
+    <span class="n">List</span><span class="p">,</span>
+    <span class="n">Mapping</span><span class="p">,</span>
+    <span class="n">Optional</span><span class="p">,</span>
+    <span class="n">Protocol</span><span class="p">,</span>
+    <span class="n">Tuple</span><span class="p">,</span>
+    <span class="n">Union</span><span class="p">,</span>
+    <span class="n">runtime_checkable</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Token value types</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+<span class="c1"># TokenValue: accepted raw input for a token (before normalization).</span>
+<span class="c1"># Enum members are accepted so callers can pass e.g. Side.LEFT directly.</span>
+<span class="n">TokenValue</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">]</span>
+
+<span class="c1"># TokenData: canonical internal representation after normalization.</span>
+<span class="c1"># Every value is a plain str; empty string means &quot;token not provided&quot;.</span>
+<span class="n">TokenData</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Rule Protocol</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="RuleValidator">
+<a class="viewcode-back" href="../../api/openrig.schemas.html#openrig.schemas.RuleValidator">[docs]</a>
+<span class="nd">@runtime_checkable</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RuleValidator</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Protocol for all token-level validation rules.</span>
+
+<span class="sd">    Any object that implements ``validate`` and ``to_regex_pattern``</span>
+<span class="sd">    satisfies this protocol. This replaces the previous</span>
+<span class="sd">    ``Union[List, str, Callable]`` type alias, eliminating the need for</span>
+<span class="sd">    ``isinstance`` branching in the ``Manager``.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; class MyRule:</span>
+<span class="sd">        ...     def validate(self, value: str) -&gt; bool:</span>
+<span class="sd">        ...         return value.isalpha()</span>
+<span class="sd">        ...     def to_regex_pattern(self) -&gt; str:</span>
+<span class="sd">        ...         return r&quot;[a-zA-Z]+&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="RuleValidator.validate">
+<a class="viewcode-back" href="../../api/openrig.schemas.html#openrig.schemas.RuleValidator.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validates a normalized token value.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value: The normalized (post-normalization) string value to check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ``True`` if the value is acceptable, ``False`` otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="RuleValidator.to_regex_pattern">
+<a class="viewcode-back" href="../../api/openrig.schemas.html#openrig.schemas.RuleValidator.to_regex_pattern">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_regex_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a regex pattern representing the valid values for this rule.</span>
+
+<span class="sd">        Used by the ``Manager`` to build the global matching regex without</span>
+<span class="sd">        inspecting the rule&#39;s internal structure.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A regex pattern string (without anchors ``^`` / ``$``).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="o">...</span></div>
+</div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Concrete rule implementations</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="RegexRule">
+<a class="viewcode-back" href="../../api/openrig.schemas.html#openrig.schemas.RegexRule">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RegexRule</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A rule that validates a token value against a regular expression.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        pattern: The regex pattern string. Anchors ``^`` / ``$`` are</span>
+<span class="sd">            optional; ``validate`` always performs a full match.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; rule = RegexRule(pattern=r&quot;^[a-z][a-zA-Z0-9]*$&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; rule.validate(&quot;armUpper&quot;)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; rule.validate(&quot;Arm Upper&quot;)</span>
+<span class="sd">        False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span>
+
+<div class="viewcode-block" id="RegexRule.__post_init__">
+<a class="viewcode-back" href="../../api/openrig.schemas.html#openrig.schemas.RegexRule.__post_init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validates that the pattern compiles correctly on construction.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">re</span><span class="o">.</span><span class="n">error</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;RegexRule received an invalid pattern &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span></div>
+
+
+<div class="viewcode-block" id="RegexRule.validate">
+<a class="viewcode-back" href="../../api/openrig.schemas.html#openrig.schemas.RegexRule.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validates the value against the compiled regex pattern.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value: The normalized token value.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ``True`` if the value matches the full pattern.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="RegexRule.to_regex_pattern">
+<a class="viewcode-back" href="../../api/openrig.schemas.html#openrig.schemas.RegexRule.to_regex_pattern">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_regex_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the raw pattern, stripping leading/trailing anchors.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The pattern string ready for embedding in a larger regex.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span>
+        <span class="k">if</span> <span class="n">pattern</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;^&quot;</span><span class="p">):</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="k">if</span> <span class="n">pattern</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">):</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">pattern</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ListRule">
+<a class="viewcode-back" href="../../api/openrig.schemas.html#openrig.schemas.ListRule">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ListRule</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A rule that validates a token value against a fixed set of allowed values.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        allowed: A frozenset of accepted string values.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; rule = ListRule(allowed=frozenset({&quot;l&quot;, &quot;r&quot;, &quot;c&quot;, &quot;m&quot;}))</span>
+<span class="sd">        &gt;&gt;&gt; rule.validate(&quot;l&quot;)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; rule.validate(&quot;left&quot;)</span>
+<span class="sd">        False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">allowed</span><span class="p">:</span> <span class="n">FrozenSet</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+<div class="viewcode-block" id="ListRule.validate">
+<a class="viewcode-back" href="../../api/openrig.schemas.html#openrig.schemas.ListRule.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks membership in the allowed set.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value: The normalized token value.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ``True`` if ``value`` is in the allowed set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed</span></div>
+
+
+<div class="viewcode-block" id="ListRule.to_regex_pattern">
+<a class="viewcode-back" href="../../api/openrig.schemas.html#openrig.schemas.ListRule.to_regex_pattern">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_regex_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns an alternation pattern of all allowed values, sorted by length.</span>
+
+<span class="sd">        Sorting by length descending prevents shorter alternatives from</span>
+<span class="sd">        shadowing longer ones in the regex engine.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A non-capturing alternation group, e.g. ``(?:left|right|l|r)``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">allowed</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">escaped</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">opt</span><span class="p">)</span> <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="n">options</span> <span class="k">if</span> <span class="n">opt</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">escaped</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">r</span><span class="s2">&quot;[^\s]+&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;(?:</span><span class="si">{</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">escaped</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="CallableRule">
+<a class="viewcode-back" href="../../api/openrig.schemas.html#openrig.schemas.CallableRule">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CallableRule</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A rule that delegates validation to an arbitrary callable.</span>
+
+<span class="sd">    The callable must accept a single ``str`` argument and return ``bool``.</span>
+<span class="sd">    Because callable rules are opaque to the regex engine,</span>
+<span class="sd">    ``to_regex_pattern`` returns a catch-all pattern; validation must be</span>
+<span class="sd">    performed separately via ``validate``.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        func: The validation callable. Typed as ``object`` to avoid</span>
+<span class="sd">            hashability issues; narrowed at call site.</span>
+<span class="sd">        name: A human-readable label used in error messages and ``__repr__``.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; rule = CallableRule(func=str.isalpha, name=&quot;alpha_only&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; rule.validate(&quot;arm&quot;)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; rule.validate(&quot;arm1&quot;)</span>
+<span class="sd">        False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">func</span><span class="p">:</span> <span class="nb">object</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+<div class="viewcode-block" id="CallableRule.validate">
+<a class="viewcode-back" href="../../api/openrig.schemas.html#openrig.schemas.CallableRule.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calls the wrapped function with the value.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value: The normalized token value.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ``True`` if the function returns a truthy result.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: If the stored ``func`` is not callable.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;CallableRule &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; holds a non-callable: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="si">!r}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">value</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="CallableRule.to_regex_pattern">
+<a class="viewcode-back" href="../../api/openrig.schemas.html#openrig.schemas.CallableRule.to_regex_pattern">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_regex_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a permissive catch-all pattern.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A catch-all pattern ``[^\\s]+``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">r</span><span class="s2">&quot;[^\s]+&quot;</span></div>
+</div>
+
+
+
+<span class="c1"># Concrete union: the type stored in Manager.rules.</span>
+<span class="n">ConcreteRule</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">RegexRule</span><span class="p">,</span> <span class="n">ListRule</span><span class="p">,</span> <span class="n">CallableRule</span><span class="p">]</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Intermediate naming config dataclasses</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="RuleConfig">
+<a class="viewcode-back" href="../../api/openrig.schemas.html#openrig.schemas.RuleConfig">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RuleConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raw deserialized configuration for a single token rule.</span>
+
+<span class="sd">    Intermediate representation populated from ``config.json``.</span>
+<span class="sd">    ``rules.py`` converts each instance into a ``ConcreteRule``.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        type: Rule type: ``&quot;regex&quot;``, ``&quot;list&quot;``, ``&quot;from_enums&quot;``,</span>
+<span class="sd">            or ``&quot;callable&quot;``.</span>
+<span class="sd">        value: Primary payload — pattern string, list of values, or</span>
+<span class="sd">            dotted import path, depending on ``type``.</span>
+<span class="sd">        sources: Enum class names to aggregate. Only for ``&quot;from_enums&quot;``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">sources</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="GlobalRules">
+<a class="viewcode-back" href="../../api/openrig.schemas.html#openrig.schemas.GlobalRules">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GlobalRules</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Global constraints applied to every fully-built name.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        max_length: Maximum allowed character length for any built name.</span>
+<span class="sd">        forbidden_patterns: Substrings that must not appear in any built name.</span>
+<span class="sd">        separator_rule: Optional ``RuleConfig`` constraining valid separators.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">max_length</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">forbidden_patterns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[])</span>
+    <span class="n">separator_rule</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">RuleConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Settings dataclasses — one per config.json top-level section</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="RiggingSettings">
+<a class="viewcode-back" href="../../api/openrig.schemas.html#openrig.schemas.RiggingSettings">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RiggingSettings</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rigging convention defaults from ``config.json[&quot;rigging&quot;]``.</span>
+
+<span class="sd">    These values drive the default class attributes on ``Side``,</span>
+<span class="sd">    ``RotateOrder``, ``Axis``, and ``ShapeType`` in ``constants.py``.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        side_default: Default side token (e.g. ``&quot;c&quot;``).</span>
+<span class="sd">        rotate_order_default: Default rotate order string (e.g. ``&quot;xyz&quot;``).</span>
+<span class="sd">        axis_aim: Default aim axis (e.g. ``&quot;X&quot;``).</span>
+<span class="sd">        axis_up: Default up axis (e.g. ``&quot;Y&quot;``).</span>
+<span class="sd">        axis_side: Default side axis (e.g. ``&quot;Z&quot;``).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">side_default</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">rotate_order_default</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">axis_aim</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">axis_up</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">axis_side</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+
+<div class="viewcode-block" id="NamingSettings">
+<a class="viewcode-back" href="../../api/openrig.schemas.html#openrig.schemas.NamingSettings">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NamingSettings</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Naming convention configuration from ``config.json[&quot;naming&quot;]``.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        separator: Token separator character (e.g. ``&quot;_&quot;``).</span>
+<span class="sd">        tokens: Ordered tuple of token names.</span>
+<span class="sd">        rules: Mapping from token name (or ``&quot;__global__&quot;``) to its parsed</span>
+<span class="sd">            rule configuration object.</span>
+<span class="sd">        normalizers: Mapping from token name to normalizer function name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">tokens</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+    <span class="n">rules</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">RuleConfig</span><span class="p">,</span> <span class="n">GlobalRules</span><span class="p">]]</span>
+    <span class="n">normalizers</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="ShapesSettings">
+<a class="viewcode-back" href="../../api/openrig.schemas.html#openrig.schemas.ShapesSettings">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ShapesSettings</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Control curve shape defaults from ``config.json[&quot;shapes&quot;]``.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        default: The default shape type string (e.g. ``&quot;circle&quot;``).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">default</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;circle&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="ColorsSettings">
+<a class="viewcode-back" href="../../api/openrig.schemas.html#openrig.schemas.ColorsSettings">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ColorsSettings</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Color convention defaults from ``config.json[&quot;colors&quot;]``.</span>
+
+<span class="sd">    Reserved for future use. Fields will be added as the color convention</span>
+<span class="sd">    is defined (e.g. colors indexed by side or usage type).</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="ExportSettings">
+<a class="viewcode-back" href="../../api/openrig.schemas.html#openrig.schemas.ExportSettings">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ExportSettings</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Export defaults from ``config.json[&quot;export&quot;]``.</span>
+
+<span class="sd">    Reserved for future use. Fields will be added as export paths,</span>
+<span class="sd">    formats, and options are defined.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="SkinSettings">
+<a class="viewcode-back" href="../../api/openrig.schemas.html#openrig.schemas.SkinSettings">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SkinSettings</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Skinning configuration defaults from ``config.json[&quot;skin&quot;]``.</span>
+
+<span class="sd">    Reserved for future use. Fields will be added as skinning workflow</span>
+<span class="sd">    defaults are defined.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="Settings">
+<a class="viewcode-back" href="../../api/openrig.schemas.html#openrig.schemas.Settings">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Settings</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Root configuration dataclass for OpenRig.</span>
+
+<span class="sd">    Aggregates all section-level settings. Each attribute corresponds</span>
+<span class="sd">    directly to a top-level key in ``config.json``.</span>
+
+<span class="sd">    Populated by ``settings.py`` on module load and consumed throughout</span>
+<span class="sd">    the project via the module-level ``SETTINGS`` constant.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        rigging: Rigging convention defaults.</span>
+<span class="sd">        naming: Naming convention configuration.</span>
+<span class="sd">        shapes: Control curve shape defaults.</span>
+<span class="sd">        colors: Color convention defaults (reserved for future use).</span>
+<span class="sd">        export: Export defaults (reserved for future use).</span>
+<span class="sd">        skin: Skinning configuration defaults (reserved for future use).</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; from openrig.settings import SETTINGS</span>
+<span class="sd">        &gt;&gt;&gt; SETTINGS.rigging.side_default</span>
+<span class="sd">        &#39;c&#39;</span>
+<span class="sd">        &gt;&gt;&gt; SETTINGS.naming.separator</span>
+<span class="sd">        &#39;_&#39;</span>
+<span class="sd">        &gt;&gt;&gt; SETTINGS.shapes.default</span>
+<span class="sd">        &#39;circle&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">rigging</span><span class="p">:</span> <span class="n">RiggingSettings</span>
+    <span class="n">naming</span><span class="p">:</span> <span class="n">NamingSettings</span>
+    <span class="n">shapes</span><span class="p">:</span> <span class="n">ShapesSettings</span>
+    <span class="n">colors</span><span class="p">:</span> <span class="n">ColorsSettings</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">ColorsSettings</span><span class="p">)</span>
+    <span class="n">export</span><span class="p">:</span> <span class="n">ExportSettings</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">ExportSettings</span><span class="p">)</span>
+    <span class="n">skin</span><span class="p">:</span> <span class="n">SkinSettings</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">SkinSettings</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Iván Cuenca Ruiz &amp; Luis de Campos.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

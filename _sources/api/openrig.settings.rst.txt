@@ -1,0 +1,7 @@
+openrig.settings module
+=======================
+
+.. automodule:: openrig.settings
+   :members:
+   :undoc-members:
+   :show-inheritance:

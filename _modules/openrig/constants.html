@@ -81,7 +81,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">IntEnum</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassVar</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">openrig.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">SETTINGS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openrig.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">SETTINGS</span>
 
 
 <div class="viewcode-block" id="Tokens">
@@ -171,7 +171,7 @@
 
 
 <span class="c1"># Set default side from configuration</span>
-<span class="n">Side</span><span class="o">.</span><span class="n">DEFAULT</span> <span class="o">=</span> <span class="n">Side</span><span class="p">(</span><span class="n">SETTINGS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;side_default&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">))</span>
+<span class="n">Side</span><span class="o">.</span><span class="n">DEFAULT</span> <span class="o">=</span> <span class="n">Side</span><span class="p">(</span><span class="n">SETTINGS</span><span class="o">.</span><span class="n">rigging</span><span class="o">.</span><span class="n">side_default</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="Position">
@@ -572,7 +572,7 @@
 
 
 <span class="c1"># Set default rotate order from configuration</span>
-<span class="n">RotateOrder</span><span class="o">.</span><span class="n">DEFAULT</span> <span class="o">=</span> <span class="n">RotateOrder</span><span class="p">[</span><span class="n">SETTINGS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rotate_order_default&quot;</span><span class="p">,</span> <span class="s2">&quot;xyz&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span>
+<span class="n">RotateOrder</span><span class="o">.</span><span class="n">DEFAULT</span> <span class="o">=</span> <span class="n">RotateOrder</span><span class="p">[</span><span class="n">SETTINGS</span><span class="o">.</span><span class="n">rigging</span><span class="o">.</span><span class="n">rotate_order_default</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span>
 
 
 <div class="viewcode-block" id="VectorIndex">
@@ -776,9 +776,9 @@
 
 
 <span class="c1"># Set default axis system from configuration</span>
-<span class="n">Axis</span><span class="o">.</span><span class="n">AIM</span> <span class="o">=</span> <span class="n">Axis</span><span class="p">(</span><span class="n">SETTINGS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;axis_aim&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">))</span>
-<span class="n">Axis</span><span class="o">.</span><span class="n">UP</span> <span class="o">=</span> <span class="n">Axis</span><span class="p">(</span><span class="n">SETTINGS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;axis_up&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">))</span>
-<span class="n">Axis</span><span class="o">.</span><span class="n">SIDE</span> <span class="o">=</span> <span class="n">Axis</span><span class="p">(</span><span class="n">SETTINGS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;axis_side&quot;</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">))</span>
+<span class="n">Axis</span><span class="o">.</span><span class="n">AIM</span> <span class="o">=</span> <span class="n">Axis</span><span class="p">(</span><span class="n">SETTINGS</span><span class="o">.</span><span class="n">rigging</span><span class="o">.</span><span class="n">axis_aim</span><span class="p">)</span>
+<span class="n">Axis</span><span class="o">.</span><span class="n">UP</span> <span class="o">=</span> <span class="n">Axis</span><span class="p">(</span><span class="n">SETTINGS</span><span class="o">.</span><span class="n">rigging</span><span class="o">.</span><span class="n">axis_up</span><span class="p">)</span>
+<span class="n">Axis</span><span class="o">.</span><span class="n">SIDE</span> <span class="o">=</span> <span class="n">Axis</span><span class="p">(</span><span class="n">SETTINGS</span><span class="o">.</span><span class="n">rigging</span><span class="o">.</span><span class="n">axis_side</span><span class="p">)</span>
 <span class="n">Axis</span><span class="o">.</span><span class="n">DEFAULT</span> <span class="o">=</span> <span class="n">Axis</span><span class="o">.</span><span class="n">AIM</span>
 
 
@@ -919,7 +919,7 @@
 
 
 <span class="c1"># Set default shape type from configuration</span>
-<span class="n">ShapeType</span><span class="o">.</span><span class="n">DEFAULT</span> <span class="o">=</span> <span class="n">ShapeType</span><span class="p">(</span><span class="n">SETTINGS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;shape_type_default&quot;</span><span class="p">,</span> <span class="s2">&quot;circle&quot;</span><span class="p">))</span>
+<span class="n">ShapeType</span><span class="o">.</span><span class="n">DEFAULT</span> <span class="o">=</span> <span class="n">ShapeType</span><span class="p">(</span><span class="n">SETTINGS</span><span class="o">.</span><span class="n">shapes</span><span class="o">.</span><span class="n">default</span><span class="p">)</span>
 </pre></div>
 
            </div>

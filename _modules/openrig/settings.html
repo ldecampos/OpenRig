@@ -1,0 +1,542 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>openrig.settings &mdash; OpenRig 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenRig
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../style_guide/coding_standards.html">Python Coding Style Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenRig</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">openrig.settings</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for openrig.settings</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Settings module for OpenRig.</span>
+
+<span class="sd">Loads ``config.json`` and exposes the result as the module-level ``SETTINGS``</span>
+<span class="sd">constant. Environment variables can override any simple string field.</span>
+
+<span class="sd">Architecture</span>
+<span class="sd">------------</span>
+<span class="sd">``json.load()`` unavoidably returns ``object`` (typed as ``Any`` in typeshed).</span>
+<span class="sd">Rather than letting that ``Any`` propagate through the whole module, this</span>
+<span class="sd">file absorbs it at the boundary with a small set of typed extractor helpers</span>
+<span class="sd">(``_require_str``, ``_require_list``, ``_require_dict``) that convert</span>
+<span class="sd">``object`` to concrete types immediately, raising ``ConfigError`` with a</span>
+<span class="sd">clear human-readable message if the shape does not match.</span>
+
+<span class="sd">Each top-level section of ``config.json`` is parsed by its own private</span>
+<span class="sd">function (``_parse_rigging``, ``_parse_naming``, etc.), which receive and</span>
+<span class="sd">return fully typed dataclasses. No ``Any`` escapes those functions.</span>
+
+<span class="sd">Environment variable overrides</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Simple string fields can be overridden at runtime via environment variables</span>
+<span class="sd">named ``OPENRIG_&lt;SECTION&gt;_&lt;FIELD&gt;`` (all upper-case). For example::</span>
+
+<span class="sd">    OPENRIG_RIGGING_SIDE_DEFAULT=l</span>
+<span class="sd">    OPENRIG_NAMING_SEPARATOR=-</span>
+<span class="sd">    OPENRIG_SHAPES_DEFAULT=square</span>
+
+<span class="sd">Token overrides use a comma-separated list::</span>
+
+<span class="sd">    OPENRIG_NAMING_TOKENS=descriptor,side,usage</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">openrig.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">GlobalRules</span><span class="p">,</span>
+    <span class="n">NamingSettings</span><span class="p">,</span>
+    <span class="n">RiggingSettings</span><span class="p">,</span>
+    <span class="n">RuleConfig</span><span class="p">,</span>
+    <span class="n">Settings</span><span class="p">,</span>
+    <span class="n">ShapesSettings</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Exceptions</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="ConfigError">
+<a class="viewcode-back" href="../../api/openrig.settings.html#openrig.settings.ConfigError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConfigError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when ``config.json`` is missing, malformed, or structurally invalid.&quot;&quot;&quot;</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Typed extractor helpers</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># These functions are the single point where ``object`` (the type returned by</span>
+<span class="c1"># json.load) is narrowed to a concrete type. All downstream code works with</span>
+<span class="c1"># fully typed values.</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_require_str</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts a ``str`` from an ``object``, raising ``ConfigError`` if it fails.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        value: The raw value from the JSON payload.</span>
+<span class="sd">        path: A dotted path string used in error messages (e.g. ``&quot;rigging.axis_aim&quot;``).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The value cast to ``str``.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ConfigError: If ``value`` is not a ``str``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Expected a string at &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39;, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2">: </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">value</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_require_list_of_str</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts a ``list`` of strings from an ``object``.</span>
+
+<span class="sd">    Validates that ``value`` is a ``list`` and that every element is a</span>
+<span class="sd">    ``str``. Uses index-based access to avoid ``list[Unknown]`` inference</span>
+<span class="sd">    that Pylance produces when iterating directly over a bare</span>
+<span class="sd">    ``isinstance``-narrowed list.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        value: The raw value from the JSON payload.</span>
+<span class="sd">        path: A dotted path string used in error messages.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The value as a ``List[str]``.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ConfigError: If ``value`` is not a list or contains non-string items.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Expected a list at &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39;, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2">: </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+    <span class="c1"># Cast to list[object] via explicit reconstruction so every element</span>
+    <span class="c1"># is typed as object — required because isinstance narrows to</span>
+    <span class="c1"># list[Unknown] and index access on that returns Unknown.</span>
+    <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">object</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">value</span><span class="p">]</span>
+    <span class="n">result</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_require_str</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_require_dict</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts a ``dict[str, object]`` from an ``object``.</span>
+
+<span class="sd">    Validates that ``value`` is a ``dict`` and that every key is a ``str``.</span>
+<span class="sd">    Uses ``list(value.keys())`` and index-based access to avoid</span>
+<span class="sd">    ``dict[Unknown, Unknown]`` inference from bare ``isinstance`` narrowing.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        value: The raw value from the JSON payload.</span>
+<span class="sd">        path: A dotted path string used in error messages.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The value as a ``Dict[str, object]``.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ConfigError: If ``value`` is not a ``dict`` or contains non-string keys.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Expected a dict at &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39;, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2">: </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+    <span class="c1"># Reconstruct as Dict[object, object] via spread so Pylance resolves</span>
+    <span class="c1"># both keys and values as object instead of Unknown.</span>
+    <span class="n">raw</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">object</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">value</span><span class="p">}</span>
+    <span class="n">result</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">raw</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">_require_str</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">[key]&quot;</span><span class="p">)]</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Section parsers</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_rule_config</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">],</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RuleConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parses a single token rule dict into a ``RuleConfig``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data: The raw dict from ``config.json``.</span>
+<span class="sd">        path: Dotted path for error messages.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A populated ``RuleConfig`` instance.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ConfigError: If required fields are missing or have wrong types.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rule_type</span> <span class="o">=</span> <span class="n">_require_str</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">.type&quot;</span><span class="p">)</span>
+
+    <span class="n">raw_value</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+    <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">raw_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">raw_value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">raw_value</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">raw_value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">_require_list_of_str</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">.value&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Expected a string or list at &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">.value&#39;, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">raw_value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">raw_sources</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sources&quot;</span><span class="p">)</span>
+    <span class="n">sources</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">raw_sources</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">sources</span> <span class="o">=</span> <span class="n">_require_list_of_str</span><span class="p">(</span><span class="n">raw_sources</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">.sources&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">RuleConfig</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">rule_type</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">sources</span><span class="o">=</span><span class="n">sources</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_global_rules</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">],</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GlobalRules</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parses the ``__global__`` rule section into a ``GlobalRules`` instance.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data: The raw dict from ``config.json``.</span>
+<span class="sd">        path: Dotted path for error messages.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A populated ``GlobalRules`` instance.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ConfigError: If required fields are missing or have wrong types.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">raw_max</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;max_length&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">raw_max</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Expected an int at &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">.max_length&#39;, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">raw_max</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">forbidden</span> <span class="o">=</span> <span class="n">_require_list_of_str</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;forbidden_patterns&quot;</span><span class="p">,</span> <span class="p">[]),</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">.forbidden_patterns&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">separator_rule</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">RuleConfig</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">raw_sep_rule</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;separator_rule&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">raw_sep_rule</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">sep_dict</span> <span class="o">=</span> <span class="n">_require_dict</span><span class="p">(</span><span class="n">raw_sep_rule</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">.separator_rule&quot;</span><span class="p">)</span>
+        <span class="n">separator_rule</span> <span class="o">=</span> <span class="n">_parse_rule_config</span><span class="p">(</span><span class="n">sep_dict</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">.separator_rule&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">GlobalRules</span><span class="p">(</span>
+        <span class="n">max_length</span><span class="o">=</span><span class="n">raw_max</span><span class="p">,</span>
+        <span class="n">forbidden_patterns</span><span class="o">=</span><span class="n">forbidden</span><span class="p">,</span>
+        <span class="n">separator_rule</span><span class="o">=</span><span class="n">separator_rule</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_naming_rules</span><span class="p">(</span>
+    <span class="n">raw_rules</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">],</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">RuleConfig</span><span class="p">,</span> <span class="n">GlobalRules</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parses all token rules into a typed mapping.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        raw_rules: The raw ``rules`` dict from ``config.json[&quot;naming&quot;]``.</span>
+<span class="sd">        path: Dotted path for error messages.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A mapping of token name → ``RuleConfig`` or ``GlobalRules``.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ConfigError: If any rule entry is malformed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parsed</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">RuleConfig</span><span class="p">,</span> <span class="n">GlobalRules</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">raw_value</span> <span class="ow">in</span> <span class="n">raw_rules</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">entry_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">entry</span> <span class="o">=</span> <span class="n">_require_dict</span><span class="p">(</span><span class="n">raw_value</span><span class="p">,</span> <span class="n">entry_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;__global__&quot;</span><span class="p">:</span>
+            <span class="n">parsed</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">_parse_global_rules</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">entry_path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">parsed</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">_parse_rule_config</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">entry_path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parsed</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_rigging</span><span class="p">(</span><span class="n">section</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">RiggingSettings</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parses ``config.json[&quot;rigging&quot;]`` into a ``RiggingSettings`` instance.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        section: The raw ``rigging`` dict from ``config.json``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A populated ``RiggingSettings`` instance.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ConfigError: If any required field is missing or has the wrong type.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">RiggingSettings</span><span class="p">(</span>
+        <span class="n">side_default</span><span class="o">=</span><span class="n">_require_str</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;side_default&quot;</span><span class="p">),</span> <span class="s2">&quot;rigging.side_default&quot;</span><span class="p">),</span>
+        <span class="n">rotate_order_default</span><span class="o">=</span><span class="n">_require_str</span><span class="p">(</span>
+            <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rotate_order_default&quot;</span><span class="p">),</span> <span class="s2">&quot;rigging.rotate_order_default&quot;</span>
+        <span class="p">),</span>
+        <span class="n">axis_aim</span><span class="o">=</span><span class="n">_require_str</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;axis_aim&quot;</span><span class="p">),</span> <span class="s2">&quot;rigging.axis_aim&quot;</span><span class="p">),</span>
+        <span class="n">axis_up</span><span class="o">=</span><span class="n">_require_str</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;axis_up&quot;</span><span class="p">),</span> <span class="s2">&quot;rigging.axis_up&quot;</span><span class="p">),</span>
+        <span class="n">axis_side</span><span class="o">=</span><span class="n">_require_str</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;axis_side&quot;</span><span class="p">),</span> <span class="s2">&quot;rigging.axis_side&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_naming</span><span class="p">(</span><span class="n">section</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">NamingSettings</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parses ``config.json[&quot;naming&quot;]`` into a ``NamingSettings`` instance.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        section: The raw ``naming`` dict from ``config.json``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A populated ``NamingSettings`` instance.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ConfigError: If any required field is missing or has the wrong type.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">separator</span> <span class="o">=</span> <span class="n">_require_str</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;separator&quot;</span><span class="p">),</span> <span class="s2">&quot;naming.separator&quot;</span><span class="p">)</span>
+    <span class="n">tokens</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+        <span class="n">_require_list_of_str</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tokens&quot;</span><span class="p">,</span> <span class="p">[]),</span> <span class="s2">&quot;naming.tokens&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">raw_rules</span> <span class="o">=</span> <span class="n">_require_dict</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rules&quot;</span><span class="p">,</span> <span class="p">{}),</span> <span class="s2">&quot;naming.rules&quot;</span><span class="p">)</span>
+    <span class="n">rules</span> <span class="o">=</span> <span class="n">_parse_naming_rules</span><span class="p">(</span><span class="n">raw_rules</span><span class="p">,</span> <span class="s2">&quot;naming.rules&quot;</span><span class="p">)</span>
+
+    <span class="n">raw_normalizers</span> <span class="o">=</span> <span class="n">_require_dict</span><span class="p">(</span>
+        <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;normalizers&quot;</span><span class="p">,</span> <span class="p">{}),</span> <span class="s2">&quot;naming.normalizers&quot;</span>
+    <span class="p">)</span>
+    <span class="n">normalizers</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">k</span><span class="p">:</span> <span class="n">_require_str</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;naming.normalizers.</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">raw_normalizers</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">NamingSettings</span><span class="p">(</span>
+        <span class="n">separator</span><span class="o">=</span><span class="n">separator</span><span class="p">,</span>
+        <span class="n">tokens</span><span class="o">=</span><span class="n">tokens</span><span class="p">,</span>
+        <span class="n">rules</span><span class="o">=</span><span class="n">rules</span><span class="p">,</span>
+        <span class="n">normalizers</span><span class="o">=</span><span class="n">normalizers</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_shapes</span><span class="p">(</span><span class="n">section</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ShapesSettings</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parses ``config.json[&quot;shapes&quot;]`` into a ``ShapesSettings`` instance.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        section: The raw ``shapes`` dict from ``config.json``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A populated ``ShapesSettings`` instance, using defaults for absent fields.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">raw_default</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">raw_default</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ShapesSettings</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">ShapesSettings</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">_require_str</span><span class="p">(</span><span class="n">raw_default</span><span class="p">,</span> <span class="s2">&quot;shapes.default&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Environment variable overrides</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_apply_env_overrides</span><span class="p">(</span><span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Settings</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Applies environment variable overrides to a ``Settings`` instance.</span>
+
+<span class="sd">    Checks for ``OPENRIG_&lt;SECTION&gt;_&lt;FIELD&gt;`` variables and overwrites the</span>
+<span class="sd">    corresponding dataclass fields. Only simple ``str`` fields and</span>
+<span class="sd">    ``naming.tokens`` (comma-separated) are supported.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        settings: The fully parsed ``Settings`` instance.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The same ``Settings`` instance with any overrides applied in-place.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_str_overrides</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="c1"># (env_var_suffix, section_attr, field_attr)</span>
+        <span class="p">(</span><span class="s2">&quot;RIGGING_SIDE_DEFAULT&quot;</span><span class="p">,</span> <span class="s2">&quot;rigging&quot;</span><span class="p">,</span> <span class="s2">&quot;side_default&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;RIGGING_ROTATE_ORDER_DEFAULT&quot;</span><span class="p">,</span> <span class="s2">&quot;rigging&quot;</span><span class="p">,</span> <span class="s2">&quot;rotate_order_default&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;RIGGING_AXIS_AIM&quot;</span><span class="p">,</span> <span class="s2">&quot;rigging&quot;</span><span class="p">,</span> <span class="s2">&quot;axis_aim&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;RIGGING_AXIS_UP&quot;</span><span class="p">,</span> <span class="s2">&quot;rigging&quot;</span><span class="p">,</span> <span class="s2">&quot;axis_up&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;RIGGING_AXIS_SIDE&quot;</span><span class="p">,</span> <span class="s2">&quot;rigging&quot;</span><span class="p">,</span> <span class="s2">&quot;axis_side&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;NAMING_SEPARATOR&quot;</span><span class="p">,</span> <span class="s2">&quot;naming&quot;</span><span class="p">,</span> <span class="s2">&quot;separator&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;SHAPES_DEFAULT&quot;</span><span class="p">,</span> <span class="s2">&quot;shapes&quot;</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">),</span>
+    <span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">suffix</span><span class="p">,</span> <span class="n">section_attr</span><span class="p">,</span> <span class="n">field_attr</span> <span class="ow">in</span> <span class="n">_str_overrides</span><span class="p">:</span>
+        <span class="n">env_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;OPENRIG_</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">env_val</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">env_key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">env_val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">section</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="n">section_attr</span><span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">field_attr</span><span class="p">,</span> <span class="n">env_val</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Override applied: </span><span class="si">%s</span><span class="s2">=</span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">env_key</span><span class="p">,</span> <span class="n">env_val</span><span class="p">)</span>
+
+    <span class="n">tokens_env</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;OPENRIG_NAMING_TOKENS&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">tokens_env</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">naming</span><span class="o">.</span><span class="n">tokens</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="n">t</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tokens_env</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Override applied: OPENRIG_NAMING_TOKENS=</span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">tokens_env</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">settings</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Public entry point</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="get_settings">
+<a class="viewcode-back" href="../../api/openrig.settings.html#openrig.settings.get_settings">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_settings</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Settings</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loads and returns the OpenRig configuration.</span>
+
+<span class="sd">    Reads ``config.json`` from the same directory as this module, parses</span>
+<span class="sd">    each section into its typed dataclass, and applies any environment</span>
+<span class="sd">    variable overrides.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A fully populated ``Settings`` instance.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ConfigError: If ``config.json`` is missing, cannot be parsed as JSON,</span>
+<span class="sd">            or has a structural mismatch with the expected schema.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;config.json&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">config_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Configuration file not found: &#39;</span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
+            <span class="s2">&quot;Ensure &#39;config.json&#39; exists in the openrig package directory.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+            <span class="n">raw</span><span class="p">:</span> <span class="nb">object</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to parse &#39;</span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s2">&#39; as JSON: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not read &#39;</span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+    <span class="c1"># Narrow the top-level object to a typed dict immediately.</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="n">_require_dict</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="s2">&quot;&lt;config.json&gt;&quot;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">settings</span> <span class="o">=</span> <span class="n">Settings</span><span class="p">(</span>
+            <span class="n">rigging</span><span class="o">=</span><span class="n">_parse_rigging</span><span class="p">(</span><span class="n">_require_dict</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rigging&quot;</span><span class="p">,</span> <span class="p">{}),</span> <span class="s2">&quot;rigging&quot;</span><span class="p">)),</span>
+            <span class="n">naming</span><span class="o">=</span><span class="n">_parse_naming</span><span class="p">(</span><span class="n">_require_dict</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;naming&quot;</span><span class="p">,</span> <span class="p">{}),</span> <span class="s2">&quot;naming&quot;</span><span class="p">)),</span>
+            <span class="n">shapes</span><span class="o">=</span><span class="n">_parse_shapes</span><span class="p">(</span><span class="n">_require_dict</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;shapes&quot;</span><span class="p">,</span> <span class="p">{}),</span> <span class="s2">&quot;shapes&quot;</span><span class="p">)),</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="n">ConfigError</span><span class="p">:</span>
+        <span class="k">raise</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Unexpected error while parsing &#39;</span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+    <span class="k">return</span> <span class="n">_apply_env_overrides</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span></div>
+
+
+
+<span class="n">SETTINGS</span><span class="p">:</span> <span class="n">Settings</span> <span class="o">=</span> <span class="n">get_settings</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Iván Cuenca Ruiz &amp; Luis de Campos.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

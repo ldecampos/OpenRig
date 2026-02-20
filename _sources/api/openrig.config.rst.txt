@@ -1,7 +1,0 @@
-openrig.config module
-=====================
-
-.. automodule:: openrig.config
-   :members:
-   :undoc-members:
-   :show-inheritance:

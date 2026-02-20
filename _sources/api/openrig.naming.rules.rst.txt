@@ -1,0 +1,7 @@
+openrig.naming.rules module
+===========================
+
+.. automodule:: openrig.naming.rules
+   :members:
+   :undoc-members:
+   :show-inheritance:

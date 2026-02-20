@@ -19,7 +19,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="openrig.naming.utils module" href="openrig.naming.utils.html" />
+    <link rel="next" title="openrig.naming.manager module" href="openrig.naming.manager.html" />
     <link rel="prev" title="openrig.core package" href="openrig.core.html" /> 
 </head>
 
@@ -90,10 +90,521 @@
              
   <section id="module-openrig.naming">
 <span id="openrig-naming-package"></span><h1>openrig.naming package<a class="headerlink" href="#module-openrig.naming" title="Link to this heading"></a></h1>
+<p>Naming package for OpenRig.</p>
+<p>This package provides a configurable system for building, parsing, and
+validating names according to a defined convention.</p>
+<p>The main entry point is <code class="docutils literal notranslate"><span class="pre">get_manager()</span></code>, which returns a singleton
+<code class="docutils literal notranslate"><span class="pre">Manager</span></code> instance pre-configured with the rules and normalizers
+declared in <code class="docutils literal notranslate"><span class="pre">config.json</span></code>.</p>
+<dl class="simple">
+<dt>Public API:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">get_manager()</span> <span class="pre">-&gt;</span> <span class="pre">Manager</span></code>: returns the singleton manager.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Manager</span></code>: the naming manager class.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Normalizer</span></code>: type alias for normalizer callables.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">openrig.naming</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_manager</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">get_manager</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span><span class="o">.</span><span class="n">build_name</span><span class="p">(</span><span class="n">descriptor</span><span class="o">=</span><span class="s2">&quot;arm&quot;</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="s2">&quot;l&quot;</span><span class="p">,</span> <span class="n">usage</span><span class="o">=</span><span class="s2">&quot;jnt&quot;</span><span class="p">)</span>
+<span class="go">&#39;arm_l_jnt&#39;</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.naming.Manager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.naming.</span></span><span class="sig-name descname"><span class="pre">Manager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rules</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="openrig.schemas.html#openrig.schemas.RegexRule" title="openrig.schemas.RegexRule"><span class="pre">RegexRule</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="openrig.schemas.html#openrig.schemas.ListRule" title="openrig.schemas.ListRule"><span class="pre">ListRule</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="openrig.schemas.html#openrig.schemas.CallableRule" title="openrig.schemas.CallableRule"><span class="pre">CallableRule</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalizers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">object</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">global_rules</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="openrig.schemas.html#openrig.schemas.GlobalRules" title="openrig.schemas.GlobalRules"><span class="pre">GlobalRules</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openrig/naming/manager.html#Manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.Manager" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Manages naming conventions by validating and operating on strings.</p>
+<p>Builds, parses, and validates names according to a configurable token
+structure. All token values are normalized to plain strings before
+validation, so callers may pass raw <code class="docutils literal notranslate"><span class="pre">str</span></code> or <code class="docutils literal notranslate"><span class="pre">Enum</span></code> members.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.naming.Manager.tokens">
+<span class="sig-name descname"><span class="pre">tokens</span></span><a class="headerlink" href="#openrig.naming.Manager.tokens" title="Link to this definition"></a></dt>
+<dd><p>Ordered list of token name strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.naming.Manager.separator">
+<span class="sig-name descname"><span class="pre">separator</span></span><a class="headerlink" href="#openrig.naming.Manager.separator" title="Link to this definition"></a></dt>
+<dd><p>Character used to join token values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.naming.Manager.rules">
+<span class="sig-name descname"><span class="pre">rules</span></span><a class="headerlink" href="#openrig.naming.Manager.rules" title="Link to this definition"></a></dt>
+<dd><p>Mapping of token name to its <code class="docutils literal notranslate"><span class="pre">ConcreteRule</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, <a class="reference internal" href="openrig.schemas.html#openrig.schemas.RegexRule" title="openrig.schemas.RegexRule">openrig.schemas.RegexRule</a> | <a class="reference internal" href="openrig.schemas.html#openrig.schemas.ListRule" title="openrig.schemas.ListRule">openrig.schemas.ListRule</a> | <a class="reference internal" href="openrig.schemas.html#openrig.schemas.CallableRule" title="openrig.schemas.CallableRule">openrig.schemas.CallableRule</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.naming.Manager.normalizers">
+<span class="sig-name descname"><span class="pre">normalizers</span></span><a class="headerlink" href="#openrig.naming.Manager.normalizers" title="Link to this definition"></a></dt>
+<dd><p>Mapping of token name to its normalizer callable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Callable[[object], str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.naming.Manager.global_rules">
+<span class="sig-name descname"><span class="pre">global_rules</span></span><a class="headerlink" href="#openrig.naming.Manager.global_rules" title="Link to this definition"></a></dt>
+<dd><p>Global constraints applied to every built name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="openrig.schemas.html#openrig.schemas.GlobalRules" title="openrig.schemas.GlobalRules">openrig.schemas.GlobalRules</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">openrig.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">RegexRule</span><span class="p">,</span> <span class="n">ListRule</span><span class="p">,</span> <span class="n">GlobalRules</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">Manager</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">tokens</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;descriptor&quot;</span><span class="p">,</span> <span class="s2">&quot;side&quot;</span><span class="p">,</span> <span class="s2">&quot;usage&quot;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">separator</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">rules</span><span class="o">=</span><span class="p">{</span>
+<span class="gp">... </span>        <span class="s2">&quot;descriptor&quot;</span><span class="p">:</span> <span class="n">RegexRule</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;^[a-z][a-zA-Z0-9]*$&quot;</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="s2">&quot;side&quot;</span><span class="p">:</span> <span class="n">ListRule</span><span class="p">(</span><span class="n">allowed</span><span class="o">=</span><span class="nb">frozenset</span><span class="p">({</span><span class="s2">&quot;l&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">})),</span>
+<span class="gp">... </span>    <span class="p">},</span>
+<span class="gp">... </span>    <span class="n">global_rules</span><span class="o">=</span><span class="n">GlobalRules</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">80</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span><span class="o">.</span><span class="n">build_name</span><span class="p">(</span><span class="n">descriptor</span><span class="o">=</span><span class="s2">&quot;arm&quot;</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="s2">&quot;l&quot;</span><span class="p">,</span> <span class="n">usage</span><span class="o">=</span><span class="s2">&quot;jnt&quot;</span><span class="p">)</span>
+<span class="go">&#39;arm_l_jnt&#39;</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.naming.Manager.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rules</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="openrig.schemas.html#openrig.schemas.RegexRule" title="openrig.schemas.RegexRule"><span class="pre">RegexRule</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="openrig.schemas.html#openrig.schemas.ListRule" title="openrig.schemas.ListRule"><span class="pre">ListRule</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="openrig.schemas.html#openrig.schemas.CallableRule" title="openrig.schemas.CallableRule"><span class="pre">CallableRule</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalizers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">object</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">global_rules</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="openrig.schemas.html#openrig.schemas.GlobalRules" title="openrig.schemas.GlobalRules"><span class="pre">GlobalRules</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/openrig/naming/manager.html#Manager.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.Manager.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes the naming Manager.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tokens</strong> – Ordered sequence of token name strings.</p></li>
+<li><p><strong>separator</strong> – Character used to join token values. Must not be empty.</p></li>
+<li><p><strong>rules</strong> – Mapping of token name to its <code class="docutils literal notranslate"><span class="pre">ConcreteRule</span></code>. Tokens
+without a rule accept any value.</p></li>
+<li><p><strong>normalizers</strong> – Mapping of token name to its normalizer callable.
+Normalizers are applied before validation.</p></li>
+<li><p><strong>global_rules</strong> – Global constraints (max length, forbidden patterns).
+Defaults to an unconstrained <code class="docutils literal notranslate"><span class="pre">GlobalRules</span></code> instance.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.NamingConfigError" title="openrig.naming.manager.NamingConfigError"><strong>NamingConfigError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">separator</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code> or empty.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">tokens</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">separator</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#id1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">rules</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="openrig.schemas.html#openrig.schemas.RegexRule" title="openrig.schemas.RegexRule"><span class="pre">RegexRule</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="openrig.schemas.html#openrig.schemas.ListRule" title="openrig.schemas.ListRule"><span class="pre">ListRule</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="openrig.schemas.html#openrig.schemas.CallableRule" title="openrig.schemas.CallableRule"><span class="pre">CallableRule</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#id2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">normalizers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">object</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#id3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">global_rules</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="openrig.schemas.html#openrig.schemas.GlobalRules" title="openrig.schemas.GlobalRules"><span class="pre">GlobalRules</span></a></em><a class="headerlink" href="#id4" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.naming.Manager.__repr__">
+<span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/openrig/naming/manager.html#Manager.__repr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.Manager.__repr__" title="Link to this definition"></a></dt>
+<dd><p>Returns a developer-friendly string representation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.naming.Manager.from_dict">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.ManagerConfig" title="openrig.naming.manager.ManagerConfig"><span class="pre">ManagerConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.Manager" title="openrig.naming.manager.Manager"><span class="pre">Manager</span></a></span></span><a class="reference internal" href="../_modules/openrig/naming/manager.html#Manager.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.Manager.from_dict" title="Link to this definition"></a></dt>
+<dd><p>Creates a <code class="docutils literal notranslate"><span class="pre">Manager</span></code> instance from a <code class="docutils literal notranslate"><span class="pre">ManagerConfig</span></code> dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> – A <code class="docutils literal notranslate"><span class="pre">ManagerConfig</span></code> typed dict containing the configuration.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new <code class="docutils literal notranslate"><span class="pre">Manager</span></code> instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.naming.Manager.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.ManagerConfig" title="openrig.naming.manager.ManagerConfig"><span class="pre">ManagerConfig</span></a></span></span><a class="reference internal" href="../_modules/openrig/naming/manager.html#Manager.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.Manager.to_dict" title="Link to this definition"></a></dt>
+<dd><p>Exports the current configuration as a <code class="docutils literal notranslate"><span class="pre">ManagerConfig</span></code> dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A <code class="docutils literal notranslate"><span class="pre">ManagerConfig</span></code> typed dict representing the current state.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.naming.Manager.is_valid">
+<span class="sig-name descname"><span class="pre">is_valid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/openrig/naming/manager.html#Manager.is_valid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.Manager.is_valid" title="Link to this definition"></a></dt>
+<dd><p>Returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if <code class="docutils literal notranslate"><span class="pre">name</span></code> is fully valid against all tokens.</p>
+<p>A name is fully valid when it contains a non-empty, rule-conforming
+value for every token defined in the convention. For partial
+validation use <code class="docutils literal notranslate"><span class="pre">get_data</span></code> and inspect individual token values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – The candidate name string.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the name is strictly valid, <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.naming.Manager.is_valid_token">
+<span class="sig-name descname"><span class="pre">is_valid_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/openrig/naming/manager.html#Manager.is_valid_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.Manager.is_valid_token" title="Link to this definition"></a></dt>
+<dd><p>Returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if <code class="docutils literal notranslate"><span class="pre">value</span></code> is valid for the given token.</p>
+<p>Checks that the value does not contain the separator, then delegates
+to the token’s <code class="docutils literal notranslate"><span class="pre">ConcreteRule.validate</span></code> method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>token</strong> – The token name.</p></li>
+<li><p><strong>value</strong> – The normalized (post-normalization) string value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if valid, <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.naming.Manager.get_data">
+<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/openrig/naming/manager.html#Manager.get_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.Manager.get_data" title="Link to this definition"></a></dt>
+<dd><p>Extracts token values from a name string using the matching regex.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – The name string to parse.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A <code class="docutils literal notranslate"><span class="pre">TokenData</span></code> dict mapping every token name to its extracted
+value, or <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> for tokens not present in the name.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.naming.Manager.parse">
+<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/openrig/naming/manager.html#Manager.parse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.Manager.parse" title="Link to this definition"></a></dt>
+<dd><p>Attempts to parse a name into its constituent token values.</p>
+<p>Tries in order:
+1. Regex-based extraction (strict structural match).
+2. Split-based extraction (loose positional match).
+3. Returns the original string if both fail.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – The name string to parse.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A <code class="docutils literal notranslate"><span class="pre">TokenData</span></code> dict if parsing succeeds, or the original
+<code class="docutils literal notranslate"><span class="pre">str</span></code> if the name does not conform to the convention.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.naming.Manager.get_token_value">
+<span class="sig-name descname"><span class="pre">get_token_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/openrig/naming/manager.html#Manager.get_token_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.Manager.get_token_value" title="Link to this definition"></a></dt>
+<dd><p>Returns the value of a specific token extracted from a name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – The name string to extract from.</p></li>
+<li><p><strong>token_name</strong> – The name of the token to retrieve.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The extracted token value, or <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> if not present.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.NamingValidationError" title="openrig.naming.manager.NamingValidationError"><strong>NamingValidationError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">token_name</span></code> is not defined in this
+    manager’s token list.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.naming.Manager.get_errors">
+<span class="sig-name descname"><span class="pre">get_errors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/openrig/naming/manager.html#Manager.get_errors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.Manager.get_errors" title="Link to this definition"></a></dt>
+<dd><p>Returns a list of human-readable validation errors for a name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – The name string to validate.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of error message strings. Empty if the name is valid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.naming.Manager.get_matching_regex">
+<span class="sig-name descname"><span class="pre">get_matching_regex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capture_groups</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_match</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/openrig/naming/manager.html#Manager.get_matching_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.Manager.get_matching_regex" title="Link to this definition"></a></dt>
+<dd><p>Generates a regex pattern matching names against this convention.</p>
+<p>Tokens are optional from right to left: for tokens
+<code class="docutils literal notranslate"><span class="pre">[&quot;descriptor&quot;,</span> <span class="pre">&quot;side&quot;,</span> <span class="pre">&quot;usage&quot;]</span></code> the pattern matches
+<code class="docutils literal notranslate"><span class="pre">&quot;arm&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;arm_l&quot;</span></code>, and <code class="docutils literal notranslate"><span class="pre">&quot;arm_l_jnt&quot;</span></code>, but never
+<code class="docutils literal notranslate"><span class="pre">&quot;arm__jnt&quot;</span></code>.</p>
+<p>The pattern for each token is derived from its <code class="docutils literal notranslate"><span class="pre">ConcreteRule</span></code>
+via <code class="docutils literal notranslate"><span class="pre">rule.to_regex_pattern()</span></code>. Tokens without a rule use a
+catch-all pattern that excludes the separator.</p>
+<p>Results are cached by <code class="docutils literal notranslate"><span class="pre">(capture_groups,</span> <span class="pre">full_match,</span> <span class="pre">strict)</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>capture_groups</strong> – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, wraps each token in a named
+capture group <code class="docutils literal notranslate"><span class="pre">(?P&lt;token_name&gt;...)</span></code>.</p></li>
+<li><p><strong>full_match</strong> – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, anchors the pattern with <code class="docutils literal notranslate"><span class="pre">^</span></code> / <code class="docutils literal notranslate"><span class="pre">$</span></code>.</p></li>
+<li><p><strong>strict</strong> – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, all tokens are required (no optional groups).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The assembled regex pattern string.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.naming.Manager.add_rule">
+<span class="sig-name descname"><span class="pre">add_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rule</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="openrig.schemas.html#openrig.schemas.RegexRule" title="openrig.schemas.RegexRule"><span class="pre">RegexRule</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="openrig.schemas.html#openrig.schemas.ListRule" title="openrig.schemas.ListRule"><span class="pre">ListRule</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="openrig.schemas.html#openrig.schemas.CallableRule" title="openrig.schemas.CallableRule"><span class="pre">CallableRule</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/openrig/naming/manager.html#Manager.add_rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.Manager.add_rule" title="Link to this definition"></a></dt>
+<dd><p>Adds or replaces the validation rule for a token.</p>
+<p>Clears the regex cache because the pattern depends on all rules.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>token</strong> – The token name.</p></li>
+<li><p><strong>rule</strong> – The <code class="docutils literal notranslate"><span class="pre">ConcreteRule</span></code> instance to associate with the token.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.naming.Manager.remove_rule">
+<span class="sig-name descname"><span class="pre">remove_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/openrig/naming/manager.html#Manager.remove_rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.Manager.remove_rule" title="Link to this definition"></a></dt>
+<dd><p>Removes the validation rule for a token, if present.</p>
+<p>Clears the regex cache because the pattern depends on all rules.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>token</strong> – The token name whose rule should be removed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.naming.Manager.build_name">
+<span class="sig-name descname"><span class="pre">build_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Enum</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/openrig/naming/manager.html#Manager.build_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.Manager.build_name" title="Link to this definition"></a></dt>
+<dd><p>Builds a name string from token values.</p>
+<p>Normalizes each provided value, validates it against the token’s
+rule, joins all non-empty values with the separator, and then
+checks the result against the global rules.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>**kwargs</strong> – Token values keyed by token name. Values may be
+<code class="docutils literal notranslate"><span class="pre">str</span></code> or <code class="docutils literal notranslate"><span class="pre">Enum</span></code> members; they are normalized before
+validation.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The assembled name string.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.NamingValidationError" title="openrig.naming.manager.NamingValidationError"><strong>NamingValidationError</strong></a> – If unknown tokens are provided, if a
+    normalized value fails its rule, or if the assembled name
+    violates a global constraint.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.naming.Manager.update_name">
+<span class="sig-name descname"><span class="pre">update_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Enum</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/openrig/naming/manager.html#Manager.update_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.Manager.update_name" title="Link to this definition"></a></dt>
+<dd><p>Updates specific token values in an existing name.</p>
+<p>Parses <code class="docutils literal notranslate"><span class="pre">name</span></code> into its token values, applies <code class="docutils literal notranslate"><span class="pre">kwargs</span></code> as
+overrides, then rebuilds the name.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">name</span></code> cannot be parsed against the full convention, it is
+treated as a bare descriptor (first token) provided it passes the
+first token’s rule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – The existing name string to update.</p></li>
+<li><p><strong>**kwargs</strong> – Token values to override. Same rules as <code class="docutils literal notranslate"><span class="pre">build_name</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The updated name string.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.NamingValidationError" title="openrig.naming.manager.NamingValidationError"><strong>NamingValidationError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">name</span></code> cannot be interpreted and is
+    not empty, or if the updated values are invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.naming.Manager.resolve_name">
+<span class="sig-name descname"><span class="pre">resolve_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Enum</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rules</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="openrig.schemas.html#openrig.schemas.RegexRule" title="openrig.schemas.RegexRule"><span class="pre">RegexRule</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="openrig.schemas.html#openrig.schemas.ListRule" title="openrig.schemas.ListRule"><span class="pre">ListRule</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="openrig.schemas.html#openrig.schemas.CallableRule" title="openrig.schemas.CallableRule"><span class="pre">CallableRule</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalizers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">object</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/openrig/naming/manager.html#Manager.resolve_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.Manager.resolve_name" title="Link to this definition"></a></dt>
+<dd><p>Resolves a flexible input into a final name string.</p>
+<p>Provides a unified entry point for callers that may supply names as
+dicts, sequences, or plain strings. When <code class="docutils literal notranslate"><span class="pre">tokens</span></code>, <code class="docutils literal notranslate"><span class="pre">rules</span></code>, or
+<code class="docutils literal notranslate"><span class="pre">normalizers</span></code> overrides are provided, a temporary <code class="docutils literal notranslate"><span class="pre">Manager</span></code> is
+created with those overrides applied on top of the current config.</p>
+<p>Supported <code class="docutils literal notranslate"><span class="pre">value</span></code> types:
+- <code class="docutils literal notranslate"><span class="pre">dict</span></code> (<code class="docutils literal notranslate"><span class="pre">TokenData</span></code>): passed directly to <code class="docutils literal notranslate"><span class="pre">build_name</span></code>.
+- <code class="docutils literal notranslate"><span class="pre">list</span></code> / <code class="docutils literal notranslate"><span class="pre">tuple</span></code> (<code class="docutils literal notranslate"><span class="pre">Sequence[TokenValue]</span></code>): values are</p>
+<blockquote>
+<div><p>mapped positionally to tokens, then passed to <code class="docutils literal notranslate"><span class="pre">build_name</span></code>.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: returned as-is (no building or validation).</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> – The input to resolve.</p></li>
+<li><p><strong>tokens</strong> – Optional token list override.</p></li>
+<li><p><strong>rules</strong> – Optional rules override.</p></li>
+<li><p><strong>normalizers</strong> – Optional normalizers override.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The resolved name string.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.NamingValidationError" title="openrig.naming.manager.NamingValidationError"><strong>NamingValidationError</strong></a> – If a sequence input has more items than
+    there are tokens.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="openrig.naming.get_manager">
+<span class="sig-prename descclassname"><span class="pre">openrig.naming.</span></span><span class="sig-name descname"><span class="pre">get_manager</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.Manager" title="openrig.naming.manager.Manager"><span class="pre">Manager</span></a></span></span><a class="reference internal" href="../_modules/openrig/naming.html#get_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.get_manager" title="Link to this definition"></a></dt>
+<dd><p>Returns the pre-configured singleton <code class="docutils literal notranslate"><span class="pre">Manager</span></code> instance.</p>
+<p>Builds the instance on first call using the convention defined in
+<code class="docutils literal notranslate"><span class="pre">config.json</span></code> (via <code class="docutils literal notranslate"><span class="pre">rules.py</span></code>). Subsequent calls return the
+same instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The singleton <code class="docutils literal notranslate"><span class="pre">Manager</span></code> instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="openrig.naming.manager.html">openrig.naming.manager module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.NamingError"><code class="docutils literal notranslate"><span class="pre">NamingError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.NamingConfigError"><code class="docutils literal notranslate"><span class="pre">NamingConfigError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.NamingValidationError"><code class="docutils literal notranslate"><span class="pre">NamingValidationError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.ManagerConfig"><code class="docutils literal notranslate"><span class="pre">ManagerConfig</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.ManagerConfig.tokens"><code class="docutils literal notranslate"><span class="pre">ManagerConfig.tokens</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.ManagerConfig.separator"><code class="docutils literal notranslate"><span class="pre">ManagerConfig.separator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.ManagerConfig.rules"><code class="docutils literal notranslate"><span class="pre">ManagerConfig.rules</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.ManagerConfig.normalizers"><code class="docutils literal notranslate"><span class="pre">ManagerConfig.normalizers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.ManagerConfig.global_rules"><code class="docutils literal notranslate"><span class="pre">ManagerConfig.global_rules</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#id0"><code class="docutils literal notranslate"><span class="pre">ManagerConfig.tokens</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#id1"><code class="docutils literal notranslate"><span class="pre">ManagerConfig.separator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#id2"><code class="docutils literal notranslate"><span class="pre">ManagerConfig.rules</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#id3"><code class="docutils literal notranslate"><span class="pre">ManagerConfig.normalizers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#id4"><code class="docutils literal notranslate"><span class="pre">ManagerConfig.global_rules</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.Manager"><code class="docutils literal notranslate"><span class="pre">Manager</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.Manager.tokens"><code class="docutils literal notranslate"><span class="pre">Manager.tokens</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.Manager.separator"><code class="docutils literal notranslate"><span class="pre">Manager.separator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.Manager.rules"><code class="docutils literal notranslate"><span class="pre">Manager.rules</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.Manager.normalizers"><code class="docutils literal notranslate"><span class="pre">Manager.normalizers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.Manager.global_rules"><code class="docutils literal notranslate"><span class="pre">Manager.global_rules</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.Manager.__init__"><code class="docutils literal notranslate"><span class="pre">Manager.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#id5"><code class="docutils literal notranslate"><span class="pre">Manager.tokens</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#id6"><code class="docutils literal notranslate"><span class="pre">Manager.separator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#id7"><code class="docutils literal notranslate"><span class="pre">Manager.rules</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#id8"><code class="docutils literal notranslate"><span class="pre">Manager.normalizers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#id9"><code class="docutils literal notranslate"><span class="pre">Manager.global_rules</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.Manager.__repr__"><code class="docutils literal notranslate"><span class="pre">Manager.__repr__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.Manager.from_dict"><code class="docutils literal notranslate"><span class="pre">Manager.from_dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.Manager.to_dict"><code class="docutils literal notranslate"><span class="pre">Manager.to_dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.Manager.is_valid"><code class="docutils literal notranslate"><span class="pre">Manager.is_valid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.Manager.is_valid_token"><code class="docutils literal notranslate"><span class="pre">Manager.is_valid_token()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.Manager.get_data"><code class="docutils literal notranslate"><span class="pre">Manager.get_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.Manager.parse"><code class="docutils literal notranslate"><span class="pre">Manager.parse()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.Manager.get_token_value"><code class="docutils literal notranslate"><span class="pre">Manager.get_token_value()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.Manager.get_errors"><code class="docutils literal notranslate"><span class="pre">Manager.get_errors()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.Manager.get_matching_regex"><code class="docutils literal notranslate"><span class="pre">Manager.get_matching_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.Manager.add_rule"><code class="docutils literal notranslate"><span class="pre">Manager.add_rule()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.Manager.remove_rule"><code class="docutils literal notranslate"><span class="pre">Manager.remove_rule()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.Manager.build_name"><code class="docutils literal notranslate"><span class="pre">Manager.build_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.Manager.update_name"><code class="docutils literal notranslate"><span class="pre">Manager.update_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openrig.naming.manager.html#openrig.naming.manager.Manager.resolve_name"><code class="docutils literal notranslate"><span class="pre">Manager.resolve_name()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="openrig.naming.normalizers.html">openrig.naming.normalizers module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="openrig.naming.normalizers.html#openrig.naming.normalizers.side"><code class="docutils literal notranslate"><span class="pre">side()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.naming.normalizers.html#openrig.naming.normalizers.descriptor"><code class="docutils literal notranslate"><span class="pre">descriptor()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.naming.normalizers.html#openrig.naming.normalizers.normalize_type"><code class="docutils literal notranslate"><span class="pre">normalize_type()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.naming.normalizers.html#openrig.naming.normalizers.pascal_case"><code class="docutils literal notranslate"><span class="pre">pascal_case()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.naming.normalizers.html#openrig.naming.normalizers.snake_case"><code class="docutils literal notranslate"><span class="pre">snake_case()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.naming.normalizers.html#openrig.naming.normalizers.kebab_case"><code class="docutils literal notranslate"><span class="pre">kebab_case()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.naming.normalizers.html#openrig.naming.normalizers.clean"><code class="docutils literal notranslate"><span class="pre">clean()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.naming.normalizers.html#openrig.naming.normalizers.version"><code class="docutils literal notranslate"><span class="pre">version()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.naming.normalizers.html#openrig.naming.normalizers.upper"><code class="docutils literal notranslate"><span class="pre">upper()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.naming.normalizers.html#openrig.naming.normalizers.lower"><code class="docutils literal notranslate"><span class="pre">lower()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.naming.normalizers.html#openrig.naming.normalizers.capitalize"><code class="docutils literal notranslate"><span class="pre">capitalize()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.naming.normalizers.html#openrig.naming.normalizers.strip_digits"><code class="docutils literal notranslate"><span class="pre">strip_digits()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.naming.normalizers.html#openrig.naming.normalizers.strip_namespace"><code class="docutils literal notranslate"><span class="pre">strip_namespace()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.naming.normalizers.html#openrig.naming.normalizers.base_name"><code class="docutils literal notranslate"><span class="pre">base_name()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="openrig.naming.rules.html">openrig.naming.rules module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="openrig.naming.rules.html#openrig.naming.rules.RuleBuilderError"><code class="docutils literal notranslate"><span class="pre">RuleBuilderError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.naming.rules.html#openrig.naming.rules.build_rules"><code class="docutils literal notranslate"><span class="pre">build_rules()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.naming.rules.html#openrig.naming.rules.build_normalizers"><code class="docutils literal notranslate"><span class="pre">build_normalizers()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="openrig.naming.rules.html#openrig.naming.rules.validate_convention"><code class="docutils literal notranslate"><span class="pre">validate_convention()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="openrig.naming.utils.html">openrig.naming.utils module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="openrig.naming.utils.html#openrig.naming.utils.is_string"><code class="docutils literal notranslate"><span class="pre">is_string()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="openrig.naming.utils.html#openrig.naming.utils.is_digit"><code class="docutils literal notranslate"><span class="pre">is_digit()</span></code></a></li>
@@ -154,7 +665,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="openrig.core.html" class="btn btn-neutral float-left" title="openrig.core package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="openrig.naming.utils.html" class="btn btn-neutral float-right" title="openrig.naming.utils module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="openrig.naming.manager.html" class="btn btn-neutral float-right" title="openrig.naming.manager module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

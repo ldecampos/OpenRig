@@ -1,0 +1,841 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>openrig.schemas module &mdash; OpenRig 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="openrig.settings module" href="openrig.settings.html" />
+    <link rel="prev" title="openrig.constants module" href="openrig.constants.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenRig
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../style_guide/coding_standards.html">Python Coding Style Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html">openrig</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="openrig.html">openrig package</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="openrig.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="openrig.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenRig</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../modules.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="modules.html">openrig</a></li>
+          <li class="breadcrumb-item"><a href="openrig.html">openrig package</a></li>
+      <li class="breadcrumb-item active">openrig.schemas module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/openrig.schemas.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-openrig.schemas">
+<span id="openrig-schemas-module"></span><h1>openrig.schemas module<a class="headerlink" href="#module-openrig.schemas" title="Link to this heading"></a></h1>
+<p>Data schemas for OpenRig configuration.</p>
+<p>Defines the core data contracts used throughout the system, split into
+two groups:</p>
+<dl class="simple">
+<dt><strong>Naming system types</strong> (used by <code class="docutils literal notranslate"><span class="pre">rules.py</span></code>, <code class="docutils literal notranslate"><span class="pre">manager.py</span></code>):</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">TokenValue</span></code>: accepted raw input for a token before normalization.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TokenData</span></code>: canonical post-normalization form (always <code class="docutils literal notranslate"><span class="pre">str</span></code> values).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RuleValidator</span></code>: <code class="docutils literal notranslate"><span class="pre">Protocol</span></code> that every rule type must satisfy.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RegexRule</span></code>, <code class="docutils literal notranslate"><span class="pre">ListRule</span></code>, <code class="docutils literal notranslate"><span class="pre">CallableRule</span></code>: concrete rule implementations.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ConcreteRule</span></code>: union of all concrete rule types.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RuleConfig</span></code>, <code class="docutils literal notranslate"><span class="pre">GlobalRules</span></code>: intermediate config representations.</p></li>
+</ul>
+</dd>
+<dt><strong>Settings dataclasses</strong> (populated by <code class="docutils literal notranslate"><span class="pre">settings.py</span></code> from <code class="docutils literal notranslate"><span class="pre">config.json</span></code>):</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">RiggingSettings</span></code>: rigging conventions (side, rotate order, axes).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NamingSettings</span></code>: naming convention (separator, tokens, rules, normalizers).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ShapesSettings</span></code>: control curve shape defaults.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ColorsSettings</span></code>: color conventions per side/usage (reserved).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ExportSettings</span></code>: export paths and format defaults (reserved).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SkinSettings</span></code>: skinning configuration defaults (reserved).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Settings</span></code>: root dataclass aggregating all sections.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Each settings section corresponds directly to a top-level key in
+<code class="docutils literal notranslate"><span class="pre">config.json</span></code>, making it trivial to locate any value’s origin.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.schemas.RuleValidator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.schemas.</span></span><span class="sig-name descname"><span class="pre">RuleValidator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openrig/schemas.html#RuleValidator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.schemas.RuleValidator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<p>Protocol for all token-level validation rules.</p>
+<p>Any object that implements <code class="docutils literal notranslate"><span class="pre">validate</span></code> and <code class="docutils literal notranslate"><span class="pre">to_regex_pattern</span></code>
+satisfies this protocol. This replaces the previous
+<code class="docutils literal notranslate"><span class="pre">Union[List,</span> <span class="pre">str,</span> <span class="pre">Callable]</span></code> type alias, eliminating the need for
+<code class="docutils literal notranslate"><span class="pre">isinstance</span></code> branching in the <code class="docutils literal notranslate"><span class="pre">Manager</span></code>.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyRule</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">isalpha</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="nf">to_regex_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="sa">r</span><span class="s2">&quot;[a-zA-Z]+&quot;</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.schemas.RuleValidator.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/openrig/schemas.html#RuleValidator.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.schemas.RuleValidator.validate" title="Link to this definition"></a></dt>
+<dd><p>Validates a normalized token value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> – The normalized (post-normalization) string value to check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the value is acceptable, <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.schemas.RuleValidator.to_regex_pattern">
+<span class="sig-name descname"><span class="pre">to_regex_pattern</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/openrig/schemas.html#RuleValidator.to_regex_pattern"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.schemas.RuleValidator.to_regex_pattern" title="Link to this definition"></a></dt>
+<dd><p>Returns a regex pattern representing the valid values for this rule.</p>
+<p>Used by the <code class="docutils literal notranslate"><span class="pre">Manager</span></code> to build the global matching regex without
+inspecting the rule’s internal structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A regex pattern string (without anchors <code class="docutils literal notranslate"><span class="pre">^</span></code> / <code class="docutils literal notranslate"><span class="pre">$</span></code>).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.schemas.RegexRule">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.schemas.</span></span><span class="sig-name descname"><span class="pre">RegexRule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openrig/schemas.html#RegexRule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.schemas.RegexRule" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A rule that validates a token value against a regular expression.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.RegexRule.pattern">
+<span class="sig-name descname"><span class="pre">pattern</span></span><a class="headerlink" href="#openrig.schemas.RegexRule.pattern" title="Link to this definition"></a></dt>
+<dd><p>The regex pattern string. Anchors <code class="docutils literal notranslate"><span class="pre">^</span></code> / <code class="docutils literal notranslate"><span class="pre">$</span></code> are
+optional; <code class="docutils literal notranslate"><span class="pre">validate</span></code> always performs a full match.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="n">RegexRule</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;^[a-z][a-zA-Z0-9]*$&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="s2">&quot;armUpper&quot;</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="s2">&quot;Arm Upper&quot;</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">pattern</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.schemas.RegexRule.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/openrig/schemas.html#RegexRule.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.schemas.RegexRule.__post_init__" title="Link to this definition"></a></dt>
+<dd><p>Validates that the pattern compiles correctly on construction.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.schemas.RegexRule.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/openrig/schemas.html#RegexRule.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.schemas.RegexRule.validate" title="Link to this definition"></a></dt>
+<dd><p>Validates the value against the compiled regex pattern.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> – The normalized token value.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the value matches the full pattern.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.schemas.RegexRule.to_regex_pattern">
+<span class="sig-name descname"><span class="pre">to_regex_pattern</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/openrig/schemas.html#RegexRule.to_regex_pattern"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.schemas.RegexRule.to_regex_pattern" title="Link to this definition"></a></dt>
+<dd><p>Returns the raw pattern, stripping leading/trailing anchors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The pattern string ready for embedding in a larger regex.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.schemas.ListRule">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.schemas.</span></span><span class="sig-name descname"><span class="pre">ListRule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allowed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FrozenSet</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openrig/schemas.html#ListRule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.schemas.ListRule" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A rule that validates a token value against a fixed set of allowed values.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.ListRule.allowed">
+<span class="sig-name descname"><span class="pre">allowed</span></span><a class="headerlink" href="#openrig.schemas.ListRule.allowed" title="Link to this definition"></a></dt>
+<dd><p>A frozenset of accepted string values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>FrozenSet[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="n">ListRule</span><span class="p">(</span><span class="n">allowed</span><span class="o">=</span><span class="nb">frozenset</span><span class="p">({</span><span class="s2">&quot;l&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;m&quot;</span><span class="p">}))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="s2">&quot;l&quot;</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">allowed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FrozenSet</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#id1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.schemas.ListRule.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/openrig/schemas.html#ListRule.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.schemas.ListRule.validate" title="Link to this definition"></a></dt>
+<dd><p>Checks membership in the allowed set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> – The normalized token value.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if <code class="docutils literal notranslate"><span class="pre">value</span></code> is in the allowed set.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.schemas.ListRule.to_regex_pattern">
+<span class="sig-name descname"><span class="pre">to_regex_pattern</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/openrig/schemas.html#ListRule.to_regex_pattern"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.schemas.ListRule.to_regex_pattern" title="Link to this definition"></a></dt>
+<dd><p>Returns an alternation pattern of all allowed values, sorted by length.</p>
+<p>Sorting by length descending prevents shorter alternatives from
+shadowing longer ones in the regex engine.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A non-capturing alternation group, e.g. <code class="docutils literal notranslate"><span class="pre">(?:left|right|l|r)</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.schemas.CallableRule">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.schemas.</span></span><span class="sig-name descname"><span class="pre">CallableRule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openrig/schemas.html#CallableRule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.schemas.CallableRule" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A rule that delegates validation to an arbitrary callable.</p>
+<p>The callable must accept a single <code class="docutils literal notranslate"><span class="pre">str</span></code> argument and return <code class="docutils literal notranslate"><span class="pre">bool</span></code>.
+Because callable rules are opaque to the regex engine,
+<code class="docutils literal notranslate"><span class="pre">to_regex_pattern</span></code> returns a catch-all pattern; validation must be
+performed separately via <code class="docutils literal notranslate"><span class="pre">validate</span></code>.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.CallableRule.func">
+<span class="sig-name descname"><span class="pre">func</span></span><a class="headerlink" href="#openrig.schemas.CallableRule.func" title="Link to this definition"></a></dt>
+<dd><p>The validation callable. Typed as <code class="docutils literal notranslate"><span class="pre">object</span></code> to avoid
+hashability issues; narrowed at call site.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.CallableRule.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#openrig.schemas.CallableRule.name" title="Link to this definition"></a></dt>
+<dd><p>A human-readable label used in error messages and <code class="docutils literal notranslate"><span class="pre">__repr__</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="n">CallableRule</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="nb">str</span><span class="o">.</span><span class="n">isalpha</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;alpha_only&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="s2">&quot;arm&quot;</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="s2">&quot;arm1&quot;</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">func</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">object</span></em><a class="headerlink" href="#id2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#id3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.schemas.CallableRule.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/openrig/schemas.html#CallableRule.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.schemas.CallableRule.validate" title="Link to this definition"></a></dt>
+<dd><p>Calls the wrapped function with the value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> – The normalized token value.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the function returns a truthy result.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>TypeError</strong> – If the stored <code class="docutils literal notranslate"><span class="pre">func</span></code> is not callable.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openrig.schemas.CallableRule.to_regex_pattern">
+<span class="sig-name descname"><span class="pre">to_regex_pattern</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/openrig/schemas.html#CallableRule.to_regex_pattern"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.schemas.CallableRule.to_regex_pattern" title="Link to this definition"></a></dt>
+<dd><p>Returns a permissive catch-all pattern.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A catch-all pattern <code class="docutils literal notranslate"><span class="pre">[^\s]+</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.schemas.RuleConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.schemas.</span></span><span class="sig-name descname"><span class="pre">RuleConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sources</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openrig/schemas.html#RuleConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.schemas.RuleConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Raw deserialized configuration for a single token rule.</p>
+<p>Intermediate representation populated from <code class="docutils literal notranslate"><span class="pre">config.json</span></code>.
+<code class="docutils literal notranslate"><span class="pre">rules.py</span></code> converts each instance into a <code class="docutils literal notranslate"><span class="pre">ConcreteRule</span></code>.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.RuleConfig.type">
+<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#openrig.schemas.RuleConfig.type" title="Link to this definition"></a></dt>
+<dd><p>Rule type: <code class="docutils literal notranslate"><span class="pre">&quot;regex&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;list&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;from_enums&quot;</span></code>,
+or <code class="docutils literal notranslate"><span class="pre">&quot;callable&quot;</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.RuleConfig.value">
+<span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#openrig.schemas.RuleConfig.value" title="Link to this definition"></a></dt>
+<dd><p>Primary payload — pattern string, list of values, or
+dotted import path, depending on <code class="docutils literal notranslate"><span class="pre">type</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str | List[str] | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.RuleConfig.sources">
+<span class="sig-name descname"><span class="pre">sources</span></span><a class="headerlink" href="#openrig.schemas.RuleConfig.sources" title="Link to this definition"></a></dt>
+<dd><p>Enum class names to aggregate. Only for <code class="docutils literal notranslate"><span class="pre">&quot;from_enums&quot;</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str] | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#id4" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id5" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">sources</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id6" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.schemas.GlobalRules">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.schemas.</span></span><span class="sig-name descname"><span class="pre">GlobalRules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_length:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forbidden_patterns:</span> <span class="pre">~typing.List[str]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator_rule:</span> <span class="pre">~openrig.schemas.RuleConfig</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openrig/schemas.html#GlobalRules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.schemas.GlobalRules" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Global constraints applied to every fully-built name.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.GlobalRules.max_length">
+<span class="sig-name descname"><span class="pre">max_length</span></span><a class="headerlink" href="#openrig.schemas.GlobalRules.max_length" title="Link to this definition"></a></dt>
+<dd><p>Maximum allowed character length for any built name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.GlobalRules.forbidden_patterns">
+<span class="sig-name descname"><span class="pre">forbidden_patterns</span></span><a class="headerlink" href="#openrig.schemas.GlobalRules.forbidden_patterns" title="Link to this definition"></a></dt>
+<dd><p>Substrings that must not appear in any built name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.GlobalRules.separator_rule">
+<span class="sig-name descname"><span class="pre">separator_rule</span></span><a class="headerlink" href="#openrig.schemas.GlobalRules.separator_rule" title="Link to this definition"></a></dt>
+<dd><p>Optional <code class="docutils literal notranslate"><span class="pre">RuleConfig</span></code> constraining valid separators.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#openrig.schemas.RuleConfig" title="openrig.schemas.RuleConfig">openrig.schemas.RuleConfig</a> | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">max_length</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#id7" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">forbidden_patterns</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#id8" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">separator_rule</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#openrig.schemas.RuleConfig" title="openrig.schemas.RuleConfig"><span class="pre">RuleConfig</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id9" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.schemas.RiggingSettings">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.schemas.</span></span><span class="sig-name descname"><span class="pre">RiggingSettings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">side_default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotate_order_default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis_aim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis_up</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis_side</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openrig/schemas.html#RiggingSettings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.schemas.RiggingSettings" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Rigging convention defaults from <code class="docutils literal notranslate"><span class="pre">config.json[&quot;rigging&quot;]</span></code>.</p>
+<p>These values drive the default class attributes on <code class="docutils literal notranslate"><span class="pre">Side</span></code>,
+<code class="docutils literal notranslate"><span class="pre">RotateOrder</span></code>, <code class="docutils literal notranslate"><span class="pre">Axis</span></code>, and <code class="docutils literal notranslate"><span class="pre">ShapeType</span></code> in <code class="docutils literal notranslate"><span class="pre">constants.py</span></code>.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.RiggingSettings.side_default">
+<span class="sig-name descname"><span class="pre">side_default</span></span><a class="headerlink" href="#openrig.schemas.RiggingSettings.side_default" title="Link to this definition"></a></dt>
+<dd><p>Default side token (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;c&quot;</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.RiggingSettings.rotate_order_default">
+<span class="sig-name descname"><span class="pre">rotate_order_default</span></span><a class="headerlink" href="#openrig.schemas.RiggingSettings.rotate_order_default" title="Link to this definition"></a></dt>
+<dd><p>Default rotate order string (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;xyz&quot;</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.RiggingSettings.axis_aim">
+<span class="sig-name descname"><span class="pre">axis_aim</span></span><a class="headerlink" href="#openrig.schemas.RiggingSettings.axis_aim" title="Link to this definition"></a></dt>
+<dd><p>Default aim axis (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;X&quot;</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.RiggingSettings.axis_up">
+<span class="sig-name descname"><span class="pre">axis_up</span></span><a class="headerlink" href="#openrig.schemas.RiggingSettings.axis_up" title="Link to this definition"></a></dt>
+<dd><p>Default up axis (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;Y&quot;</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.RiggingSettings.axis_side">
+<span class="sig-name descname"><span class="pre">axis_side</span></span><a class="headerlink" href="#openrig.schemas.RiggingSettings.axis_side" title="Link to this definition"></a></dt>
+<dd><p>Default side axis (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;Z&quot;</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">side_default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#id10" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id11">
+<span class="sig-name descname"><span class="pre">rotate_order_default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#id11" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id12">
+<span class="sig-name descname"><span class="pre">axis_aim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#id12" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id13">
+<span class="sig-name descname"><span class="pre">axis_up</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#id13" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id14">
+<span class="sig-name descname"><span class="pre">axis_side</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#id14" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.schemas.NamingSettings">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.schemas.</span></span><span class="sig-name descname"><span class="pre">NamingSettings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rules</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#openrig.schemas.RuleConfig" title="openrig.schemas.RuleConfig"><span class="pre">RuleConfig</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#openrig.schemas.GlobalRules" title="openrig.schemas.GlobalRules"><span class="pre">GlobalRules</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalizers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openrig/schemas.html#NamingSettings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.schemas.NamingSettings" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Naming convention configuration from <code class="docutils literal notranslate"><span class="pre">config.json[&quot;naming&quot;]</span></code>.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.NamingSettings.separator">
+<span class="sig-name descname"><span class="pre">separator</span></span><a class="headerlink" href="#openrig.schemas.NamingSettings.separator" title="Link to this definition"></a></dt>
+<dd><p>Token separator character (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;_&quot;</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.NamingSettings.tokens">
+<span class="sig-name descname"><span class="pre">tokens</span></span><a class="headerlink" href="#openrig.schemas.NamingSettings.tokens" title="Link to this definition"></a></dt>
+<dd><p>Ordered tuple of token names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[str, …]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.NamingSettings.rules">
+<span class="sig-name descname"><span class="pre">rules</span></span><a class="headerlink" href="#openrig.schemas.NamingSettings.rules" title="Link to this definition"></a></dt>
+<dd><p>Mapping from token name (or <code class="docutils literal notranslate"><span class="pre">&quot;__global__&quot;</span></code>) to its parsed
+rule configuration object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Mapping[str, <a class="reference internal" href="#openrig.schemas.RuleConfig" title="openrig.schemas.RuleConfig">openrig.schemas.RuleConfig</a> | <a class="reference internal" href="#openrig.schemas.GlobalRules" title="openrig.schemas.GlobalRules">openrig.schemas.GlobalRules</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.NamingSettings.normalizers">
+<span class="sig-name descname"><span class="pre">normalizers</span></span><a class="headerlink" href="#openrig.schemas.NamingSettings.normalizers" title="Link to this definition"></a></dt>
+<dd><p>Mapping from token name to normalizer function name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Mapping[str, str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id15">
+<span class="sig-name descname"><span class="pre">separator</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#id15" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id16">
+<span class="sig-name descname"><span class="pre">tokens</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#id16" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id17">
+<span class="sig-name descname"><span class="pre">rules</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#openrig.schemas.RuleConfig" title="openrig.schemas.RuleConfig"><span class="pre">RuleConfig</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#openrig.schemas.GlobalRules" title="openrig.schemas.GlobalRules"><span class="pre">GlobalRules</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#id17" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id18">
+<span class="sig-name descname"><span class="pre">normalizers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#id18" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.schemas.ShapesSettings">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.schemas.</span></span><span class="sig-name descname"><span class="pre">ShapesSettings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'circle'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openrig/schemas.html#ShapesSettings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.schemas.ShapesSettings" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Control curve shape defaults from <code class="docutils literal notranslate"><span class="pre">config.json[&quot;shapes&quot;]</span></code>.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.ShapesSettings.default">
+<span class="sig-name descname"><span class="pre">default</span></span><a class="headerlink" href="#openrig.schemas.ShapesSettings.default" title="Link to this definition"></a></dt>
+<dd><p>The default shape type string (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;circle&quot;</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id19">
+<span class="sig-name descname"><span class="pre">default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'circle'</span></em><a class="headerlink" href="#id19" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.schemas.ColorsSettings">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.schemas.</span></span><span class="sig-name descname"><span class="pre">ColorsSettings</span></span><a class="reference internal" href="../_modules/openrig/schemas.html#ColorsSettings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.schemas.ColorsSettings" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Color convention defaults from <code class="docutils literal notranslate"><span class="pre">config.json[&quot;colors&quot;]</span></code>.</p>
+<p>Reserved for future use. Fields will be added as the color convention
+is defined (e.g. colors indexed by side or usage type).</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.schemas.ExportSettings">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.schemas.</span></span><span class="sig-name descname"><span class="pre">ExportSettings</span></span><a class="reference internal" href="../_modules/openrig/schemas.html#ExportSettings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.schemas.ExportSettings" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Export defaults from <code class="docutils literal notranslate"><span class="pre">config.json[&quot;export&quot;]</span></code>.</p>
+<p>Reserved for future use. Fields will be added as export paths,
+formats, and options are defined.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.schemas.SkinSettings">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.schemas.</span></span><span class="sig-name descname"><span class="pre">SkinSettings</span></span><a class="reference internal" href="../_modules/openrig/schemas.html#SkinSettings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.schemas.SkinSettings" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Skinning configuration defaults from <code class="docutils literal notranslate"><span class="pre">config.json[&quot;skin&quot;]</span></code>.</p>
+<p>Reserved for future use. Fields will be added as skinning workflow
+defaults are defined.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="openrig.schemas.Settings">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openrig.schemas.</span></span><span class="sig-name descname"><span class="pre">Settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rigging:</span> <span class="pre">~openrig.schemas.RiggingSettings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">naming:</span> <span class="pre">~openrig.schemas.NamingSettings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shapes:</span> <span class="pre">~openrig.schemas.ShapesSettings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors:</span> <span class="pre">~openrig.schemas.ColorsSettings</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export:</span> <span class="pre">~openrig.schemas.ExportSettings</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skin:</span> <span class="pre">~openrig.schemas.SkinSettings</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openrig/schemas.html#Settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.schemas.Settings" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Root configuration dataclass for OpenRig.</p>
+<p>Aggregates all section-level settings. Each attribute corresponds
+directly to a top-level key in <code class="docutils literal notranslate"><span class="pre">config.json</span></code>.</p>
+<p>Populated by <code class="docutils literal notranslate"><span class="pre">settings.py</span></code> on module load and consumed throughout
+the project via the module-level <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> constant.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.Settings.rigging">
+<span class="sig-name descname"><span class="pre">rigging</span></span><a class="headerlink" href="#openrig.schemas.Settings.rigging" title="Link to this definition"></a></dt>
+<dd><p>Rigging convention defaults.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#openrig.schemas.RiggingSettings" title="openrig.schemas.RiggingSettings">openrig.schemas.RiggingSettings</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.Settings.naming">
+<span class="sig-name descname"><span class="pre">naming</span></span><a class="headerlink" href="#openrig.schemas.Settings.naming" title="Link to this definition"></a></dt>
+<dd><p>Naming convention configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#openrig.schemas.NamingSettings" title="openrig.schemas.NamingSettings">openrig.schemas.NamingSettings</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.Settings.shapes">
+<span class="sig-name descname"><span class="pre">shapes</span></span><a class="headerlink" href="#openrig.schemas.Settings.shapes" title="Link to this definition"></a></dt>
+<dd><p>Control curve shape defaults.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#openrig.schemas.ShapesSettings" title="openrig.schemas.ShapesSettings">openrig.schemas.ShapesSettings</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.Settings.colors">
+<span class="sig-name descname"><span class="pre">colors</span></span><a class="headerlink" href="#openrig.schemas.Settings.colors" title="Link to this definition"></a></dt>
+<dd><p>Color convention defaults (reserved for future use).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#openrig.schemas.ColorsSettings" title="openrig.schemas.ColorsSettings">openrig.schemas.ColorsSettings</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.Settings.export">
+<span class="sig-name descname"><span class="pre">export</span></span><a class="headerlink" href="#openrig.schemas.Settings.export" title="Link to this definition"></a></dt>
+<dd><p>Export defaults (reserved for future use).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#openrig.schemas.ExportSettings" title="openrig.schemas.ExportSettings">openrig.schemas.ExportSettings</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="openrig.schemas.Settings.skin">
+<span class="sig-name descname"><span class="pre">skin</span></span><a class="headerlink" href="#openrig.schemas.Settings.skin" title="Link to this definition"></a></dt>
+<dd><p>Skinning configuration defaults (reserved for future use).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#openrig.schemas.SkinSettings" title="openrig.schemas.SkinSettings">openrig.schemas.SkinSettings</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">openrig.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">SETTINGS</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SETTINGS</span><span class="o">.</span><span class="n">rigging</span><span class="o">.</span><span class="n">side_default</span>
+<span class="go">&#39;c&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SETTINGS</span><span class="o">.</span><span class="n">naming</span><span class="o">.</span><span class="n">separator</span>
+<span class="go">&#39;_&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SETTINGS</span><span class="o">.</span><span class="n">shapes</span><span class="o">.</span><span class="n">default</span>
+<span class="go">&#39;circle&#39;</span>
+</pre></div>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id20">
+<span class="sig-name descname"><span class="pre">rigging</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#openrig.schemas.RiggingSettings" title="openrig.schemas.RiggingSettings"><span class="pre">RiggingSettings</span></a></em><a class="headerlink" href="#id20" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id21">
+<span class="sig-name descname"><span class="pre">naming</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#openrig.schemas.NamingSettings" title="openrig.schemas.NamingSettings"><span class="pre">NamingSettings</span></a></em><a class="headerlink" href="#id21" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id22">
+<span class="sig-name descname"><span class="pre">shapes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#openrig.schemas.ShapesSettings" title="openrig.schemas.ShapesSettings"><span class="pre">ShapesSettings</span></a></em><a class="headerlink" href="#id22" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id23">
+<span class="sig-name descname"><span class="pre">colors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#openrig.schemas.ColorsSettings" title="openrig.schemas.ColorsSettings"><span class="pre">ColorsSettings</span></a></em><a class="headerlink" href="#id23" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id24">
+<span class="sig-name descname"><span class="pre">export</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#openrig.schemas.ExportSettings" title="openrig.schemas.ExportSettings"><span class="pre">ExportSettings</span></a></em><a class="headerlink" href="#id24" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id25">
+<span class="sig-name descname"><span class="pre">skin</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#openrig.schemas.SkinSettings" title="openrig.schemas.SkinSettings"><span class="pre">SkinSettings</span></a></em><a class="headerlink" href="#id25" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="openrig.constants.html" class="btn btn-neutral float-left" title="openrig.constants module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="openrig.settings.html" class="btn btn-neutral float-right" title="openrig.settings module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Iván Cuenca Ruiz &amp; Luis de Campos.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="openrig.ops package" href="openrig.ops.html" />
-    <link rel="prev" title="openrig.naming package" href="openrig.naming.html" /> 
+    <link rel="prev" title="openrig.naming.rules module" href="openrig.naming.rules.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -91,31 +91,41 @@
              
   <section id="module-openrig.naming.utils">
 <span id="openrig-naming-utils-module"></span><h1>openrig.naming.utils module<a class="headerlink" href="#module-openrig.naming.utils" title="Link to this heading"></a></h1>
-<p>Module providing string manipulation facilities.</p>
+<p>String manipulation utilities for the OpenRig naming system.</p>
+<p>Provides validators, getters, converters, and incrementers for building
+and transforming name strings used throughout the rigging pipeline.</p>
+<dl class="simple">
+<dt>Categories:</dt><dd><p>Validators: <code class="docutils literal notranslate"><span class="pre">is_string</span></code>, <code class="docutils literal notranslate"><span class="pre">is_digit</span></code>, <code class="docutils literal notranslate"><span class="pre">is_camel_case</span></code>, etc.
+Getters: <code class="docutils literal notranslate"><span class="pre">get_digits</span></code>, <code class="docutils literal notranslate"><span class="pre">get_version</span></code>, <code class="docutils literal notranslate"><span class="pre">get_namespace</span></code>, etc.
+Converters: <code class="docutils literal notranslate"><span class="pre">to_camel_case</span></code>, <code class="docutils literal notranslate"><span class="pre">to_snake_case</span></code>, <code class="docutils literal notranslate"><span class="pre">to_kebab_case</span></code>, etc.
+Incrementers: <code class="docutils literal notranslate"><span class="pre">increment_digit</span></code>, <code class="docutils literal notranslate"><span class="pre">increment_character</span></code>, etc.
+Decrementers: <code class="docutils literal notranslate"><span class="pre">decrement_digit</span></code>, <code class="docutils literal notranslate"><span class="pre">decrement_character</span></code>, etc.</p>
+</dd>
+</dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="openrig.naming.utils.is_string">
-<span class="sig-prename descclassname"><span class="pre">openrig.naming.utils.</span></span><span class="sig-name descname"><span class="pre">is_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/openrig/naming/utils.html#is_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.utils.is_string" title="Link to this definition"></a></dt>
-<dd><p>Validates if a variable is a string.</p>
+<span class="sig-prename descclassname"><span class="pre">openrig.naming.utils.</span></span><span class="sig-name descname"><span class="pre">is_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/openrig/naming/utils.html#is_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.utils.is_string" title="Link to this definition"></a></dt>
+<dd><p>Validates whether a variable is a string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>text</strong> – String to validate.</p>
+<dd class="field-odd"><p><strong>text</strong> – The value to validate.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>True if successful, False otherwise.</p>
+<dd class="field-even"><p>True if <code class="docutils literal notranslate"><span class="pre">text</span></code> is a <code class="docutils literal notranslate"><span class="pre">str</span></code> instance, False otherwise.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="openrig.naming.utils.is_digit">
-<span class="sig-prename descclassname"><span class="pre">openrig.naming.utils.</span></span><span class="sig-name descname"><span class="pre">is_digit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/openrig/naming/utils.html#is_digit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.utils.is_digit" title="Link to this definition"></a></dt>
-<dd><p>Validates if a variable is a number (int or float).</p>
+<span class="sig-prename descclassname"><span class="pre">openrig.naming.utils.</span></span><span class="sig-name descname"><span class="pre">is_digit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/openrig/naming/utils.html#is_digit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.utils.is_digit" title="Link to this definition"></a></dt>
+<dd><p>Validates whether a variable is a number.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>value</strong> – Value to validate.</p>
+<dd class="field-odd"><p><strong>value</strong> – The value to validate.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>True if successful, False otherwise.</p>
+<dd class="field-even"><p>True if <code class="docutils literal notranslate"><span class="pre">value</span></code> is an <code class="docutils literal notranslate"><span class="pre">int</span></code> or <code class="docutils literal notranslate"><span class="pre">float</span></code> instance, False otherwise.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -458,16 +468,15 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="openrig.naming.utils.value_to_str">
 <span class="sig-prename descclassname"><span class="pre">openrig.naming.utils.</span></span><span class="sig-name descname"><span class="pre">value_to_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/openrig/naming/utils.html#value_to_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.utils.value_to_str" title="Link to this definition"></a></dt>
-<dd><p>Converts a digit to a string with the following format: MxDx.</p>
-<p>where M is the sign (M for negative digits),
-x is the integer part,
-D is the decimal point (d), and x is the decimal part.</p>
+<dd><p>Converts a numeric value to a filesystem-safe string in <code class="docutils literal notranslate"><span class="pre">MxDx</span></code> format.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">M</span></code> prefix indicates a negative value; the decimal point is
+replaced by <code class="docutils literal notranslate"><span class="pre">d</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">-1.5</span></code> → <code class="docutils literal notranslate"><span class="pre">&quot;M1d5&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">2.0</span></code> → <code class="docutils literal notranslate"><span class="pre">&quot;2d0&quot;</span></code>).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>value</strong> – Value to convert to string.</p>
+<dd class="field-odd"><p><strong>value</strong> – The numeric value to encode.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Converted value.</p>
+<dd class="field-even"><p>The encoded string representation.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -475,10 +484,9 @@ D is the decimal point (d), and x is the decimal part.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="openrig.naming.utils.str_to_value">
 <span class="sig-prename descclassname"><span class="pre">openrig.naming.utils.</span></span><span class="sig-name descname"><span class="pre">str_to_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/openrig/naming/utils.html#str_to_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.utils.str_to_value" title="Link to this definition"></a></dt>
-<dd><p>Converts a formatted string (MxDx) into a digit.</p>
-<p>Where M is the sign (M for negative digits),
-x is the integer part,
-D is the decimal point (d), and x is the decimal part.</p>
+<dd><p>Converts a formatted <code class="docutils literal notranslate"><span class="pre">MxDx</span></code> string back into a numeric value.</p>
+<p>Reverses the encoding applied by <code class="docutils literal notranslate"><span class="pre">value_to_str</span></code>: strips the <code class="docutils literal notranslate"><span class="pre">M</span></code>
+sign prefix and replaces <code class="docutils literal notranslate"><span class="pre">d</span></code> with a decimal point.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>text</strong> – Formatted text to convert into a digit.</p>
@@ -506,8 +514,8 @@ D is the decimal point (d), and x is the decimal part.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="openrig.naming.utils.split_text">
 <span class="sig-prename descclassname"><span class="pre">openrig.naming.utils.</span></span><span class="sig-name descname"><span class="pre">split_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/openrig/naming/utils.html#split_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.utils.split_text" title="Link to this definition"></a></dt>
-<dd><p>Splits text into individual word.</p>
-<p>Handling camelCase, PascalCase, and delimiters like _ and -.</p>
+<dd><p>Splits text into individual words.</p>
+<p>Handles camelCase, PascalCase, and delimiters like <code class="docutils literal notranslate"><span class="pre">_</span></code> and <code class="docutils literal notranslate"><span class="pre">-</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>text</strong> – The text to split.</p>
@@ -586,8 +594,9 @@ D is the decimal point (d), and x is the decimal part.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="openrig.naming.utils.clean_txt">
 <span class="sig-prename descclassname"><span class="pre">openrig.naming.utils.</span></span><span class="sig-name descname"><span class="pre">clean_txt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace_with</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'_'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/openrig/naming/utils.html#clean_txt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#openrig.naming.utils.clean_txt" title="Link to this definition"></a></dt>
-<dd><p>Cleans a string.</p>
-<p>by replacing illegal characters and ensuring it doesn’t start with a digit.</p>
+<dd><p>Cleans a string by replacing illegal characters.</p>
+<p>Ensures the result does not start with a digit by prepending
+<code class="docutils literal notranslate"><span class="pre">replace_with</span></code> if necessary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -852,7 +861,7 @@ Defaults to True.</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="openrig.naming.html" class="btn btn-neutral float-left" title="openrig.naming package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="openrig.naming.rules.html" class="btn btn-neutral float-left" title="openrig.naming.rules module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="openrig.ops.html" class="btn btn-neutral float-right" title="openrig.ops package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

@@ -1,0 +1,504 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>openrig.naming.rules &mdash; OpenRig 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            OpenRig
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../style_guide/coding_standards.html">Python Coding Style Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">OpenRig</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../naming.html">openrig.naming</a></li>
+      <li class="breadcrumb-item active">openrig.naming.rules</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for openrig.naming.rules</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Configuration rules for the naming convention.</span>
+
+<span class="sd">This module is responsible for two things:</span>
+
+<span class="sd">1. **Building rules**: interpreting the raw ``RuleConfig`` entries from</span>
+<span class="sd">   ``config.json`` and converting them into typed ``ConcreteRule`` instances</span>
+<span class="sd">   (``RegexRule``, ``ListRule``, ``CallableRule``).</span>
+
+<span class="sd">2. **Building normalizers**: resolving the normalizer function names declared</span>
+<span class="sd">   in ``config.json`` into actual callables from ``normalizers.NORMALIZER_MAP``.</span>
+
+<span class="sd">The module also validates the integrity of the assembled convention at import</span>
+<span class="sd">time, so any configuration error is caught immediately rather than at the</span>
+<span class="sd">first call to ``build_name``.</span>
+
+<span class="sd">Exported constants (consumed by ``__init__.py`` and ``Manager``):</span>
+<span class="sd">    - ``TOKENS``: ordered list of token names.</span>
+<span class="sd">    - ``SEPARATOR``: the separator character.</span>
+<span class="sd">    - ``TOKEN_RULES``: mapping of token name → ``ConcreteRule``.</span>
+<span class="sd">    - ``NORMALIZERS``: mapping of token name → normalizer callable.</span>
+<span class="sd">    - ``GLOBAL_RULES``: the validated ``GlobalRules`` instance.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">FrozenSet</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Mapping</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">openrig</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openrig.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CallableRule</span><span class="p">,</span>
+    <span class="n">ConcreteRule</span><span class="p">,</span>
+    <span class="n">GlobalRules</span><span class="p">,</span>
+    <span class="n">ListRule</span><span class="p">,</span>
+    <span class="n">RegexRule</span><span class="p">,</span>
+    <span class="n">RuleConfig</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openrig.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">SETTINGS</span>
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Normalizer type alias</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+<span class="c1"># All normalizer functions accept ``object`` (the widest safe type for</span>
+<span class="c1"># input that is guaranteed to be converted to ``str`` internally) and</span>
+<span class="c1"># return ``str``. Using ``object`` instead of ``Any`` is correct here:</span>
+<span class="c1"># it is the honest supertype of everything without losing type safety.</span>
+<span class="n">Normalizer</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">object</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Exceptions</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="RuleBuilderError">
+<a class="viewcode-back" href="../../../api/openrig.naming.rules.html#openrig.naming.rules.RuleBuilderError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RuleBuilderError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when the naming convention cannot be assembled from configuration.&quot;&quot;&quot;</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Private providers — each converts a RuleConfig into a ConcreteRule</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_provider_regex</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">RuleConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RegexRule</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a ``&quot;regex&quot;`` RuleConfig into a ``RegexRule``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config: The raw rule configuration from ``config.json``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A ``RegexRule`` instance wrapping the pattern.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RuleBuilderError: If ``config.value`` is not a string, or if the</span>
+<span class="sd">            pattern is not a valid regular expression.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">RuleBuilderError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Regex rule requires a string &#39;value&#39;, got: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">RegexRule</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">RuleBuilderError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_provider_list</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">RuleConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListRule</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a ``&quot;list&quot;`` RuleConfig into a ``ListRule``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config: The raw rule configuration from ``config.json``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A ``ListRule`` instance with the allowed values as a ``frozenset``.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RuleBuilderError: If ``config.value`` is not a list.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">RuleBuilderError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;List rule requires a list &#39;value&#39;, got: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">ListRule</span><span class="p">(</span><span class="n">allowed</span><span class="o">=</span><span class="nb">frozenset</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_provider_from_enums</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">RuleConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListRule</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Aggregates enum member values into a ``ListRule``.</span>
+
+<span class="sd">    Iterates over all enum classes named in ``config.sources`` within</span>
+<span class="sd">    ``openrig.constants`` and collects their string values into a single</span>
+<span class="sd">    ``ListRule``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config: The raw rule configuration. ``config.sources`` must be a</span>
+<span class="sd">            non-empty list of enum class names present in ``openrig.constants``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A ``ListRule`` whose allowed set is the union of all member values.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RuleBuilderError: If ``config.sources`` is missing, empty, or</span>
+<span class="sd">            references a name that is not a valid ``Enum`` subclass.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">sources</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">sources</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">RuleBuilderError</span><span class="p">(</span>
+            <span class="s2">&quot;&#39;sources&#39; for a &#39;from_enums&#39; rule must be a non-empty list of enum names.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">all_values</span><span class="p">:</span> <span class="n">FrozenSet</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">sources</span><span class="p">:</span>
+        <span class="n">enum_cls</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">constants</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">enum_cls</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="ow">or</span> <span class="ow">not</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">enum_cls</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">enum_cls</span><span class="p">,</span> <span class="n">Enum</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="n">RuleBuilderError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; is not a valid Enum subclass in openrig.constants.&quot;</span>
+            <span class="p">)</span>
+        <span class="n">all_values</span> <span class="o">=</span> <span class="n">all_values</span> <span class="o">|</span> <span class="nb">frozenset</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">enum_cls</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ListRule</span><span class="p">(</span><span class="n">allowed</span><span class="o">=</span><span class="n">all_values</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_provider_callable</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">RuleConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CallableRule</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Imports a callable by dotted path and wraps it in a ``CallableRule``.</span>
+
+<span class="sd">    The callable at the given path must accept a single ``str`` argument and</span>
+<span class="sd">    return a value interpretable as ``bool``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config: The raw rule configuration. ``config.value`` must be a</span>
+<span class="sd">            dotted import path string (e.g. ``&quot;mypackage.module.my_func&quot;``).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A ``CallableRule`` wrapping the imported function.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RuleBuilderError: If ``config.value`` is not a string, if the module</span>
+<span class="sd">            cannot be imported, or if the resolved attribute is not callable.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">RuleBuilderError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Callable rule requires a dotted-path string &#39;value&#39;, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;got: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">import_path</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">value</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">module_path</span><span class="p">,</span> <span class="n">func_name</span> <span class="o">=</span> <span class="n">import_path</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">RuleBuilderError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Callable rule &#39;value&#39; must be a dotted path (e.g. &#39;pkg.mod.func&#39;), &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;got: </span><span class="si">{</span><span class="n">import_path</span><span class="si">!r}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module_path</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">RuleBuilderError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Could not import module &#39;</span><span class="si">{</span><span class="n">module_path</span><span class="si">}</span><span class="s2">&#39; for callable rule: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+    <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">func_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">RuleBuilderError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Module &#39;</span><span class="si">{</span><span class="n">module_path</span><span class="si">}</span><span class="s2">&#39; has no attribute &#39;</span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">RuleBuilderError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">import_path</span><span class="si">}</span><span class="s2">&#39; resolves to a non-callable object: </span><span class="si">{</span><span class="n">func</span><span class="si">!r}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">CallableRule</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">import_path</span><span class="p">)</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Provider dispatch table</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+<span class="c1"># Maps the ``type`` string from ``config.json`` to the corresponding provider.</span>
+<span class="c1"># Each provider accepts a ``RuleConfig`` and returns a ``ConcreteRule``.</span>
+<span class="n">_PROVIDER_MAP</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">RuleConfig</span><span class="p">],</span> <span class="n">ConcreteRule</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;regex&quot;</span><span class="p">:</span> <span class="n">_provider_regex</span><span class="p">,</span>
+    <span class="s2">&quot;list&quot;</span><span class="p">:</span> <span class="n">_provider_list</span><span class="p">,</span>
+    <span class="s2">&quot;from_enums&quot;</span><span class="p">:</span> <span class="n">_provider_from_enums</span><span class="p">,</span>
+    <span class="s2">&quot;callable&quot;</span><span class="p">:</span> <span class="n">_provider_callable</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Public builders</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="build_rules">
+<a class="viewcode-back" href="../../../api/openrig.naming.rules.html#openrig.naming.rules.build_rules">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_rules</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ConcreteRule</span><span class="p">],</span> <span class="n">GlobalRules</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Builds the token rule mapping and the global rules from configuration.</span>
+
+<span class="sd">    Reads ``SETTINGS.naming.rules``, extracts the mandatory ``__global__``</span>
+<span class="sd">    entry as a ``GlobalRules`` instance, and converts every remaining entry</span>
+<span class="sd">    from a ``RuleConfig`` into the appropriate ``ConcreteRule`` via the</span>
+<span class="sd">    provider dispatch table.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A tuple of ``(token_rules, global_rules)`` where ``token_rules`` maps</span>
+<span class="sd">        each token name to its ``ConcreteRule`` and ``global_rules`` is the</span>
+<span class="sd">        validated ``GlobalRules`` dataclass.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RuleBuilderError: If ``__global__`` is missing or invalid, if an</span>
+<span class="sd">            unknown rule type is encountered, or if a provider fails.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># --- Extract and validate global rules ---</span>
+    <span class="n">global_rules_config</span> <span class="o">=</span> <span class="n">SETTINGS</span><span class="o">.</span><span class="n">naming</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;__global__&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">global_rules_config</span><span class="p">,</span> <span class="n">GlobalRules</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">RuleBuilderError</span><span class="p">(</span>
+            <span class="s2">&quot;Configuration is missing or invalid for &#39;__global__&#39; in &#39;naming_rules&#39;. &quot;</span>
+            <span class="s2">&quot;Expected a GlobalRules instance.&quot;</span>
+        <span class="p">)</span>
+    <span class="n">global_rules</span><span class="p">:</span> <span class="n">GlobalRules</span> <span class="o">=</span> <span class="n">global_rules_config</span>
+
+    <span class="c1"># --- Build per-token rules ---</span>
+    <span class="n">token_rules</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ConcreteRule</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">token</span><span class="p">,</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">SETTINGS</span><span class="o">.</span><span class="n">naming</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">token</span> <span class="o">==</span> <span class="s2">&quot;__global__&quot;</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">RuleConfig</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">RuleBuilderError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Expected a RuleConfig for token &#39;</span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&#39;, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;got: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">config</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">provider</span> <span class="o">=</span> <span class="n">_PROVIDER_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">provider</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">RuleBuilderError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Unknown rule type &#39;</span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">&#39; for token &#39;</span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Valid types are: </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">_PROVIDER_MAP</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">!r}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">token_rules</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span> <span class="n">provider</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">token_rules</span><span class="p">,</span> <span class="n">global_rules</span></div>
+
+
+
+<div class="viewcode-block" id="build_normalizers">
+<a class="viewcode-back" href="../../../api/openrig.naming.rules.html#openrig.naming.rules.build_normalizers">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_normalizers</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Normalizer</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolves normalizer function names into callable normalizers.</span>
+
+<span class="sd">    Reads ``SETTINGS.naming.normalizers`` and maps each token name to the</span>
+<span class="sd">    corresponding function in ``normalizers.NORMALIZER_MAP``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A mapping of token name → normalizer callable.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RuleBuilderError: If a declared normalizer name is not found in</span>
+<span class="sd">            ``NORMALIZER_MAP``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">openrig.naming.normalizers</span><span class="w"> </span><span class="kn">import</span> <span class="n">NORMALIZER_MAP</span>
+
+    <span class="n">final_normalizers</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Normalizer</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">token</span><span class="p">,</span> <span class="n">func_name</span> <span class="ow">in</span> <span class="n">SETTINGS</span><span class="o">.</span><span class="n">naming</span><span class="o">.</span><span class="n">normalizers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">normalizer_func</span> <span class="o">=</span> <span class="n">NORMALIZER_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">func_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">normalizer_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">RuleBuilderError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Normalizer &#39;</span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">&#39; for token &#39;</span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&#39; not found &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;in NORMALIZER_MAP. Available: </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">NORMALIZER_MAP</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">!r}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+        <span class="n">final_normalizers</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span> <span class="n">normalizer_func</span>
+
+    <span class="k">return</span> <span class="n">final_normalizers</span></div>
+
+
+
+<div class="viewcode-block" id="validate_convention">
+<a class="viewcode-back" href="../../../api/openrig.naming.rules.html#openrig.naming.rules.validate_convention">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_convention</span><span class="p">(</span>
+    <span class="n">tokens</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">token_rules</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ConcreteRule</span><span class="p">],</span>
+    <span class="n">global_rules</span><span class="p">:</span> <span class="n">GlobalRules</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates the structural integrity of the assembled naming convention.</span>
+
+<span class="sd">    Performs checks that cannot be done at the individual rule level:</span>
+<span class="sd">    - Token list must be non-empty and duplicate-free.</span>
+<span class="sd">    - Separator must be non-empty and satisfy its own global rule (if any).</span>
+<span class="sd">    - Token names must be valid Python identifiers (required for named</span>
+<span class="sd">      regex capture groups).</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Regex pattern validity is no longer checked here because</span>
+<span class="sd">        ``RegexRule.__post_init__`` already validates the pattern at</span>
+<span class="sd">        construction time.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        tokens: The ordered list of token names.</span>
+<span class="sd">        separator: The separator character.</span>
+<span class="sd">        token_rules: The assembled token rule mapping.</span>
+<span class="sd">        global_rules: The global rules dataclass.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RuleBuilderError: If any structural constraint is violated.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">tokens</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">RuleBuilderError</span><span class="p">(</span><span class="s2">&quot;&#39;naming_tokens&#39; cannot be an empty list.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">tokens</span><span class="p">))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">):</span>
+        <span class="n">duplicates</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tokens</span> <span class="k">if</span> <span class="n">tokens</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">raise</span> <span class="n">RuleBuilderError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;&#39;naming_tokens&#39; contains duplicate entries: </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">duplicates</span><span class="p">))</span><span class="si">!r}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">separator</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">RuleBuilderError</span><span class="p">(</span><span class="s2">&quot;&#39;naming_separator&#39; cannot be empty.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Validate separator against its own declared rule.</span>
+    <span class="n">sep_rule</span> <span class="o">=</span> <span class="n">global_rules</span><span class="o">.</span><span class="n">separator_rule</span>
+    <span class="k">if</span> <span class="n">sep_rule</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">sep_rule</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;regex&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sep_rule</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">RuleBuilderError</span><span class="p">(</span>
+                <span class="s2">&quot;The separator_rule has type &#39;regex&#39; but its &#39;value&#39; is not a string.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">sep_rule</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">separator</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">RuleBuilderError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Separator &#39;</span><span class="si">{</span><span class="n">separator</span><span class="si">}</span><span class="s2">&#39; does not satisfy its own rule &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;(pattern: &#39;</span><span class="si">{</span><span class="n">sep_rule</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&#39;).&quot;</span>
+            <span class="p">)</span>
+
+    <span class="c1"># Token names must be valid Python identifiers because they are used</span>
+    <span class="c1"># as named groups in the matching regex (e.g. ``(?P&lt;descriptor&gt;...)``).</span>
+    <span class="n">_IDENTIFIER_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[a-zA-Z_][a-zA-Z0-9_]*$&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_IDENTIFIER_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">RuleBuilderError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Token name &#39;</span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&#39; is not a valid Python identifier. &quot;</span>
+                <span class="s2">&quot;Token names are used as regex named groups and must match &quot;</span>
+                <span class="sa">r</span><span class="s2">&quot;&#39;^[a-zA-Z_][a-zA-Z0-9_]*$&#39;.&quot;</span>
+            <span class="p">)</span>
+
+    <span class="c1"># Warn about tokens that have no rule — they accept any value.</span>
+    <span class="c1"># This is intentional (the Manager falls back to a catch-all pattern),</span>
+    <span class="c1"># but worth surfacing during validation for transparency.</span>
+    <span class="n">rule_less</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tokens</span> <span class="k">if</span> <span class="n">t</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">token_rules</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">rule_less</span><span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;The following tokens have no validation rule and will accept any value: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">rule_less</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Module-level assembly — executed once at import time</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+<span class="n">TOKENS</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">SETTINGS</span><span class="o">.</span><span class="n">naming</span><span class="o">.</span><span class="n">tokens</span><span class="p">)</span>
+<span class="n">SEPARATOR</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">SETTINGS</span><span class="o">.</span><span class="n">naming</span><span class="o">.</span><span class="n">separator</span>
+<span class="n">TOKEN_RULES</span><span class="p">,</span> <span class="n">_GLOBAL_RULES_OBJ</span> <span class="o">=</span> <span class="n">build_rules</span><span class="p">()</span>
+<span class="n">NORMALIZERS</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Normalizer</span><span class="p">]</span> <span class="o">=</span> <span class="n">build_normalizers</span><span class="p">()</span>
+
+<span class="n">validate_convention</span><span class="p">(</span><span class="n">TOKENS</span><span class="p">,</span> <span class="n">SEPARATOR</span><span class="p">,</span> <span class="n">TOKEN_RULES</span><span class="p">,</span> <span class="n">_GLOBAL_RULES_OBJ</span><span class="p">)</span>
+
+<span class="n">GLOBAL_RULES</span><span class="p">:</span> <span class="n">GlobalRules</span> <span class="o">=</span> <span class="n">_GLOBAL_RULES_OBJ</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Iván Cuenca Ruiz &amp; Luis de Campos.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

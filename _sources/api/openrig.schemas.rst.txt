@@ -1,0 +1,7 @@
+openrig.schemas module
+======================
+
+.. automodule:: openrig.schemas
+   :members:
+   :undoc-members:
+   :show-inheritance:

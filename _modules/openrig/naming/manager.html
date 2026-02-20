@@ -1,0 +1,878 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>openrig.naming.manager &mdash; OpenRig 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            OpenRig
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../style_guide/coding_standards.html">Python Coding Style Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">OpenRig</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../naming.html">openrig.naming</a></li>
+      <li class="breadcrumb-item active">openrig.naming.manager</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for openrig.naming.manager</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Module for managing naming conventions in rigging.</span>
+
+<span class="sd">This module provides the ``Manager`` class to validate, parse, and build</span>
+<span class="sd">strings based on configurable naming rules and tokens.</span>
+
+<span class="sd">The key design decisions that enable strict typing throughout:</span>
+
+<span class="sd">- Token values flowing **in** (raw input from callers) are typed as</span>
+<span class="sd">  ``TokenValue = Union[str, Enum]``, defined in ``schemas``.</span>
+<span class="sd">- Token values flowing **internally** (after normalization) are always</span>
+<span class="sd">  plain ``str``, represented as ``TokenData = Dict[str, str]``.</span>
+<span class="sd">- Rules are ``ConcreteRule`` instances (``RegexRule``, ``ListRule``,</span>
+<span class="sd">  ``CallableRule``) that expose a uniform ``validate`` / ``to_regex_pattern``</span>
+<span class="sd">  interface, eliminating all ``isinstance`` branching over rule types.</span>
+<span class="sd">- Global rules are stored as a typed ``GlobalRules`` dataclass instead of</span>
+<span class="sd">  ``Dict[str, Any]``, so attribute access is fully type-safe.</span>
+<span class="sd">- Serialization uses a ``ManagerConfig`` ``TypedDict`` so ``from_dict`` /</span>
+<span class="sd">  ``to_dict`` round-trips are fully typed without ``Any``.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">List</span><span class="p">,</span>
+    <span class="n">Optional</span><span class="p">,</span>
+    <span class="n">Sequence</span><span class="p">,</span>
+    <span class="n">Tuple</span><span class="p">,</span>
+    <span class="n">TypedDict</span><span class="p">,</span>
+    <span class="n">Union</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">openrig.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ConcreteRule</span><span class="p">,</span>
+    <span class="n">GlobalRules</span><span class="p">,</span>
+    <span class="n">TokenData</span><span class="p">,</span>
+    <span class="n">TokenValue</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.normalizers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Normalizer</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Exceptions</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="NamingError">
+<a class="viewcode-back" href="../../../api/openrig.naming.manager.html#openrig.naming.NamingError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NamingError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base exception for naming-related errors.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="NamingConfigError">
+<a class="viewcode-back" href="../../../api/openrig.naming.manager.html#openrig.naming.NamingConfigError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NamingConfigError</span><span class="p">(</span><span class="n">NamingError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when the Manager is configured with invalid parameters.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="NamingValidationError">
+<a class="viewcode-back" href="../../../api/openrig.naming.manager.html#openrig.naming.NamingValidationError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NamingValidationError</span><span class="p">(</span><span class="n">NamingError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when a name or token value fails validation.&quot;&quot;&quot;</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Serialization contract</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="ManagerConfig">
+<a class="viewcode-back" href="../../../api/openrig.naming.manager.html#openrig.naming.ManagerConfig">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ManagerConfig</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Typed dictionary representing the serializable state of a ``Manager``.</span>
+
+<span class="sd">    Used by ``Manager.from_dict`` and ``Manager.to_dict`` to provide a</span>
+<span class="sd">    fully typed round-trip without resorting to ``Dict[str, Any]``.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        tokens: Ordered list of token name strings.</span>
+<span class="sd">        separator: The separator character.</span>
+<span class="sd">        rules: Mapping of token name to its ``ConcreteRule``.</span>
+<span class="sd">        normalizers: Mapping of token name to its normalizer callable.</span>
+<span class="sd">        global_rules: The global naming constraints.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">tokens</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">rules</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ConcreteRule</span><span class="p">]</span>
+    <span class="n">normalizers</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Normalizer</span><span class="p">]</span>
+    <span class="n">global_rules</span><span class="p">:</span> <span class="n">GlobalRules</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Manager</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="Manager">
+<a class="viewcode-back" href="../../../api/openrig.naming.manager.html#openrig.naming.Manager">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Manager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Manages naming conventions by validating and operating on strings.</span>
+
+<span class="sd">    Builds, parses, and validates names according to a configurable token</span>
+<span class="sd">    structure. All token values are normalized to plain strings before</span>
+<span class="sd">    validation, so callers may pass raw ``str`` or ``Enum`` members.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        tokens: Ordered list of token name strings.</span>
+<span class="sd">        separator: Character used to join token values.</span>
+<span class="sd">        rules: Mapping of token name to its ``ConcreteRule``.</span>
+<span class="sd">        normalizers: Mapping of token name to its normalizer callable.</span>
+<span class="sd">        global_rules: Global constraints applied to every built name.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; from openrig.schemas import RegexRule, ListRule, GlobalRules</span>
+<span class="sd">        &gt;&gt;&gt; manager = Manager(</span>
+<span class="sd">        ...     tokens=[&quot;descriptor&quot;, &quot;side&quot;, &quot;usage&quot;],</span>
+<span class="sd">        ...     separator=&quot;_&quot;,</span>
+<span class="sd">        ...     rules={</span>
+<span class="sd">        ...         &quot;descriptor&quot;: RegexRule(pattern=r&quot;^[a-z][a-zA-Z0-9]*$&quot;),</span>
+<span class="sd">        ...         &quot;side&quot;: ListRule(allowed=frozenset({&quot;l&quot;, &quot;r&quot;, &quot;c&quot;})),</span>
+<span class="sd">        ...     },</span>
+<span class="sd">        ...     global_rules=GlobalRules(max_length=80),</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; manager.build_name(descriptor=&quot;arm&quot;, side=&quot;l&quot;, usage=&quot;jnt&quot;)</span>
+<span class="sd">        &#39;arm_l_jnt&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">tokens</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">rules</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ConcreteRule</span><span class="p">]</span>
+    <span class="n">normalizers</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Normalizer</span><span class="p">]</span>
+    <span class="n">global_rules</span><span class="p">:</span> <span class="n">GlobalRules</span>
+
+<div class="viewcode-block" id="Manager.__init__">
+<a class="viewcode-back" href="../../../api/openrig.naming.manager.html#openrig.naming.Manager.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tokens</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">separator</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">rules</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ConcreteRule</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">normalizers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Normalizer</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">global_rules</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">GlobalRules</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the naming Manager.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tokens: Ordered sequence of token name strings.</span>
+<span class="sd">            separator: Character used to join token values. Must not be empty.</span>
+<span class="sd">            rules: Mapping of token name to its ``ConcreteRule``. Tokens</span>
+<span class="sd">                without a rule accept any value.</span>
+<span class="sd">            normalizers: Mapping of token name to its normalizer callable.</span>
+<span class="sd">                Normalizers are applied before validation.</span>
+<span class="sd">            global_rules: Global constraints (max length, forbidden patterns).</span>
+<span class="sd">                Defaults to an unconstrained ``GlobalRules`` instance.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NamingConfigError: If ``separator`` is ``None`` or empty.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tokens</span> <span class="ow">or</span> <span class="p">[])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">separator</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NamingConfigError</span><span class="p">(</span><span class="s2">&quot;Separator must be a non-empty string.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">separator</span> <span class="o">=</span> <span class="n">separator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rules</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">rules</span> <span class="ow">or</span> <span class="p">{})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">normalizers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">normalizers</span> <span class="ow">or</span> <span class="p">{})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">global_rules</span> <span class="o">=</span> <span class="n">global_rules</span> <span class="ow">or</span> <span class="n">GlobalRules</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_regex_cache</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">bool</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span></div>
+
+
+<div class="viewcode-block" id="Manager.__repr__">
+<a class="viewcode-back" href="../../../api/openrig.naming.manager.html#openrig.naming.Manager.__repr__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a developer-friendly string representation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;tokens=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="si">}</span><span class="s2"> separator=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="si">!r}</span><span class="s2">&gt;&quot;</span>
+        <span class="p">)</span></div>
+
+
+    <span class="c1"># -----------------------------------------------------------------------</span>
+    <span class="c1"># Serialization</span>
+    <span class="c1"># -----------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="Manager.from_dict">
+<a class="viewcode-back" href="../../../api/openrig.naming.manager.html#openrig.naming.Manager.from_dict">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">ManagerConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Manager</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a ``Manager`` instance from a ``ManagerConfig`` dictionary.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data: A ``ManagerConfig`` typed dict containing the configuration.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A new ``Manager`` instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">tokens</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tokens&quot;</span><span class="p">),</span>
+            <span class="n">separator</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;separator&quot;</span><span class="p">),</span>
+            <span class="n">rules</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rules&quot;</span><span class="p">),</span>
+            <span class="n">normalizers</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;normalizers&quot;</span><span class="p">),</span>
+            <span class="n">global_rules</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;global_rules&quot;</span><span class="p">),</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Manager.to_dict">
+<a class="viewcode-back" href="../../../api/openrig.naming.manager.html#openrig.naming.Manager.to_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ManagerConfig</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Exports the current configuration as a ``ManagerConfig`` dictionary.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A ``ManagerConfig`` typed dict representing the current state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ManagerConfig</span><span class="p">(</span>
+            <span class="n">tokens</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">,</span>
+            <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+            <span class="n">rules</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">,</span>
+            <span class="n">normalizers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">normalizers</span><span class="p">,</span>
+            <span class="n">global_rules</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">global_rules</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+    <span class="c1"># -----------------------------------------------------------------------</span>
+    <span class="c1"># Internal helpers</span>
+    <span class="c1"># -----------------------------------------------------------------------</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_join_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">TokenData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Joins normalized token values into a name string.</span>
+
+<span class="sd">        Skips tokens whose value is an empty string.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data: A ``TokenData`` mapping of token name → normalized value.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The assembled name string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span> <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">token</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_normalize_token_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">TokenValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Normalizes a raw token value to a plain string.</span>
+
+<span class="sd">        Processing order:</span>
+<span class="sd">        1. Extract ``.value`` from ``Enum`` members.</span>
+<span class="sd">        2. Apply the token&#39;s registered normalizer (if any).</span>
+<span class="sd">        3. Convert to ``str`` and strip surrounding whitespace.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            token: The token name.</span>
+<span class="sd">            value: The raw input value (``str`` or ``Enum``).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The normalized string value. Returns ``&quot;&quot;`` for empty inputs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Step 1: unwrap Enum — isinstance narrows the type so Pylance</span>
+        <span class="c1"># knows value.value is str after this branch.</span>
+        <span class="n">raw</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Enum</span><span class="p">)</span> <span class="k">else</span> <span class="n">value</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">raw</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="c1"># Step 2: apply registered normalizer</span>
+        <span class="n">normalizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalizers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">normalizer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">raw</span> <span class="o">=</span> <span class="n">normalizer</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
+
+        <span class="c1"># Step 3: final string coercion + strip</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="c1"># -----------------------------------------------------------------------</span>
+    <span class="c1"># Validators</span>
+    <span class="c1"># -----------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="Manager.is_valid">
+<a class="viewcode-back" href="../../../api/openrig.naming.manager.html#openrig.naming.Manager.is_valid">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns ``True`` if ``name`` is fully valid against all tokens.</span>
+
+<span class="sd">        A name is fully valid when it contains a non-empty, rule-conforming</span>
+<span class="sd">        value for every token defined in the convention. For partial</span>
+<span class="sd">        validation use ``get_data`` and inspect individual token values.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name: The candidate name string.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ``True`` if the name is strictly valid, ``False`` otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">regex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_matching_regex</span><span class="p">(</span><span class="n">full_match</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Second pass: callable rules cannot be fully represented as regex,</span>
+        <span class="c1"># so we validate each extracted token value explicitly.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">all</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">is_valid_token</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">token</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">value</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Manager.is_valid_token">
+<a class="viewcode-back" href="../../../api/openrig.naming.manager.html#openrig.naming.Manager.is_valid_token">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_valid_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns ``True`` if ``value`` is valid for the given token.</span>
+
+<span class="sd">        Checks that the value does not contain the separator, then delegates</span>
+<span class="sd">        to the token&#39;s ``ConcreteRule.validate`` method.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            token: The token name.</span>
+<span class="sd">            value: The normalized (post-normalization) string value.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ``True`` if valid, ``False`` otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">separator</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">rule</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rule</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">rule</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+
+    <span class="c1"># -----------------------------------------------------------------------</span>
+    <span class="c1"># Getters</span>
+    <span class="c1"># -----------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="Manager.get_data">
+<a class="viewcode-back" href="../../../api/openrig.naming.manager.html#openrig.naming.Manager.get_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TokenData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts token values from a name string using the matching regex.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name: The name string to parse.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A ``TokenData`` dict mapping every token name to its extracted</span>
+<span class="sd">            value, or ``&quot;&quot;`` for tokens not present in the name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">TokenData</span> <span class="o">=</span> <span class="p">{</span><span class="n">token</span><span class="p">:</span> <span class="s2">&quot;&quot;</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">}</span>
+        <span class="n">regex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_matching_regex</span><span class="p">(</span><span class="n">capture_groups</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">full_match</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">match</span><span class="o">.</span><span class="n">groupdict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="Manager.parse">
+<a class="viewcode-back" href="../../../api/openrig.naming.manager.html#openrig.naming.Manager.parse">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">TokenData</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Attempts to parse a name into its constituent token values.</span>
+
+<span class="sd">        Tries in order:</span>
+<span class="sd">        1. Regex-based extraction (strict structural match).</span>
+<span class="sd">        2. Split-based extraction (loose positional match).</span>
+<span class="sd">        3. Returns the original string if both fail.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name: The name string to parse.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A ``TokenData`` dict if parsing succeeds, or the original</span>
+<span class="sd">            ``str`` if the name does not conform to the convention.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">name</span>
+
+        <span class="c1"># 1. Regex extraction</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+            <span class="k">return</span> <span class="n">data</span>
+
+        <span class="c1"># 2. Split extraction</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">):</span>
+            <span class="n">temp_data</span><span class="p">:</span> <span class="n">TokenData</span> <span class="o">=</span> <span class="p">{</span><span class="n">token</span><span class="p">:</span> <span class="s2">&quot;&quot;</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">}</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">part</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">parts</span><span class="p">):</span>
+                <span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_valid_token</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">part</span><span class="p">):</span>
+                    <span class="n">temp_data</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span> <span class="n">part</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">name</span>
+            <span class="k">return</span> <span class="n">temp_data</span>
+
+        <span class="k">return</span> <span class="n">name</span></div>
+
+
+<div class="viewcode-block" id="Manager.get_token_value">
+<a class="viewcode-back" href="../../../api/openrig.naming.manager.html#openrig.naming.Manager.get_token_value">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_token_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">token_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the value of a specific token extracted from a name.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name: The name string to extract from.</span>
+<span class="sd">            token_name: The name of the token to retrieve.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The extracted token value, or ``&quot;&quot;`` if not present.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NamingValidationError: If ``token_name`` is not defined in this</span>
+<span class="sd">                manager&#39;s token list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">token_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NamingValidationError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Token &#39;</span><span class="si">{</span><span class="n">token_name</span><span class="si">}</span><span class="s2">&#39; is not defined. Available tokens: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">name</span><span class="p">)[</span><span class="n">token_name</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Manager.get_errors">
+<a class="viewcode-back" href="../../../api/openrig.naming.manager.html#openrig.naming.Manager.get_errors">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a list of human-readable validation errors for a name.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name: The name string to validate.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A list of error message strings. Empty if the name is valid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">errors</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Name must be a non-empty string.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">errors</span>
+
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">):</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Name has too many parts: expected at most </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">part</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">parts</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">):</span>
+                <span class="k">break</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_valid_token</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">part</span><span class="p">):</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid value &#39;</span><span class="si">{</span><span class="n">part</span><span class="si">}</span><span class="s2">&#39; for token &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">errors</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_valid</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Name does not match the required naming pattern.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">errors</span></div>
+
+
+<div class="viewcode-block" id="Manager.get_matching_regex">
+<a class="viewcode-back" href="../../../api/openrig.naming.manager.html#openrig.naming.Manager.get_matching_regex">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_matching_regex</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">capture_groups</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">full_match</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates a regex pattern matching names against this convention.</span>
+
+<span class="sd">        Tokens are optional from right to left: for tokens</span>
+<span class="sd">        ``[&quot;descriptor&quot;, &quot;side&quot;, &quot;usage&quot;]`` the pattern matches</span>
+<span class="sd">        ``&quot;arm&quot;``, ``&quot;arm_l&quot;``, and ``&quot;arm_l_jnt&quot;``, but never</span>
+<span class="sd">        ``&quot;arm__jnt&quot;``.</span>
+
+<span class="sd">        The pattern for each token is derived from its ``ConcreteRule``</span>
+<span class="sd">        via ``rule.to_regex_pattern()``. Tokens without a rule use a</span>
+<span class="sd">        catch-all pattern that excludes the separator.</span>
+
+<span class="sd">        Results are cached by ``(capture_groups, full_match, strict)``.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            capture_groups: If ``True``, wraps each token in a named</span>
+<span class="sd">                capture group ``(?P&lt;token_name&gt;...)``.</span>
+<span class="sd">            full_match: If ``True``, anchors the pattern with ``^`` / ``$``.</span>
+<span class="sd">            strict: If ``True``, all tokens are required (no optional groups).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The assembled regex pattern string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cache_key</span> <span class="o">=</span> <span class="p">(</span><span class="n">capture_groups</span><span class="p">,</span> <span class="n">full_match</span><span class="p">,</span> <span class="n">strict</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cache_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_regex_cache</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_regex_cache</span><span class="p">[</span><span class="n">cache_key</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;^$&quot;</span> <span class="k">if</span> <span class="n">full_match</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_regex_cache</span><span class="p">[</span><span class="n">cache_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="c1"># 1. Build raw pattern per token via ConcreteRule.to_regex_pattern()</span>
+        <span class="n">raw_patterns</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">:</span>
+            <span class="n">rule</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">rule</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">raw_patterns</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span> <span class="n">rule</span><span class="o">.</span><span class="n">to_regex_pattern</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># No rule: match anything except the separator</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">raw_patterns</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;.+&quot;</span>
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">raw_patterns</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;(?:(?!</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">)</span><span class="si">}</span><span class="s2">).)+&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">raw_patterns</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;[^</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">)</span><span class="si">}</span><span class="s2">]+&quot;</span>
+
+        <span class="c1"># 2. Wrap in optional named capture groups</span>
+        <span class="n">token_patterns</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">:</span>
+            <span class="n">raw</span> <span class="o">=</span> <span class="n">raw_patterns</span><span class="p">[</span><span class="n">token</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">capture_groups</span><span class="p">:</span>
+                <span class="n">token_patterns</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;(?P&lt;</span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&gt;</span><span class="si">{</span><span class="n">raw</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">token_patterns</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;(?:</span><span class="si">{</span><span class="n">raw</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+        <span class="c1"># 3. Assemble final regex</span>
+        <span class="n">sep</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">strict</span><span class="p">:</span>
+            <span class="n">final_regex</span> <span class="o">=</span> <span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">token_patterns</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">final_regex</span> <span class="o">=</span> <span class="n">token_patterns</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">final_regex</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;(?:</span><span class="si">{</span><span class="n">sep</span><span class="si">}{</span><span class="n">token_patterns</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span><span class="si">}</span><span class="s2">)?&quot;</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                    <span class="n">tok</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">final_regex</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;(?:</span><span class="si">{</span><span class="n">sep</span><span class="si">}{</span><span class="n">token_patterns</span><span class="p">[</span><span class="n">tok</span><span class="p">]</span><span class="si">}{</span><span class="n">final_regex</span><span class="si">}</span><span class="s2">)?&quot;</span>
+                <span class="n">final_regex</span> <span class="o">=</span> <span class="n">token_patterns</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="n">final_regex</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;^</span><span class="si">{</span><span class="n">final_regex</span><span class="si">}</span><span class="s2">$&quot;</span> <span class="k">if</span> <span class="n">full_match</span> <span class="k">else</span> <span class="n">final_regex</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_regex_cache</span><span class="p">[</span><span class="n">cache_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+    <span class="c1"># -----------------------------------------------------------------------</span>
+    <span class="c1"># Setters</span>
+    <span class="c1"># -----------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="Manager.add_rule">
+<a class="viewcode-back" href="../../../api/openrig.naming.manager.html#openrig.naming.Manager.add_rule">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="n">ConcreteRule</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds or replaces the validation rule for a token.</span>
+
+<span class="sd">        Clears the regex cache because the pattern depends on all rules.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            token: The token name.</span>
+<span class="sd">            rule: The ``ConcreteRule`` instance to associate with the token.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_regex_cache</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span> <span class="n">rule</span></div>
+
+
+<div class="viewcode-block" id="Manager.remove_rule">
+<a class="viewcode-back" href="../../../api/openrig.naming.manager.html#openrig.naming.Manager.remove_rule">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes the validation rule for a token, if present.</span>
+
+<span class="sd">        Clears the regex cache because the pattern depends on all rules.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            token: The token name whose rule should be removed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_regex_cache</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+    <span class="c1"># -----------------------------------------------------------------------</span>
+    <span class="c1"># Builders</span>
+    <span class="c1"># -----------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="Manager.build_name">
+<a class="viewcode-back" href="../../../api/openrig.naming.manager.html#openrig.naming.Manager.build_name">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">TokenValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Builds a name string from token values.</span>
+
+<span class="sd">        Normalizes each provided value, validates it against the token&#39;s</span>
+<span class="sd">        rule, joins all non-empty values with the separator, and then</span>
+<span class="sd">        checks the result against the global rules.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            **kwargs: Token values keyed by token name. Values may be</span>
+<span class="sd">                ``str`` or ``Enum`` members; they are normalized before</span>
+<span class="sd">                validation.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The assembled name string.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NamingValidationError: If unknown tokens are provided, if a</span>
+<span class="sd">                normalized value fails its rule, or if the assembled name</span>
+<span class="sd">                violates a global constraint.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">unknown</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">unknown</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NamingValidationError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Unknown tokens: </span><span class="si">{</span><span class="n">unknown</span><span class="si">}</span><span class="s2">. Expected one of: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">data</span><span class="p">:</span> <span class="n">TokenData</span> <span class="o">=</span> <span class="p">{</span><span class="n">token</span><span class="p">:</span> <span class="s2">&quot;&quot;</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">:</span>
+            <span class="n">raw_value</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">normalized</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_token_value</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">raw_value</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">normalized</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_valid_token</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">normalized</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">NamingValidationError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Invalid value &#39;</span><span class="si">{</span><span class="n">normalized</span><span class="si">}</span><span class="s2">&#39; for token &#39;</span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;(separator: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="si">}</span><span class="s2">&#39;).&quot;</span>
+                <span class="p">)</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span> <span class="n">normalized</span>
+
+        <span class="n">final_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_join_tokens</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_global_rules</span><span class="p">(</span><span class="n">final_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">final_name</span></div>
+
+
+<div class="viewcode-block" id="Manager.update_name">
+<a class="viewcode-back" href="../../../api/openrig.naming.manager.html#openrig.naming.Manager.update_name">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">TokenValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates specific token values in an existing name.</span>
+
+<span class="sd">        Parses ``name`` into its token values, applies ``kwargs`` as</span>
+<span class="sd">        overrides, then rebuilds the name.</span>
+
+<span class="sd">        If ``name`` cannot be parsed against the full convention, it is</span>
+<span class="sd">        treated as a bare descriptor (first token) provided it passes the</span>
+<span class="sd">        first token&#39;s rule.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name: The existing name string to update.</span>
+<span class="sd">            **kwargs: Token values to override. Same rules as ``build_name``.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The updated name string.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NamingValidationError: If ``name`` cannot be interpreted and is</span>
+<span class="sd">                not empty, or if the updated values are invalid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">TokenData</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">is_parsed</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_parsed</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+                <span class="c1"># Empty name: build from kwargs only</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_name</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="n">first_token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_valid_token</span><span class="p">(</span><span class="n">first_token</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+                <span class="n">data</span><span class="p">[</span><span class="n">first_token</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">NamingValidationError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Could not parse &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; against tokens </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="si">}</span><span class="s2">, &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;and it is not a valid value for the first token &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">first_token</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
+                <span class="p">)</span>
+
+        <span class="c1"># Merge overrides: normalize kwargs to str before updating TokenData</span>
+        <span class="k">for</span> <span class="n">token</span><span class="p">,</span> <span class="n">raw_value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_token_value</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">raw_value</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_name</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Manager.resolve_name">
+<a class="viewcode-back" href="../../../api/openrig.naming.manager.html#openrig.naming.Manager.resolve_name">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resolve_name</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TokenData</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">TokenValue</span><span class="p">]],</span>
+        <span class="n">tokens</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">rules</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ConcreteRule</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">normalizers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Normalizer</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resolves a flexible input into a final name string.</span>
+
+<span class="sd">        Provides a unified entry point for callers that may supply names as</span>
+<span class="sd">        dicts, sequences, or plain strings. When ``tokens``, ``rules``, or</span>
+<span class="sd">        ``normalizers`` overrides are provided, a temporary ``Manager`` is</span>
+<span class="sd">        created with those overrides applied on top of the current config.</span>
+
+<span class="sd">        Supported ``value`` types:</span>
+<span class="sd">        - ``dict`` (``TokenData``): passed directly to ``build_name``.</span>
+<span class="sd">        - ``list`` / ``tuple`` (``Sequence[TokenValue]``): values are</span>
+<span class="sd">          mapped positionally to tokens, then passed to ``build_name``.</span>
+<span class="sd">        - ``str``: returned as-is (no building or validation).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value: The input to resolve.</span>
+<span class="sd">            tokens: Optional token list override.</span>
+<span class="sd">            rules: Optional rules override.</span>
+<span class="sd">            normalizers: Optional normalizers override.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The resolved name string.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NamingValidationError: If a sequence input has more items than</span>
+<span class="sd">                there are tokens.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">tokens</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">rules</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">normalizers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="n">Manager</span><span class="p">(</span>
+                <span class="n">tokens</span><span class="o">=</span><span class="n">tokens</span> <span class="k">if</span> <span class="n">tokens</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">,</span>
+                <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+                <span class="n">rules</span><span class="o">=</span><span class="n">rules</span> <span class="k">if</span> <span class="n">rules</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">,</span>
+                <span class="n">normalizers</span><span class="o">=</span><span class="n">normalizers</span>
+                <span class="k">if</span> <span class="n">normalizers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalizers</span><span class="p">,</span>
+                <span class="n">global_rules</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">global_rules</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">temp</span><span class="o">.</span><span class="n">resolve_name</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_name</span><span class="p">(</span><span class="o">**</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">NamingValidationError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Input sequence has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2"> items but only &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">)</span><span class="si">}</span><span class="s2"> tokens are defined.&quot;</span>
+                <span class="p">)</span>
+            <span class="n">token_data</span><span class="p">:</span> <span class="n">TokenData</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">token</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_token_value</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">token</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_name</span><span class="p">(</span><span class="o">**</span><span class="n">token_data</span><span class="p">)</span>
+
+        <span class="c1"># Plain string: return as-is</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+
+    <span class="c1"># -----------------------------------------------------------------------</span>
+    <span class="c1"># Private validation helpers</span>
+    <span class="c1"># -----------------------------------------------------------------------</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_global_rules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validates a fully assembled name against the global rules.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name: The assembled name string.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NamingValidationError: If ``name`` exceeds the maximum length or</span>
+<span class="sd">                contains a forbidden pattern.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">max_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_rules</span><span class="o">.</span><span class="n">max_length</span>
+        <span class="k">if</span> <span class="n">max_length</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_length</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NamingValidationError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Name &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; exceeds the maximum length of </span><span class="si">{</span><span class="n">max_length</span><span class="si">}</span><span class="s2"> &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;(got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="si">}</span><span class="s2">).&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_rules</span><span class="o">.</span><span class="n">forbidden_patterns</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">NamingValidationError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Name &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; contains the forbidden pattern &#39;</span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
+                <span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Iván Cuenca Ruiz &amp; Luis de Campos.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -63,6 +63,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../naming.html">openrig.naming</a></li>
       <li class="breadcrumb-item active">openrig.naming.utils</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -73,10 +74,21 @@
            <div itemprop="articleBody">
              
   <h1>Source code for openrig.naming.utils</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Module providing string manipulation facilities.&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;String manipulation utilities for the OpenRig naming system.</span>
+
+<span class="sd">Provides validators, getters, converters, and incrementers for building</span>
+<span class="sd">and transforming name strings used throughout the rigging pipeline.</span>
+
+<span class="sd">Categories:</span>
+<span class="sd">    Validators: ``is_string``, ``is_digit``, ``is_camel_case``, etc.</span>
+<span class="sd">    Getters: ``get_digits``, ``get_version``, ``get_namespace``, etc.</span>
+<span class="sd">    Converters: ``to_camel_case``, ``to_snake_case``, ``to_kebab_case``, etc.</span>
+<span class="sd">    Incrementers: ``increment_digit``, ``increment_character``, etc.</span>
+<span class="sd">    Decrementers: ``decrement_digit``, ``decrement_character``, etc.</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
 
 <span class="c1"># Compiled Regex Patterns for performance</span>
 <span class="n">_CAMEL_CASE_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[a-z][a-z0-9]*([A-Z][a-z0-9]*)*$&quot;</span><span class="p">)</span>
@@ -115,6 +127,14 @@
     <span class="s2">&quot;_Right&quot;</span><span class="p">:</span> <span class="s2">&quot;_Left&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Center&quot;</span><span class="p">:</span> <span class="s2">&quot;Center&quot;</span><span class="p">,</span>
     <span class="s2">&quot;center&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Middle&quot;</span><span class="p">:</span> <span class="s2">&quot;Middle&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;middle&quot;</span><span class="p">:</span> <span class="s2">&quot;middle&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;_M_&quot;</span><span class="p">:</span> <span class="s2">&quot;_M_&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;_m_&quot;</span><span class="p">:</span> <span class="s2">&quot;_m_&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;M_&quot;</span><span class="p">:</span> <span class="s2">&quot;M_&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;m_&quot;</span><span class="p">:</span> <span class="s2">&quot;m_&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;_M&quot;</span><span class="p">:</span> <span class="s2">&quot;_M&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;_m&quot;</span><span class="p">:</span> <span class="s2">&quot;_m&quot;</span><span class="p">,</span>
     <span class="s2">&quot;left&quot;</span><span class="p">:</span> <span class="s2">&quot;right&quot;</span><span class="p">,</span>
     <span class="s2">&quot;right&quot;</span><span class="p">:</span> <span class="s2">&quot;left&quot;</span><span class="p">,</span>
     <span class="s2">&quot;_left&quot;</span><span class="p">:</span> <span class="s2">&quot;_right&quot;</span><span class="p">,</span>
@@ -125,14 +145,14 @@
 <span class="c1"># VALIDATORS</span>
 <div class="viewcode-block" id="is_string">
 <a class="viewcode-back" href="../../../api/openrig.naming.utils.html#openrig.naming.utils.is_string">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">is_string</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates if a variable is a string.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_string</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates whether a variable is a string.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        text: String to validate.</span>
+<span class="sd">        text: The value to validate.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        True if successful, False otherwise.</span>
+<span class="sd">        True if ``text`` is a ``str`` instance, False otherwise.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span></div>
 
@@ -140,14 +160,14 @@
 
 <div class="viewcode-block" id="is_digit">
 <a class="viewcode-back" href="../../../api/openrig.naming.utils.html#openrig.naming.utils.is_digit">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">is_digit</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates if a variable is a number (int or float).</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_digit</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates whether a variable is a number.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        value: Value to validate.</span>
+<span class="sd">        value: The value to validate.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        True if successful, False otherwise.</span>
+<span class="sd">        True if ``value`` is an ``int`` or ``float`` instance, False otherwise.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span></div>
 
@@ -562,17 +582,16 @@
 <div class="viewcode-block" id="value_to_str">
 <a class="viewcode-back" href="../../../api/openrig.naming.utils.html#openrig.naming.utils.value_to_str">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">value_to_str</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a digit to a string with the following format: MxDx.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a numeric value to a filesystem-safe string in ``MxDx`` format.</span>
 
-<span class="sd">    where M is the sign (M for negative digits),</span>
-<span class="sd">    x is the integer part,</span>
-<span class="sd">    D is the decimal point (d), and x is the decimal part.</span>
+<span class="sd">    The ``M`` prefix indicates a negative value; the decimal point is</span>
+<span class="sd">    replaced by ``d`` (e.g. ``-1.5`` → ``&quot;M1d5&quot;``, ``2.0`` → ``&quot;2d0&quot;``).</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        value: Value to convert to string.</span>
+<span class="sd">        value: The numeric value to encode.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Converted value.</span>
+<span class="sd">        The encoded string representation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">sign</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -586,11 +605,10 @@
 <div class="viewcode-block" id="str_to_value">
 <a class="viewcode-back" href="../../../api/openrig.naming.utils.html#openrig.naming.utils.str_to_value">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">str_to_value</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a formatted string (MxDx) into a digit.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a formatted ``MxDx`` string back into a numeric value.</span>
 
-<span class="sd">    Where M is the sign (M for negative digits),</span>
-<span class="sd">    x is the integer part,</span>
-<span class="sd">    D is the decimal point (d), and x is the decimal part.</span>
+<span class="sd">    Reverses the encoding applied by ``value_to_str``: strips the ``M``</span>
+<span class="sd">    sign prefix and replaces ``d`` with a decimal point.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        text: Formatted text to convert into a digit.</span>
@@ -625,9 +643,9 @@
 <div class="viewcode-block" id="split_text">
 <a class="viewcode-back" href="../../../api/openrig.naming.utils.html#openrig.naming.utils.split_text">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">split_text</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Splits text into individual word.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Splits text into individual words.</span>
 
-<span class="sd">    Handling camelCase, PascalCase, and delimiters like _ and -.</span>
+<span class="sd">    Handles camelCase, PascalCase, and delimiters like ``_`` and ``-``.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        text: The text to split.</span>
@@ -709,9 +727,10 @@
 <div class="viewcode-block" id="clean_txt">
 <a class="viewcode-back" href="../../../api/openrig.naming.utils.html#openrig.naming.utils.clean_txt">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">clean_txt</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">replace_with</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cleans a string.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cleans a string by replacing illegal characters.</span>
 
-<span class="sd">    by replacing illegal characters and ensuring it doesn&#39;t start with a digit.</span>
+<span class="sd">    Ensures the result does not start with a digit by prepending</span>
+<span class="sd">    ``replace_with`` if necessary.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        text: Text to clean.</span>

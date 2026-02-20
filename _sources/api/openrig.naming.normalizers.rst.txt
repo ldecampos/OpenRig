@@ -1,0 +1,7 @@
+openrig.naming.normalizers module
+=================================
+
+.. automodule:: openrig.naming.normalizers
+   :members:
+   :undoc-members:
+   :show-inheritance:
