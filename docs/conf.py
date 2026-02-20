@@ -65,12 +65,13 @@ def run_apidoc(_: Sphinx):
     cur_dir = os.path.abspath(os.path.dirname(__file__))
     output_path = os.path.join(cur_dir, "api")
     module_path = os.path.abspath(os.path.join(cur_dir, "..", "src", "openrig"))
+    exclude_path = os.path.join(module_path, "tests")
 
     # -f: Force overwrite (so it updates with new files)
     # -e: Put each module on its own page (cleaner structure)
     # -M: Put module documentation before submodule documentation
-    # Excluimos cualquier carpeta de tests para que no se documente
-    main(["-f", "-e", "-M", "-o", output_path, module_path, "**/tests/*"])
+    # Excluimos la carpeta de tests explícitamente usando su ruta absoluta
+    main(["-f", "-e", "-M", "-o", output_path, module_path, exclude_path])
 
 
 def setup(app: Sphinx):

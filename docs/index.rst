@@ -8,12 +8,13 @@ Welcome to OpenRig's documentation!
    :caption: User Guide
 
    style_guide/coding_standards
+   style_guide/naming_convention
 
 .. toctree::
    :maxdepth: 2
    :caption: API Reference
 
-   modules
+   api/modules
 
 Indices and tables
 ==================
