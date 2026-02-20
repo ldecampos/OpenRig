@@ -18,7 +18,9 @@
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="openrig" href="../api/modules.html" />
+    <link rel="prev" title="Python Coding Style Guide" href="coding_standards.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -41,12 +43,51 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="coding_standards.html">Python Coding Style Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Naming Convention</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#core-design-principles">Core Design Principles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#default-convention">Default Convention</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tokens">Tokens</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#descriptor-rules">Descriptor Rules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#side-rules">Side Rules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#usage-rules">Usage Rules</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#global-rules">Global Rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-the-naming-library">Using the Naming Library</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#getting-the-manager">Getting the Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#building-names">Building Names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#validating-names">Validating Names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parsing-names">Parsing Names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#updating-names">Updating Names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#resolving-names-flexible-input">Resolving Names (Flexible Input)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#available-normalizers">Available Normalizers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extending-the-convention">Extending the Convention</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#changing-the-convention-via-config-json">Changing the Convention via <code class="docutils literal notranslate"><span class="pre">config.json</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-a-custom-manager">Using a Custom Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-or-removing-rules-at-runtime">Adding or Removing Rules at Runtime</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#real-world-use-cases">Real-World Use Cases</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rigging-building-joint-and-control-names">1. Rigging — Building joint and control names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mirroring-swapping-sides">2. Mirroring — Swapping sides</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#validation-checking-existing-scene-names">3. Validation — Checking existing scene names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rename-tool-accepting-flexible-input-from-artists">4. Rename tool — Accepting flexible input from artists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#unique-names-avoiding-duplicates-in-scene">5. Unique names — Avoiding duplicates in scene</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deformer-naming">6. Deformer naming</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#quick-reference-valid-vs-invalid-names">Quick Reference — Valid vs Invalid Names</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules.html">openrig</a></li>
 </ul>
 
         </div>
@@ -850,7 +891,10 @@ Prefer creating a separate <code class="docutils literal notranslate"><span clas
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="coding_standards.html" class="btn btn-neutral float-left" title="Python Coding Style Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api/modules.html" class="btn btn-neutral float-right" title="openrig" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
