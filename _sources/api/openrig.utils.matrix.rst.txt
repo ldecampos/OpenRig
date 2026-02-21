@@ -1,0 +1,7 @@
+openrig.utils.matrix module
+===========================
+
+.. automodule:: openrig.utils.matrix
+   :members:
+   :undoc-members:
+   :show-inheritance:

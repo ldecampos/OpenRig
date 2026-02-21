@@ -5,3 +5,11 @@ openrig.utils package
    :members:
    :undoc-members:
    :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   openrig.utils.matrix
