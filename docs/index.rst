@@ -4,11 +4,18 @@ Welcome to OpenRig's documentation!
 **OpenRig** is an open-source rigging library designed for Autodesk Maya.
 
 .. toctree::
+   :maxdepth: 1
+   :caption: Architecture
+
+   architecture
+
+.. toctree::
    :maxdepth: 2
    :caption: User Guide
 
-   style_guide/coding_standards
+   style_guide/python_style_guide
    style_guide/naming_convention
+   style_guide/rigging_standards
 
 .. toctree::
    :maxdepth: 2

@@ -183,49 +183,47 @@ Function and method docstrings should contain:
 - **Complete Example:**
 
   ```python
-  def get_model(self, model_name: str | None) -> Model:
-      """Gets an instance of the specified model.
+  def build_name(self, **kwargs: object) -> str:
+      """Builds a validated name from the given token values.
 
-      If `model_name` is None, it returns the default model. This method
-      lazily loads the OpenAI client to avoid errors if the API
-      key is not configured.
+      Each keyword argument corresponds to a token defined in the active
+      convention. Values are normalized before validation, so raw inputs
+      such as ``"upper_arm"`` or ``Side.LEFT`` are accepted.
 
       Args:
-          model_name: The name of the model to get.
+          **kwargs: Token name/value pairs (e.g. ``descriptor="arm"``,
+              ``side="l"``, ``usage="jnt"``).
 
       Returns:
-          A `Model` instance configured with the appropriate client.
+          A fully validated name string built from the provided tokens.
+
+      Raises:
+          NamingValidationError: If any token value fails validation after
+              normalization, or if the assembled name violates a global rule.
       """
-      if model_name is None:
-          model_name = DEFAULT_MODEL
-
-      client = self._get_client()
-
-      return (
-          OpenAIResponsesModel(model=model_name, openai_client=client)
-          if self._use_responses
-          else OpenAIChatCompletionsModel(model=model_name, openai_client=client)
-      )
+      ...
   ```
 
 - **Example with `Raises`:**
 
   ```python
-  def validate_code(cls, v):
-      """Validates that the code contains a Diagram definition.
+  def _require_str(data: dict, key: str) -> str:
+      """Extracts a required string value from a configuration dict.
 
       Args:
-          v: The code string to validate.
+          data: The configuration dictionary to read from.
+          key: The key whose value must be a non-empty string.
 
       Returns:
-          The original code string if it is valid.
+          The string value associated with *key*.
 
       Raises:
-          ValueError: If the code does not contain a 'Diagram' definition.
+          NamingConfigError: If *key* is missing or its value is not a string.
       """
-      if 'Diagram(' not in v:
-          raise ValueError('Code must contain a Diagram definition')
-      return v
+      value = data.get(key)
+      if not isinstance(value, str):
+          raise NamingConfigError(f"Expected string for '{key}', got {type(value)}")
+      return value
   ```
 
 ### 3.3. Google Style for Classes
@@ -240,61 +238,51 @@ Class docstrings should contain:
 - **Class Example:**
 
   ```python
-  class OpenAIProvider(ModelProvider):
-      """Creates a new OpenAI provider.
+  class Manager:
+      """Validates, parses, and builds names according to a configurable convention.
 
-      This class manages the creation and access to an OpenAI client,
-      allowing for the configuration of API keys, base URLs, and other parameters.
-      It loads the client lazily to optimize performance.
+      A ``Manager`` is built from a set of ordered tokens, a separator, per-token
+      rules, and optional normalizers. It can validate raw names, extract token
+      values, and assemble new names with automatic normalization.
 
       Attributes:
-          use_responses: A boolean indicating whether to use the OpenAI responses API.
+          tokens: Ordered list of token names that form a valid name.
+          separator: The string used to join tokens (default ``"_"``).
       """
 
       def __init__(
           self,
-          *,
-          api_key: str | None = None,
-          base_url: str | None = None,
-          # ...
+          tokens: list[str],
+          separator: str,
+          rules: dict[str, RuleValidator],
+          global_rules: GlobalRules | None = None,
       ) -> None:
-          """Initializes the OpenAI provider.
+          """Initializes the Manager with a naming convention.
 
           Args:
-              api_key: The API key to use.
-              base_url: The base URL for the client.
-              openai_client: An optional, pre-existing OpenAI client.
-              # ...
+              tokens: Ordered token names (e.g. ``["descriptor", "side", "usage"]``).
+              separator: Character(s) used to join tokens.
+              rules: Mapping from token name to its validation rule.
+              global_rules: Optional global constraints applied to the full name.
           """
-          # ...
+          ...
   ```
 
 - **Example with `Example`:**
 
   ```python
-  class OpenIdConfig(BaseModel):
-    """Represents the OpenID Connect configuration.
+  class RegexRule:
+      """Validates a token value against a regular expression.
 
-    Attributes:
-        client_id: The client ID.
-        auth_uri: The authorization URI.
-        token_uri: The token URI.
-        client_secret: The client secret.
-        redirect_uri: The optional redirect URI.
+      Attributes:
+          pattern: The compiled regex pattern used for validation.
 
-    Example:
-        config = OpenIdConfig(
-            client_id="your_client_id",
-            auth_uri="https://accounts.google.com/o/oauth2/auth",
-            token_uri="https://oauth2.googleapis.com/token",
-            client_secret="your_client_secret",
-        )
-    """
-    client_id: str
-    auth_uri: str
-    token_uri: str
-    client_secret: str
-    redirect_uri: Optional[str]
+      Example:
+          rule = RegexRule(pattern=r"^[a-z][a-zA-Z0-9]*$")
+          rule.validate("upperArm")  # True
+          rule.validate("UpperArm")  # False
+      """
+      pattern: re.Pattern
   ```
 
 ### 3.4. Module Docstrings
@@ -304,12 +292,12 @@ Module docstrings should be at the top of the file and summarize the module's co
 - **Example:**
 
   ```python
-  """Defines the Coder agent for generating, executing, and debugging code.
+  """Normalizer functions for converting raw token values to their canonical form.
 
-  This module provides the `CoderAgent` class, which interacts with a
-  language model to write code and with a code executor (local or Docker)
-  to test it. The agent supports multiple rounds of debugging and user
-  approval guards.
+  Each function accepts any object as input and always returns a ``str``.
+  Falsy inputs (``None``, ``""``, ``0``) return an empty string.
+  Normalizers are assigned per-token in ``config.json`` and applied
+  automatically by the ``Manager`` before validation.
   """
 
   # ... rest of the module's code ...
@@ -379,11 +367,25 @@ Select the appropriate level: `DEBUG`, `INFO`, `WARNING`, `ERROR`, or `CRITICAL`
 
 To ensure consistency and automate compliance, use the following tools:
 
-- **Formatter:** Black
-- **Import Sorter:** isort
+- **Linter + Formatter:** [Ruff](https://docs.astral.sh/ruff/) — handles code style, import sorting, and docstring conventions in a single tool. Configured in `pyproject.toml`.
 - **Type Checker:** mypy
 
-### 6.1. Pre-commit
+Ruff replaces Black and isort. Do not install or configure them separately.
+
+### 6.1. Running Ruff
+
+```bash
+# Check for issues
+ruff check .
+
+# Fix automatically where possible
+ruff check . --fix
+
+# Format code
+ruff format .
+```
+
+### 6.2. Pre-commit
 
 We use pre-commit to automatically run these checks before every commit.
 
