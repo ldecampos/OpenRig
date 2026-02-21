@@ -1,7 +1,0 @@
-openrig.ops package
-===================
-
-.. automodule:: openrig.ops
-   :members:
-   :undoc-members:
-   :show-inheritance:

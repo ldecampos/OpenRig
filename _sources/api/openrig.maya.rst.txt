@@ -1,0 +1,16 @@
+openrig.maya package
+====================
+
+.. automodule:: openrig.maya
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   openrig.maya.build
+   openrig.maya.ops

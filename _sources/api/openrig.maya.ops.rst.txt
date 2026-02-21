@@ -1,0 +1,7 @@
+openrig.maya.ops package
+========================
+
+.. automodule:: openrig.maya.ops
+   :members:
+   :undoc-members:
+   :show-inheritance:

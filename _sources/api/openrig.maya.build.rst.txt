@@ -1,7 +1,7 @@
-openrig.components package
+openrig.maya.build package
 ==========================
 
-.. automodule:: openrig.components
+.. automodule:: openrig.maya.build
    :members:
    :undoc-members:
    :show-inheritance:

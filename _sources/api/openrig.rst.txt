@@ -12,10 +12,11 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   openrig.components
    openrig.core
+   openrig.io
+   openrig.maya
    openrig.naming
-   openrig.ops
+   openrig.solutions
    openrig.ui
    openrig.utils
 

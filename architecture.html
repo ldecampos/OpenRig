@@ -1,0 +1,253 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenRig — Architecture Overview &mdash; OpenRig 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            OpenRig
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="style_guide/coding_standards.html">Python Coding Style Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_guide/naming_convention.html">Naming Convention</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">openrig</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">OpenRig</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenRig — Architecture Overview</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/architecture.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="openrig-architecture-overview">
+<h1>OpenRig — Architecture Overview<a class="headerlink" href="#openrig-architecture-overview" title="Link to this heading"></a></h1>
+<section id="what-is-a-rig">
+<h2>What is a rig?<a class="headerlink" href="#what-is-a-rig" title="Link to this heading"></a></h2>
+<p>A system that translates animator <strong>inputs</strong> into deformation <strong>outputs</strong> through a <strong>process</strong>.</p>
+<p>OpenRig never assumes what inputs, outputs, or processes look like. There is no single
+mandatory structure. A rig can use controls transforms,
+direct geometry selection, or anything else, (It is probably a matrix representing a point in space). The library provides the tools; the rigger
+decides what to build.</p>
+</section>
+<hr class="docutils" />
+<section id="core-principles">
+<h2>Core Principles<a class="headerlink" href="#core-principles" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Modular</strong> — the fundamental unit is a <em>solution</em>, not a full rig.
+A full rig is just a composition of solutions.</p></li>
+<li><p><strong>Flexible</strong> — solutions can be used standalone or composed freely.</p></li>
+<li><p><strong>Reconstructable</strong> — a rig can always be rebuilt from its description (pipeline-style).</p></li>
+<li><p><strong>Agnostic</strong> — the core logic is decoupled from any specific DCC.</p></li>
+<li><p><strong>Config-driven</strong> — conventions and behaviours are declared in configuration, not hardcoded. It should have one by default, in an external file.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="rig-lifecycle">
+<h2>Rig Lifecycle<a class="headerlink" href="#rig-lifecycle" title="Link to this heading"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>DESCRIPTION  →  BUILD  →  SCENE
+(data/file)     (DCC)     (accessible via API)
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li><p><strong>Description</strong> — the rig is defined as data (JSON or similar), outside DCC.</p></li>
+<li><p><strong>Build</strong> — the description is materialized in the DCC.</p></li>
+<li><p><strong>Scene</strong> — the built rig leaves metadata in the scene;
+the API can recover its data at any point without keeping Python objects in memory.</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="three-layer-architecture">
+<h2>Three-Layer Architecture<a class="headerlink" href="#three-layer-architecture" title="Link to this heading"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>┌─────────────────────────────────────────┐
+│           AGNOSTIC LAYER                │
+│  Contracts, data models, solution logic │
+│  knows nothing about any DCC            │
+└─────────────────┬───────────────────────┘
+                  │ implemented by
+┌─────────────────▼───────────────────────┐
+│           DCC LAYER                     │
+│  DCC-specific: nodes, commands,         │
+│  atomic operations (currently Maya)     │
+└─────────────────┬───────────────────────┘
+                  │ builds
+┌─────────────────▼───────────────────────┐
+│           SCENE                         │
+│  Materialized rig, accessible via API   │
+└─────────────────────────────────────────┘
+</pre></div>
+</div>
+<p>Adding support for a future DCC (Blender, Houdini…) means adding a new DCC layer
+implementation. The agnostic layer and all solutions remain untouched.</p>
+</section>
+<hr class="docutils" />
+<section id="package-structure">
+<h2>Package Structure<a class="headerlink" href="#package-structure" title="Link to this heading"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>openrig/
+├── naming/       ← agnostic — naming system (complete)
+├── core/         ← agnostic — contracts and data models (ABCs, Protocols, dataclasses)
+├── solutions/    ← agnostic — solution catalogue, implemented against core/ contracts
+├── io/           ← agnostic — serialization: rig description ↔ JSON/file
+├── utils/        ← agnostic — shared utilities (math, transforms…)
+│
+├── maya/         ← DCC-specific — everything Maya
+│   ├── ops/      ← atomic operations (create joint, constraint, connect attrs…)
+│   └── build/    ← materialize and read rigs in scene
+│
+└── ui/           ← independent project, joins later
+</pre></div>
+</div>
+<section id="responsibility-of-each-module">
+<h3>Responsibility of each module<a class="headerlink" href="#responsibility-of-each-module" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Module</p></th>
+<th class="head"><p>Layer</p></th>
+<th class="head"><p>Responsibility</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">naming/</span></code></p></td>
+<td><p>Agnostic</p></td>
+<td><p>Name validation, construction and parsing</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">core/</span></code></p></td>
+<td><p>Agnostic</p></td>
+<td><p>Contracts that every solution and component must fulfil</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">solutions/</span></code></p></td>
+<td><p>Agnostic</p></td>
+<td><p>Concrete solutions (arm, spine, twist…) built on <code class="docutils literal notranslate"><span class="pre">core/</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">io/</span></code></p></td>
+<td><p>Agnostic</p></td>
+<td><p>Read/write rig descriptions to disk</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">utils/</span></code></p></td>
+<td><p>Agnostic</p></td>
+<td><p>Math, matrix helpers, shared utilities</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">maya/ops/</span></code></p></td>
+<td><p>DCC</p></td>
+<td><p>Low-level Maya operations (building blocks)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">maya/build/</span></code></p></td>
+<td><p>DCC</p></td>
+<td><p>Build pipeline and scene introspection</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ui/</span></code></p></td>
+<td><p>—</p></td>
+<td><p>Authoring tools, independent of the core library</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<hr class="docutils" />
+<section id="what-this-design-buys">
+<h2>What this design buys<a class="headerlink" href="#what-this-design-buys" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">solutions/</span></code> can be used and tested without Maya.</p></li>
+<li><p>A rigger works mainly with <code class="docutils literal notranslate"><span class="pre">solutions/</span></code> and <code class="docutils literal notranslate"><span class="pre">maya/build/</span></code>.</p></li>
+<li><p>Future DCC support = add <code class="docutils literal notranslate"><span class="pre">blender/Houdini/..</span></code> alongside <code class="docutils literal notranslate"><span class="pre">maya/</span></code>, nothing else changes.</p></li>
+<li><p>A rig description (in <code class="docutils literal notranslate"><span class="pre">io/</span></code>) is DCC-portable by design.</p></li>
+<li><p>The config-driven approach means conventions can change without touching the code.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="open-questions-next-steps">
+<h2>Open Questions (next steps)<a class="headerlink" href="#open-questions-next-steps" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>What does a <strong>solution contract</strong> look like in <code class="docutils literal notranslate"><span class="pre">core/</span></code>?
+What must every solution expose? (inputs, outputs, a build method?)</p></li>
+<li><p>How does a solution declare what it needs vs what it produces?</p></li>
+<li><p>How are solutions composed into a full rig?</p></li>
+<li><p>What format does the rig description use in <code class="docutils literal notranslate"><span class="pre">io/</span></code>?</p></li>
+<li><p>How does the rig leave retrievable metadata in the Maya scene?</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Iván Cuenca Ruiz &amp; Luis de Campos.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
