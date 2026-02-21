@@ -1,0 +1,296 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rigging Standards &mdash; OpenRig 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="openrig" href="../api/modules.html" />
+    <link rel="prev" title="Naming Convention" href="naming_convention.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenRig
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Architecture</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html">OpenRig — Architecture Overview</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="python_style_guide.html">Python Coding Style Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="naming_convention.html">Naming Convention</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Rigging Standards</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#coordinate-system-axes">1. Coordinate System &amp; Axes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#side-convention">2. Side Convention</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#joint-orientation">3. Joint Orientation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hierarchy-node-organization">4. Hierarchy &amp; Node Organization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#option-a-group-offset-nodes-traditional">Option A — Group + Offset nodes (traditional)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#option-b-offsetparentmatrix-maya-2020">Option B — offsetParentMatrix (Maya 2020+)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#option-c-other">Option C — Other</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#controls">5. Controls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#naming">6. Naming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#connections-data-flow">7. Connections &amp; Data Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#build-vs-scene-state">8. Build vs Scene State</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules.html">openrig</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenRig</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Rigging Standards</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/style_guide/rigging_standards.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="rigging-standards">
+<h1>Rigging Standards<a class="headerlink" href="#rigging-standards" title="Link to this heading"></a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
+<p>This document defines the rigging conventions adopted by OpenRig. These decisions govern
+how rigs are structured, oriented, and connected inside the DCC. Where possible,
+conventions are declared in <code class="docutils literal notranslate"><span class="pre">config.json</span></code> so they can be changed without modifying code.</p>
+</section>
+<hr class="docutils" />
+<section id="coordinate-system-axes">
+<h2>1. Coordinate System &amp; Axes<a class="headerlink" href="#coordinate-system-axes" title="Link to this heading"></a></h2>
+<p>All axis conventions are declared in <code class="docutils literal notranslate"><span class="pre">config.json</span></code> under the <code class="docutils literal notranslate"><span class="pre">rigging</span></code> key and read at
+runtime via <code class="docutils literal notranslate"><span class="pre">openrig.constants</span></code>. Changing a value in the config is enough to apply it
+across the entire library.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Convention</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Config key</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Aim axis</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">X</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">axis_aim</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Up axis</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Y</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">axis_up</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Side axis</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Z</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">axis_side</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Rotate order</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">xyz</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">rotate_order_default</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rationale:</strong> X-aim, Y-up, Z-side is the most common convention in Maya pipelines
+and aligns with the default matrix layout for joints.</p>
+</section>
+<hr class="docutils" />
+<section id="side-convention">
+<h2>2. Side Convention<a class="headerlink" href="#side-convention" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Side</p></th>
+<th class="head"><p>Token</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Left</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">l</span></code></p></td>
+<td><p>Positive X side of the character</p></td>
+</tr>
+<tr class="row-odd"><td><p>Right</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">r</span></code></p></td>
+<td><p>Negative X side of the character</p></td>
+</tr>
+<tr class="row-even"><td><p>Center</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">c</span></code></p></td>
+<td><p>On the character’s symmetry plane</p></td>
+</tr>
+<tr class="row-odd"><td><p>Middle</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">m</span></code></p></td>
+<td><p>Intermediate position, not strictly on-axis</p></td>
+</tr>
+</tbody>
+</table>
+<p>Default side is declared in <code class="docutils literal notranslate"><span class="pre">config.json</span></code> as <code class="docutils literal notranslate"><span class="pre">side_default</span></code> (default: <code class="docutils literal notranslate"><span class="pre">&quot;c&quot;</span></code>).</p>
+<p><strong>Rule:</strong> Left is always the character’s left (positive X), not the camera’s left.</p>
+</section>
+<hr class="docutils" />
+<section id="joint-orientation">
+<h2>3. Joint Orientation<a class="headerlink" href="#joint-orientation" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Joints follow the axis convention defined in Section 1: aim along <strong>X</strong>, up along <strong>Y</strong>.</p></li>
+<li><p>The last joint in a chain (tip joint) inherits the orientation of its parent.</p></li>
+<li><p>World-oriented joints are acceptable only for root and global nodes.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="hierarchy-node-organization">
+<h2>4. Hierarchy &amp; Node Organization<a class="headerlink" href="#hierarchy-node-organization" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p><strong>Status: open design decision — not yet adopted.</strong></p>
+</div></blockquote>
+<p>The library does not mandate a specific node hierarchy. The following are the options
+under consideration:</p>
+<section id="option-a-group-offset-nodes-traditional">
+<h3>Option A — Group + Offset nodes (traditional)<a class="headerlink" href="#option-a-group-offset-nodes-traditional" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;descriptor&gt;_&lt;side&gt;_grp
+  └── &lt;descriptor&gt;_&lt;side&gt;_offset
+        └── &lt;descriptor&gt;_&lt;side&gt;_ctr
+</pre></div>
+</div>
+<p>Explicit transform nodes absorb placement so the control starts at zero.
+Simple and universally compatible, but adds nodes to the scene.</p>
+</section>
+<section id="option-b-offsetparentmatrix-maya-2020">
+<h3>Option B — offsetParentMatrix (Maya 2020+)<a class="headerlink" href="#option-b-offsetparentmatrix-maya-2020" title="Link to this heading"></a></h3>
+<p>The initial placement is stored in the control’s <code class="docutils literal notranslate"><span class="pre">offsetParentMatrix</span></code> attribute.
+No extra nodes are needed; the control itself starts at zero in channel box.
+Cleaner hierarchy, but Maya-specific and not supported in all DCCs.</p>
+</section>
+<section id="option-c-other">
+<h3>Option C — Other<a class="headerlink" href="#option-c-other" title="Link to this heading"></a></h3>
+<p>Any other approach (e.g. driven by the solution’s config) is valid as long as it
+satisfies the core requirement: the animatable node must read zero on all channels
+at bind pose.</p>
+<p>The chosen approach will be documented here once the design decision is made.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="controls">
+<h2>5. Controls<a class="headerlink" href="#controls" title="Link to this heading"></a></h2>
+<p>OpenRig does not mandate a specific control representation. Valid options include:</p>
+<ul class="simple">
+<li><p>Curves with display shapes (most common)</p></li>
+<li><p>Transform nodes without shapes (lightweight setups)</p></li>
+<li><p>Direct geometry selection (no dedicated control object)</p></li>
+</ul>
+<p>The control type for a given solution is declared in its configuration, not hardcoded
+in the library. The default shape type is declared in <code class="docutils literal notranslate"><span class="pre">config.json</span></code> under <code class="docutils literal notranslate"><span class="pre">shapes.default</span></code>.</p>
+</section>
+<hr class="docutils" />
+<section id="naming">
+<h2>6. Naming<a class="headerlink" href="#naming" title="Link to this heading"></a></h2>
+<p>All node names must conform to the naming convention defined in <code class="docutils literal notranslate"><span class="pre">config.json</span></code>.
+See <a class="reference internal" href="naming_convention.html"><span class="std std-doc">naming_convention.md</span></a> for the full reference.</p>
+<p>Quick summary of the default convention:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>descriptor_side_usage
+upperArm_l_jnt
+spine_c_ctr
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="connections-data-flow">
+<h2>7. Connections &amp; Data Flow<a class="headerlink" href="#connections-data-flow" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Prefer <strong>matrix-based connections</strong> over constraint nodes where possible.
+They are cheaper to evaluate and easier to inspect.</p></li>
+<li><p>Constraints are acceptable for legacy compatibility or cases where matrix math
+would significantly increase complexity.</p></li>
+<li><p>Utility nodes must follow the naming convention (<code class="docutils literal notranslate"><span class="pre">mult</span></code>, <code class="docutils literal notranslate"><span class="pre">add</span></code>, <code class="docutils literal notranslate"><span class="pre">cond</span></code>, <code class="docutils literal notranslate"><span class="pre">dmat</span></code>, etc.).</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="build-vs-scene-state">
+<h2>8. Build vs Scene State<a class="headerlink" href="#build-vs-scene-state" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>A rig must be <strong>fully reconstructable</strong> from its description file.
+No manual edits to the built scene should be necessary.</p></li>
+<li><p>Guide objects (<code class="docutils literal notranslate"><span class="pre">guide</span></code> usage token) are build-time only and must be removed or
+hidden after the rig is built.</p></li>
+<li><p>Any metadata needed for API access after the build must be stored as
+custom attributes on a designated metadata node.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="naming_convention.html" class="btn btn-neutral float-left" title="Naming Convention" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api/modules.html" class="btn btn-neutral float-right" title="openrig" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Iván Cuenca Ruiz &amp; Luis de Campos.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Naming Convention" href="naming_convention.html" />
-    <link rel="prev" title="Welcome to OpenRig’s documentation!" href="../index.html" /> 
+    <link rel="prev" title="OpenRig — Architecture Overview" href="../architecture.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -42,7 +42,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Architecture</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html">OpenRig — Architecture Overview</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Python Coding Style Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
@@ -79,7 +83,8 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#tooling">6. Tooling</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#pre-commit">6.1. Pre-commit</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#running-ruff">6.1. Running Ruff</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pre-commit">6.2. Pre-commit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#installation-setup">Installation &amp; Setup</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id1">Usage</a></li>
 </ul>
@@ -89,6 +94,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="naming_convention.html">Naming Convention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rigging_standards.html">Rigging Standards</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -111,7 +117,7 @@
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Python Coding Style Guide</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/style_guide/coding_standards.md.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/style_guide/python_style_guide.md.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -308,48 +314,46 @@
 </ol>
 <ul>
 <li><p><strong>Complete Example:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets an instance of the specified model.</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">build_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Builds a validated name from the given token values.</span>
 
-<span class="sd">    If `model_name` is None, it returns the default model. This method</span>
-<span class="sd">    lazily loads the OpenAI client to avoid errors if the API</span>
-<span class="sd">    key is not configured.</span>
+<span class="sd">    Each keyword argument corresponds to a token defined in the active</span>
+<span class="sd">    convention. Values are normalized before validation, so raw inputs</span>
+<span class="sd">    such as ``&quot;upper_arm&quot;`` or ``Side.LEFT`` are accepted.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        model_name: The name of the model to get.</span>
+<span class="sd">        **kwargs: Token name/value pairs (e.g. ``descriptor=&quot;arm&quot;``,</span>
+<span class="sd">            ``side=&quot;l&quot;``, ``usage=&quot;jnt&quot;``).</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        A `Model` instance configured with the appropriate client.</span>
+<span class="sd">        A fully validated name string built from the provided tokens.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        NamingValidationError: If any token value fails validation after</span>
+<span class="sd">            normalization, or if the assembled name violates a global rule.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">model_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">model_name</span> <span class="o">=</span> <span class="n">DEFAULT_MODEL</span>
-
-    <span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_client</span><span class="p">()</span>
-
-    <span class="k">return</span> <span class="p">(</span>
-        <span class="n">OpenAIResponsesModel</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span> <span class="n">openai_client</span><span class="o">=</span><span class="n">client</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_use_responses</span>
-        <span class="k">else</span> <span class="n">OpenAIChatCompletionsModel</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span> <span class="n">openai_client</span><span class="o">=</span><span class="n">client</span><span class="p">)</span>
-    <span class="p">)</span>
+    <span class="o">...</span>
 </pre></div>
 </div>
 </li>
 <li><p><strong>Example with <code class="docutils literal notranslate"><span class="pre">Raises</span></code>:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">validate_code</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates that the code contains a Diagram definition.</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">_require_str</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts a required string value from a configuration dict.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        v: The code string to validate.</span>
+<span class="sd">        data: The configuration dictionary to read from.</span>
+<span class="sd">        key: The key whose value must be a non-empty string.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        The original code string if it is valid.</span>
+<span class="sd">        The string value associated with *key*.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        ValueError: If the code does not contain a &#39;Diagram&#39; definition.</span>
+<span class="sd">        NamingConfigError: If *key* is missing or its value is not a string.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="s1">&#39;Diagram(&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Code must contain a Diagram definition&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">v</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">NamingConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected string for &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39;, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">value</span>
 </pre></div>
 </div>
 </li>
@@ -366,60 +370,50 @@
 </ol>
 <ul>
 <li><p><strong>Class Example:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">OpenAIProvider</span><span class="p">(</span><span class="n">ModelProvider</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a new OpenAI provider.</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Manager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates, parses, and builds names according to a configurable convention.</span>
 
-<span class="sd">    This class manages the creation and access to an OpenAI client,</span>
-<span class="sd">    allowing for the configuration of API keys, base URLs, and other parameters.</span>
-<span class="sd">    It loads the client lazily to optimize performance.</span>
+<span class="sd">    A ``Manager`` is built from a set of ordered tokens, a separator, per-token</span>
+<span class="sd">    rules, and optional normalizers. It can validate raw names, extract token</span>
+<span class="sd">    values, and assemble new names with automatic normalization.</span>
 
 <span class="sd">    Attributes:</span>
-<span class="sd">        use_responses: A boolean indicating whether to use the OpenAI responses API.</span>
+<span class="sd">        tokens: Ordered list of token names that form a valid name.</span>
+<span class="sd">        separator: The string used to join tokens (default ``&quot;_&quot;``).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">api_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">base_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="c1"># ...</span>
+        <span class="n">tokens</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">rules</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">RuleValidator</span><span class="p">],</span>
+        <span class="n">global_rules</span><span class="p">:</span> <span class="n">GlobalRules</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the OpenAI provider.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the Manager with a naming convention.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            api_key: The API key to use.</span>
-<span class="sd">            base_url: The base URL for the client.</span>
-<span class="sd">            openai_client: An optional, pre-existing OpenAI client.</span>
-<span class="sd">            # ...</span>
+<span class="sd">            tokens: Ordered token names (e.g. ``[&quot;descriptor&quot;, &quot;side&quot;, &quot;usage&quot;]``).</span>
+<span class="sd">            separator: Character(s) used to join tokens.</span>
+<span class="sd">            rules: Mapping from token name to its validation rule.</span>
+<span class="sd">            global_rules: Optional global constraints applied to the full name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># ...</span>
+        <span class="o">...</span>
 </pre></div>
 </div>
 </li>
 <li><p><strong>Example with <code class="docutils literal notranslate"><span class="pre">Example</span></code>:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">OpenIdConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;Represents the OpenID Connect configuration.</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">RegexRule</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates a token value against a regular expression.</span>
 
-<span class="sd">  Attributes:</span>
-<span class="sd">      client_id: The client ID.</span>
-<span class="sd">      auth_uri: The authorization URI.</span>
-<span class="sd">      token_uri: The token URI.</span>
-<span class="sd">      client_secret: The client secret.</span>
-<span class="sd">      redirect_uri: The optional redirect URI.</span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        pattern: The compiled regex pattern used for validation.</span>
 
-<span class="sd">  Example:</span>
-<span class="sd">      config = OpenIdConfig(</span>
-<span class="sd">          client_id=&quot;your_client_id&quot;,</span>
-<span class="sd">          auth_uri=&quot;https://accounts.google.com/o/oauth2/auth&quot;,</span>
-<span class="sd">          token_uri=&quot;https://oauth2.googleapis.com/token&quot;,</span>
-<span class="sd">          client_secret=&quot;your_client_secret&quot;,</span>
-<span class="sd">      )</span>
-<span class="sd">  &quot;&quot;&quot;</span>
-  <span class="n">client_id</span><span class="p">:</span> <span class="nb">str</span>
-  <span class="n">auth_uri</span><span class="p">:</span> <span class="nb">str</span>
-  <span class="n">token_uri</span><span class="p">:</span> <span class="nb">str</span>
-  <span class="n">client_secret</span><span class="p">:</span> <span class="nb">str</span>
-  <span class="n">redirect_uri</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="sd">    Example:</span>
+<span class="sd">        rule = RegexRule(pattern=r&quot;^[a-z][a-zA-Z0-9]*$&quot;)</span>
+<span class="sd">        rule.validate(&quot;upperArm&quot;)  # True</span>
+<span class="sd">        rule.validate(&quot;UpperArm&quot;)  # False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pattern</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">Pattern</span>
 </pre></div>
 </div>
 </li>
@@ -430,12 +424,12 @@
 <p>Module docstrings should be at the top of the file and summarize the module’s content and purpose.</p>
 <ul>
 <li><p><strong>Example:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Defines the Coder agent for generating, executing, and debugging code.</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Normalizer functions for converting raw token values to their canonical form.</span>
 
-<span class="sd">This module provides the `CoderAgent` class, which interacts with a</span>
-<span class="sd">language model to write code and with a code executor (local or Docker)</span>
-<span class="sd">to test it. The agent supports multiple rounds of debugging and user</span>
-<span class="sd">approval guards.</span>
+<span class="sd">Each function accepts any object as input and always returns a ``str``.</span>
+<span class="sd">Falsy inputs (``None``, ``&quot;&quot;``, ``0``) return an empty string.</span>
+<span class="sd">Normalizers are assigned per-token in ``config.json`` and applied</span>
+<span class="sd">automatically by the ``Manager`` before validation.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="c1"># ... rest of the module&#39;s code ...</span>
@@ -510,12 +504,25 @@
 <h2>6. Tooling<a class="headerlink" href="#tooling" title="Link to this heading"></a></h2>
 <p>To ensure consistency and automate compliance, use the following tools:</p>
 <ul class="simple">
-<li><p><strong>Formatter:</strong> Black</p></li>
-<li><p><strong>Import Sorter:</strong> isort</p></li>
+<li><p><strong>Linter + Formatter:</strong> <a class="reference external" href="https://docs.astral.sh/ruff/">Ruff</a> — handles code style, import sorting, and docstring conventions in a single tool. Configured in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>.</p></li>
 <li><p><strong>Type Checker:</strong> mypy</p></li>
 </ul>
+<p>Ruff replaces Black and isort. Do not install or configure them separately.</p>
+<section id="running-ruff">
+<h3>6.1. Running Ruff<a class="headerlink" href="#running-ruff" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check for issues</span>
+ruff<span class="w"> </span>check<span class="w"> </span>.
+
+<span class="c1"># Fix automatically where possible</span>
+ruff<span class="w"> </span>check<span class="w"> </span>.<span class="w"> </span>--fix
+
+<span class="c1"># Format code</span>
+ruff<span class="w"> </span>format<span class="w"> </span>.
+</pre></div>
+</div>
+</section>
 <section id="pre-commit">
-<h3>6.1. Pre-commit<a class="headerlink" href="#pre-commit" title="Link to this heading"></a></h3>
+<h3>6.2. Pre-commit<a class="headerlink" href="#pre-commit" title="Link to this heading"></a></h3>
 <p>We use pre-commit to automatically run these checks before every commit.</p>
 <section id="installation-setup">
 <h4>Installation &amp; Setup<a class="headerlink" href="#installation-setup" title="Link to this heading"></a></h4>
@@ -547,7 +554,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to OpenRig’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../architecture.html" class="btn btn-neutral float-left" title="OpenRig — Architecture Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="naming_convention.html" class="btn btn-neutral float-right" title="Naming Convention" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
